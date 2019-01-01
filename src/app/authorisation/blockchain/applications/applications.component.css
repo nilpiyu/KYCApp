@@ -1,0 +1,30 @@
+.changepassword-btn{background: #cd2122;color: #fff;border: none;border-radius: 0;}
+.card{padding: 20px;background: #fff;border: 1px solid rgba(230, 230, 230, 0.7);margin-bottom: 20px;}
+.card-title{padding-bottom: 10px;}
+.table-bordered th{background: #e1e1e1;}
+.table-bordered .btn{    border: 1px solid #e8e9ea;
+    box-shadow: none;
+    color: #333;margin-right: 5px;}
+.installed_applicaion{background: #fff;
+    display: inline-block;padding: 20px 29px;
+    border-radius: 8px;    -webkit-box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);margin-bottom: 20px;}
+.installed_applicaion img{background: linear-gradient(to bottom right, #284b62, #4a7998);
+    width: 150px;}
+.application_cat{border-radius: 4px;
+        border-color: #cecece;
+        box-shadow: 0px 0px 24px #e0e0e0;
+        margin-bottom: 20px;
+        background: #fff;}
+.application_cat .navbar-nav>li>a{color: #000;padding: 15px 30px;cursor: pointer;}
+.application_cat .navbar-nav>li>a.active_border{border-bottom: 2px solid #cd2122;}
+
+.application_installed{border-radius: 4px;
+    border-color: #cecece;
+    box-shadow: 0px 0px 24px #e0e0e0;
+    margin-bottom: 20px;
+    background: #fff;padding: 15px 30px;color:#000;
+    font-size: 16px;}
+.application_installed a{color: #000;cursor: pointer;}
+.application_installed i{float: right;}
+.installed_applicaion h4{color: #000;}

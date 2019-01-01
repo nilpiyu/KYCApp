@@ -1,0 +1,50 @@
+<div class=" container ">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- START card -->
+      <div class="card card-default">
+        <div class="card-header ">
+          <div class="card-title">
+            Search Authorised Personnel
+          </div>
+        </div>
+        <div class="card-block">
+          <form class="" role="form">
+            <div class="row">
+              <div class="col-md-5  col-sm-6 col-xs-12">
+                <div class="form-group form-group-default required">
+                   <input type="text" class="form-control" required>
+                </div>
+              </div>
+          
+              <div class="col-md-7  col-sm-6 col-xs-12 text-right">
+                <div class="form-group ">
+                  <a class="btn btn-default changepassword-btn" (click)="openModal()">Add</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div>
+            
+          </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="authorisedPersonnelModal" class="overlay" (click)="closeModal()"></div>
+</div>
+<app-dialog [(visible)]="authorisedPersonnelModal">
+  <div class="popup_dialouge poup_edit">
+    <h5>ADD  <span class="semi-bold">Authorised Personnel</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <h5>EDIT  <span class="semi-bold">Authorised Personnel</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>                    
+    <form role="form" #documentMetaForm="ngForm">
+      <div class="form-group-attached">
+          <div class="row">
+            <div class="col-md-12 user_doc_form">
+              <button type="button" class="btn btn-primary changepassword-btn">Submit</button>
+            </div>
+          </div>  
+      </div>
+    </form>
+</div>
+</app-dialog>

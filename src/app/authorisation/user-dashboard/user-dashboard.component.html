@@ -1,0 +1,2345 @@
+<div class="container dashboard_main">
+    <div *ngIf="socialMediaModal" class="overlay" (click)="closeSocialMediaModal()"></div>    
+    <div *ngIf="documentUploadModal" class="overlay" (click)="closeDocumentUploadModal()"></div>    
+    <div *ngIf="viewRequestedDocumentImageModal" class="overlay" (click)="closeViewRequestedDocumentImageModal()"></div>        
+    <div *ngIf="userCountryModal" class="overlay" (click)="closeAddCountryModal()"></div>    
+    <div *ngIf="walletLoginModal" class="overlay" (click)="closeWalletLoginModal()"></div>    
+    <div *ngIf="receiveAddressModal" class="overlay" (click)="closeQRCodeModal()"></div>        
+    <div *ngIf="sendTransaction" class="overlay" (click)="closeSendTransactionModal()"></div>    
+    <div *ngIf="becomeDelegateModal" class="overlay" (click)="closeBecomeDelegateModal()"></div>
+    <div *ngIf="voteCastingModal" class="overlay" (click)="closeVoteCastingModal()"></div>        
+    <div *ngIf="voteRevokingModal" class="overlay" (click)="closeVoteRevokingModal()"></div>    
+    <div *ngIf="secondSecretModal" class="overlay" (click)="closeSecondSecretModal()"></div>    
+    <div *ngIf="userWhiteListedWalletModal" class="overlay" (click)="closeUserWhiteListedWalletModal()"></div>        
+    <div *ngIf="documentKYCPaymentModal" class="overlay" (click)="closeDocumentKYCPaymentModal()"></div>    
+    <div *ngIf="walletKYCModal" class="overlay" (click)="closeEnableWalletKYCModal()"></div>        
+    <div *ngIf="primaryWalletSecretModal" class="overlay" (click)="closePrimaryWalletSecretModal()"></div>        
+    <div *ngIf="newWalletModalCreationModal" class="overlay" (click)="closeNewWalletCreationModal()"></div>        
+    <div *ngIf="documentVerificationModal" class="overlay" (click)="closeDocumentVerificationModal()"></div>  
+    <div *ngIf="walletAuthenticationModal" class="overlay" (click)="closeWalletAuthenticationModal()"></div>
+    <div *ngIf="userCountryKYCStatusModal" class="overlay" (click)="closeUserCountryKYCStatusModal()"></div>  
+    <div *ngIf="walletSelectionModal" class="overlay" (click)="closeWalletSelectionModal()"></div>  
+    <div *ngIf="userCertificateModal" class="overlay" (click)="closeUserCertificateModal()"></div>  
+    <div *ngIf="shareAssetModal" class="overlay" (click)="closeShareAssetModal()"></div>  
+    
+    <ul class="nav nav-tabs main_section">
+       <!-- <li class="active"><a data-toggle="tab" href="#profile" (click)="getUserProfile()">Profile</a></li> -->
+       <li class="active"><a data-toggle="tab" href="#wallet" (click)="$event.preventDefault(); getUserCountriesWallet(false)">Wallet</a></li>       
+       <li *ngIf="userRoleName!='verifier'"><a #kycSection data-toggle="tab" href="#kyc" baseCountry="false" (click)="$event.preventDefault(); getUserCountriesDocument()">KYC</a></li>
+       <li *ngIf="userRoleName!='verifier'" [ngClass]="{'inactive':isRedirectedToKYC}"><a data-toggle="tab" href="#whiteListedWallet" (click)="$event.preventDefault(); getWhiteLabelUserWallet()">White Listed Wallet</a></li>
+       <li *ngIf="userRoleName!='verifier'" [ngClass]="{'inactive':isRedirectedToKYC}"><a data-toggle="tab" href="#certifcate" (click)="$event.preventDefault(); getDappId()">Assets</a></li>
+    </ul>
+    <div class="tab-content main_section_tab">
+      <!-- ------------------------------profile section---------------------- -->
+      <div id="profile" class="tab-pane fade kyc_section">
+        <div class="col-md-12 no-padding ">
+            <div class="col-md-5 col-sm-6 no-padding">
+              <div class="card social-card" data-social="item">
+                  <div class="user_profile user_profile_top">
+                    <div class="col-md-12 no-padding">
+                        <div class="user_profile_wallet text-center col-md-4">
+                          <img [src]="userProfileData['profileImagePath']" accept="image/*" class="img-responsive"/>
+                          <i class="fa fa-check-circle text_succes"></i>
+                          <input 
+                                *ngIf="isEdited"
+                                type="file" 
+                                accept="image/*"
+                                (change)="saveProfileImage($event)"
+                                #userProfileImage
+                          />
+                        </div>
+                        <div class="user_profile_wallet col-md-8">
+                          <h3 class="">{{userProfileData['name']}} {{userProfileData['lastName']}}</h3>
+                          <p>{{userProfileData['email']}}</p>
+                        </div>
+                    </div>
+                    <p *ngIf="isEdited">Note :</p><p *ngIf="isEdited" class="note">File size limit: 10MB. File types supported: jpeg/png</p>
+                    <h3 class="">Profile </h3>
+                    <div class="profile-edit-btn">
+                        <i *ngIf="!isEdited" class="fa fa-pencil" (click)="editUserProfile()" ngbTooltip="Edit"></i>
+                    </div>
+                    <div class="table-responsive table_profile">
+                        <form #updateUserProfileForm="ngForm">
+                          <table class="table " id="stripedTable">
+                              <tbody>
+                                  <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                      <p>First Name:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                      <p *ngIf="!isEdited">{{userProfileData['name']}}</p>
+                                      <div *ngIf="isEdited">
+                                          <input 
+                                                type="text" 
+                                                class="form-control" 
+                                                name="nameField" 
+                                                #nameField="ngModel"  
+                                                [(ngModel)]="userProfileData['name']" 
+                                                minlength="2" 
+                                                maxlength="101" 
+                                                pattern="[a-zA-Z]+" 
+                                                required
+                                                [disabled]="!isEdited"
+                                                [ngClass]="{'editable-input-field':isEdited}"
+                                                (keyup)="checkMaxLength(nameField, 101)"
+                                                required
+                                          />
+                                          <div *ngIf="nameField.errors && nameField.dirty">
+                                              <div [hidden]="nameField.errors.required || !nameField.errors.pattern" class="error-block">
+                                                Not allowed
+                                              </div>
+                                              <div [hidden]="nameField.errors.required || nameField.errors.pattern || (nameField.errors.minlength && nameField.errors.minlength['requiredLength']<nameField.errors.minlength['actualLength'])" class="error-block">
+                                                First Name should be at least 2 characters long
+                                              </div>
+                                              <div [hidden]="!nameField.errors.required" class="error-block">
+                                                First Name is required
+                                              </div>
+                                          </div>
+                                          <div [hidden]="nameField.errors || !maxLengthExceeded['nameField']" class="error-block">
+                                            First Name should not 100 characters
+                                          </div>
+                                          <div [hidden]="(!nameField.touched || nameField.dirty) || (nameField.value && nameField.value.length)" class="error-block">
+                                            First Name is required
+                                          </div>
+                                  </div>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                        <p>Last Name:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                        <p *ngIf="!isEdited">{{userProfileData['lastName']}}</p>
+                                        <div *ngIf="isEdited">
+                                            <input 
+                                                  type="text" 
+                                                  class="form-control" 
+                                                  name="lastNameField" 
+                                                  #lastNameField="ngModel"  
+                                                  pattern="[a-zA-Z]+([a-zA-Z\s0-9]*)"
+                                                  [(ngModel)]="userProfileData['lastName']" 
+                                                  maxlength="101" 
+                                                  [disabled]="!isEdited"
+                                                  [ngClass]="{'editable-input-field':isEdited}"
+                                                  (keyup)="checkMaxLength(lastNameField, 101)"
+                                            />
+                                            <div *ngIf="lastNameField.errors && lastNameField.dirty">
+                                              <!-- <div [hidden]="(lastNameField.errors.minlength && lastNameField.errors.minlength['requiredLength']<lastNameField.errors.minlength['actualLength'])" class="error-block">
+                                                Last name should be at least 2 characters long
+                                              </div> -->
+                                            </div>
+                                            <div [hidden]="lastNameField.errors || !maxLengthExceeded['lastNameField']" class="error-block">
+                                              Last name should not exceed 100 characters
+                                            </div>
+                                    </div>
+                                    </td>
+                                    </tr>
+                                <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                      <p>Email:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                      <p>{{userProfileData['email']}}</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                      <p>Mobile no:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                      <p *ngIf="!isEdited">{{userProfileData['address']['phone']}}</p>    
+                                  <div *ngIf="isEdited" >
+                                      <input 
+                                            type="tel" 
+                                            class="form-control" 
+                                            name="phoneNo" 
+                                            #phoneField="ngModel" 
+                                            [(ngModel)]="userProfileData['address']['phone']" 
+                                            minlength="8" 
+                                            maxlength="15" 
+                                            pattern="([1-9]){1}([0-9]*)"  
+                                            required
+                                            [disabled]="!isEdited"
+                                            [ngClass]="{'editable-input-field':isEdited}"
+                                            (keyup)="checkMaxLength(phoneField, 16)"                                               
+                                      />
+                                    <div *ngIf="phoneField.errors && phoneField.dirty">
+                                        <div [hidden]="phoneField.errors.required || !phoneField.errors.pattern" class="error-block">
+                                              Only Numbers are allowed
+                                        </div>
+                                        <div [hidden]="phoneField.errors.required || phoneField.errors.pattern || (phoneField.errors.minlength && phoneField.errors.minlength['requiredLength']<phoneField.errors.minlength['actualLength'])" class="error-block">
+                                              Mob No. should be at least 8 characters long
+                                        </div>
+                                        <div [hidden]="!phoneField.errors.required" class="error-block">
+                                              Mob No. is required
+                                        </div>
+                                  </div>
+                                  <div [hidden]="phoneField.errors || !maxLengthExceeded['phoneField']" class="error-block">
+                                        Mob No. should not exceed 15 characters
+                                  </div>
+                                  <div [hidden]="(!phoneField.touched || phoneField.dirty) || (phoneField.value && phoneField.value.length)" class="error-block">
+                                        Mob No. is required
+                                  </div>
+                                  </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                      <p>Pincode:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                      <p *ngIf="!isEdited">{{userProfileData['address']['pincode']}}</p>
+                              <div *ngIf="isEdited">
+                                      <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            name="pincodeField" 
+                                            #pincodeField="ngModel"  
+                                            [(ngModel)]="userProfileData['address']['pincode']" 
+                                            minlength="5" 
+                                            maxlength="16" 
+                                            pattern="([1-9]){1}([0-9]*)"  
+                                            required
+                                            [disabled]="!isEdited"
+                                            [ngClass]="{'editable-input-field':isEdited}"
+                                            (keyup)="checkMaxLength(pincodeField, 16)"
+                                      />
+                                      <div *ngIf="pincodeField.errors && pincodeField.dirty">
+                                        <div [hidden]="pincodeField.errors.required || !pincodeField.errors.pattern" class="error-block">
+                                          Only Numbers are allowed
+                                        </div>
+                                        <div [hidden]="pincodeField.errors.required || pincodeField.errors.pattern || (pincodeField.errors.minlength && pincodeField.errors.minlength['requiredLength']<pincodeField.errors.minlength['actualLength'])" class="error-block">
+                                          Pincode should be at least 5 characters long
+                                        </div>
+                                        <div [hidden]="!pincodeField.errors.required" class="error-block">
+                                          Pincode is required
+                                        </div>
+                                      </div>
+                                      <div [hidden]="pincodeField.errors || !maxLengthExceeded['pincodeField']" class="error-block">
+                                        Pincode should not exceed 15 characters
+                                      </div>
+                                      <div [hidden]="(!pincodeField.touched || pincodeField.dirty) || (pincodeField.value && pincodeField.value.length)" class="error-block">
+                                        Pincode is required
+                                      </div>
+                              </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                      <p>Address:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                      <p *ngIf="!isEdited">{{userProfileData['address']['addressLine1']}}</p>
+                                      <div *ngIf ="isEdited">
+                                      <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            name="addressLine1Field" 
+                                            #addressLine1Field="ngModel"  
+                                            [(ngModel)]="userProfileData['address']['addressLine1']" 
+                                            minlength="2" 
+                                            maxlength="101" 
+                                            pattern="[a-zA-Z0-9.,-_/ ]*"
+                                            required
+                                            [ngClass]="{'editable-input-field':isEdited}"
+                                            [disabled]="!isEdited"
+                                            (keyup)="checkMaxLength(addressLine1Field, 101)"
+                                            
+                                      />
+                                      <div *ngIf="addressLine1Field.errors && addressLine1Field.dirty">
+                                          <div [hidden]="addressLine1Field.errors.required || !addressLine1Field.errors.pattern" class="error-block">
+                                                Invalid Characters
+                                          </div>
+                                          <div [hidden]="addressLine1Field.errors.required || addressLine1Field.errors.pattern || (addressLine1Field.errors.minlength && addressLine1Field.errors.minlength['requiredLength']<addressLine1Field.errors.minlength['actualLength'])" class="error-block">
+                                                Address should be at least 5 characters long.
+                                          </div>
+                                          <div [hidden]="!addressLine1Field.errors.required" class="error-block">
+                                                Address is required
+                                          </div>
+                                    </div>
+                                    <div [hidden]="addressLine1Field.errors || !maxLengthExceeded['addressLine1Field']" class="error-block">
+                                          Address should not exceed 100 characters
+                                    </div>
+                                    <div [hidden]="(!addressLine1Field.touched || addressLine1Field.dirty) || (addressLine1Field.value && addressLine1Field.value.length)" class="error-block">
+                                          Address is required
+                                    </div>
+                                  </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                        <p>City:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                        <p *ngIf="!isEdited">{{userProfileData['address']['city']}}</p>
+                                        <div *ngIf="isEdited">
+                                        <input 
+                                              type="text" 
+                                              class="form-control" 
+                                              name="cityField" 
+                                              #cityField="ngModel"  
+                                              [(ngModel)]="userProfileData['address']['city']" 
+                                              minlength="3" 
+                                              maxlength="21" 
+                                              pattern="[a-zA-Z ]*" 
+                                              required
+                                              [ngClass]="{'editable-input-field':isEdited}"
+                                              [disabled]="!isEdited"
+                                              (keyup)="checkMaxLength(cityField, 21)"
+                                        />
+                                        <div *ngIf="cityField.errors && cityField.dirty">
+                                            <div [hidden]="cityField.errors.required || !cityField.errors.pattern" class="error-block">
+                                                  Only Alphabets, including space, are allowed
+                                            </div>
+                                            <div [hidden]="cityField.errors.required || cityField.errors.pattern || (cityField.errors.minlength && cityField.errors.minlength['requiredLength']<cityField.errors.minlength['actualLength'])" class="error-block">
+                                                  City should be at least 3 characters long
+                                            </div>
+                                            <div [hidden]="!cityField.errors.required" class="error-block">
+                                                  City is required
+                                            </div>
+                                      </div>
+                                      <div [hidden]="cityField.errors || !maxLengthExceeded['cityField']" class="error-block">
+                                            City should not exceed 20 characters
+                                      </div>
+                                      <div [hidden]="(!cityField.touched || cityField.dirty) || (cityField.value && cityField.value.length)" class="error-block">
+                                            City is required
+                                      </div>
+                                        </div>
+                                    </td>
+                                  </tr>
+                                <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                      <p>State:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                      <p *ngIf="!isEdited">{{userProfileData['address']['state']}}</p>
+                                      <div *ngIf="isEdited">
+                                      <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            name="stateField" 
+                                            #stateField="ngModel"  
+                                            [(ngModel)]="userProfileData.address.state" 
+                                            minlength="2" 
+                                            maxlength="21" 
+                                            pattern="[a-zA-Z. ]*"
+                                            [disabled]="!isEdited"
+                                            [ngClass]="{'editable-input-field':isEdited}"
+                                            (keyup)="checkMaxLength(stateField, 21)"
+                                      />
+                                      <div *ngIf="stateField.errors && stateField.dirty">
+                                          <div [hidden]="stateField.errors.required || !stateField.errors.pattern" class="error-block">
+                                                Only Alphabets, including space, are allowed
+                                          </div>
+                                          <div [hidden]="stateField.errors.required || stateField.errors.pattern || (stateField.errors.minlength && stateField.errors.minlength['requiredLength']<stateField.errors.minlength['actualLength'])" class="error-block">
+                                                State Name should be at least 5 characters long
+                                          </div>
+                                          <!-- <div [hidden]="!stateField.errors.required" class="error-block">
+                                              State is required.
+                                        </div> -->
+                                    </div>
+                                    <div [hidden]="stateField.errors || !maxLengthExceeded['stateField']" class="error-block">
+                                        State should not exceed 20 characters
+                                  </div>
+                                  <!-- <div [hidden]="(!stateField.touched || stateField.dirty) || (stateField.value && stateField.value.length)" class="error-block">
+                                      State is required.
+                                  </div> -->
+                                  </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                  <td class="v-align-middle semi-bold table_title">
+                                      <p>Country:</p>
+                                  </td>
+                                  <td class="v-align-middle semi-bold">
+                                      <p>{{userProfileData['address']['country']}}</p>
+                                  </td>
+                                </tr>
+                              </tbody>
+                          </table>
+                          <div *ngIf="isEdited">
+                              <button [disabled]="updateUserProfileForm.invalid" class="btn btn-primary changepassword-btn" (click)="updateUserProfile(updateUserProfileForm)">Submit</button>     
+                          </div>
+                        </form>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="col-md-7 col-sm-6 no-padding">
+              <div class="col-md-6 col-sm-6 no-padding">
+                <div class="card social-card share social_bk" data-social="item">
+                    <div class="card-header clearfix user_profile">
+                        <div class="user_profile_wallet_right">
+                          <h3 class="">Social Media</h3>
+                              <i class="fa fa-pencil socialMediaEditPencil" (click)="OpenSocialMediaModal()" ngbTooltip="Edit"></i>
+                          <div class="row social-media-urls">
+                            <div *ngFor="let registeredSocialServicesURL of registeredSocialServicesURLs" class="col-md-3 social-media"><a [href]="registeredSocialServicesURL['value']" target="_blank"><img [src]="registeredSocialServicesURL['logo']"/></a></div>                            
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="card social-card share social_bk  full-width m-b-10 no-border" data-social="item">
+                    <div class="card-header clearfix user_profile">
+                        <div class="kyc_status">
+                          <h3 class="">KYC Status</h3>
+                          <ul>
+                              <li *ngFor="let userCountry of userCountries">{{userCountry['country']['countryName']}}
+                                <span *ngIf="userCountry['kycstatus']" [ngClass]="{'verfied fa fa-check': userCountry['kycstatus']}">Verified</span>  
+                                <span *ngIf="!userCountry['kycstatus']" [ngClass]="{'unverfied fa fa-exclamation-triangle': !userCountry['kycstatus']}">Unverified</span>                                     
+                                <!-- <span class="verfied">Verified</span>                          -->
+                              </li>
+                          </ul>
+                        </div>
+                    </div>
+                  </div>
+                  
+              </div>
+              <div class="col-md-6 col-sm-6 no-padding">
+                <div class="card social-card share" data-social="item">
+                    <div class="card-header clearfix user_profile">
+                        <div class="user_profile_wallet_right">
+                          <h3 class="">Last Login Date/Time</h3>
+                          <p>{{loginDateAndTime}} from {{loginIPAddress}}</p>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="card social-card share  full-width m-b-10 no-border" data-social="item">
+                    <div class="card-header clearfix user_profile">
+                        <div class="kyc_status">
+                          <h3 class="">Recently Requested Document(s) </h3>
+                          <div class="row">
+                            <ul>
+                              <li *ngFor="let userRequestedDocument of userRequestedDocuments">
+                                <div class="col-md-4">{{userRequestedDocument['kycdoc']['kycDocumentMeta']['documentName']}}</div>
+                                <div class="col-md-4">{{userRequestedDocument['requester']['name']}}</div>
+                                <div class="col-md-4">
+                                  <button *ngIf="userRequestedDocument['status']=='Requested'" type="button" class="btn btn-warning user-requested-document-status"><span>{{userRequestedDocument['status']}}</span></button>
+                                  <button *ngIf="userRequestedDocument['status']=='Accepted'" type="button" class="btn btn-success user-requested-document-status"><span>{{userRequestedDocument['status']}}</span></button>
+                                  <button *ngIf="userRequestedDocument['status']=='Rejected'" type="button" class="btn btn-danger user-requested-document-status"><span>{{userRequestedDocument['status']}}</span></button>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+              <!--<div class="col-md-12 col-sm-12 no-padding">
+                  <div class="card social-card share social_bk  full-width m-b-10 no-border" data-social="item">
+                      <div class="card-header clearfix user_profile">
+                          <div class="kyc_activity">
+                            <h3 class="">Activity Feed</h3>
+                            <ul>
+                                <li>Raghu Requested for document "Aadhar"</li>
+                                <li>Your Aadhar was Verified</li>
+                                <li>You uploaded a new KYC Document
+                                <img src="../../../assets/img/adhar.jpg" class="img-responsive"/>
+                                </li>
+                                <li>Raghu Requested for document "PAN"</li>
+                                <li>Your Pan was Verified</li>
+                            </ul>
+                          </div>
+                      </div>
+                    </div>
+              </div>-->
+            </div>
+        </div>
+      </div>
+
+    <!-- -------------------------kyc------------------------ -->
+    <div id="kyc" class="tab-pane fade kyc_section">
+        <button class="btn btn-default add-country" (click)="getCountries()">ADD COUNTRY</button>                                             
+        <div class="col-md-3 no-padding country-li">
+            <ul class="nav nav-tabs" *ngFor="let userCountryDocument of userCountryDocuments;let userCountryDocumentLoopIndex=index;">
+              <li *ngIf="!userCountryDocuments[userCountryDocumentLoopIndex]['active']" [ngClass]="{'inactive':!userCountryDocuments[userCountryDocumentLoopIndex]['active']}"><a data-toggle="tab" href="#country" (click)="getDcoumentTypesByCountryIndex(userCountryDocumentLoopIndex)">{{userCountryDocument['countryName']}}</a></li>
+              <li *ngIf="userCountryDocuments[userCountryDocumentLoopIndex]['active']" [ngClass]="{'active':userCountryDocuments[userCountryDocumentLoopIndex]['active']}"><a data-toggle="tab" href="#country" (click)="getDcoumentTypesByCountryIndex(userCountryDocumentLoopIndex)">{{userCountryDocument['countryName']}}</a></li>              
+            </ul>
+          </div>
+          <div class="col-md-9 kyc_content_section">
+            <button 
+                    [disabled]="((localKYCStatus=='ACTIVE' && blockchainKYCStatus=='ACTIVE') || localKYCStatus=='INACTIVE')?true:false"
+                    class="btn btn-default kyc-enabled-btn kyc-button"
+                    (click)="openPrimaryWalletSecretModal()">
+                    <i class="fa fa-toggle-on"> Enable KYC</i>
+            </button>
+            <div class="tab-content">
+                <p class="error only_doc">Note :<span class="note">File size limit: 20MB. File types supported: pdf, jpeg/png</span></p>    
+                 <div id="country" class="tab-pane fade in active">
+                   
+                   <div class="col-md-12 no-padding kyc_doc_table ">
+                      <div class="panel-group">
+                          <div class="panel panel-default">
+                            <div class="panel-heading">
+                              <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#collapsekyc" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i> Belrium KYC</a>
+                              </h4>
+                            </div>
+                            <div id="collapsekyc" class="panel-collapse collapse">
+                              <div class="panel-body">
+                                
+                                  <table class="table table-bordered kyc-table-bordered" id="stripedTable">
+                                      <thead>
+                                        <tr>
+                                          <!-- <th class="kyc-enable-button">
+                                             <button class="btn btn-default kyc-enabled-btn kyc-enable-button" (click)="getCountries()">ADD COUNTRY</button>             
+                                          </th> -->
+                                          <!-- <th class="kyc-enable-button">
+                                             <button 
+                                                     [disabled]="((localKYCStatus=='ACTIVE' && blockchainKYCStatus=='ACTIVE') || localKYCStatus=='INACTIVE')?true:false"
+                                                     class="btn btn-default kyc-enabled-btn"
+                                                     (click)="openPrimaryWalletSecretModal()">
+                                                     <i class="fa fa-toggle-on"> Enable KYC</i>
+                                             </button>
+                                           </th> -->
+                                        </tr>
+                                         <tr>
+                                            <th style="width:18%">Document Type</th>
+                                            <th style="width:17%">Uploading Date</th>
+                                            <th style="width:15%">Status</th>
+                                            <th style="width:11%">Upload</th>
+                                            <th style="width:11%">Payment</th>
+                                            <th style="width:11%">Verification</th>
+                                            <th style="width:11%">View</th>
+                                         </tr>
+                                      </thead>
+                                      <tbody>
+                                         <tr>
+                                            <td colspan="7" class="v-align-middle td_inner">
+                                               <div *ngIf="userCountryDocuments[countryIndex] && userCountryDocuments[countryIndex]['kycDocumentTypes']" class="panel-group" id="accordion">
+                                                   <div *ngFor="let documentType of userCountryDocuments[countryIndex]['kycDocumentTypes'];let documentTypeLoopIndex=index" class="panel panel-default">
+                                                     <div class="panel-heading">
+                                                       <h4 class="panel-title">
+                                                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{documentTypeLoopIndex}}" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i>{{documentType['documentType']}}<span *ngIf="documentType['isMandatory']" class="mandatory">*</span></a><br>                                                      
+                                                       </h4>
+                                                     </div>
+                                                     <div id="collapse{{documentTypeLoopIndex}}" class="panel-collapse collapse">
+                                                     <div class="panel-body panel-body-background">
+                                                       <table style="width:100%" class="borderless">
+                                                         <tbody>
+                                                           <tr *ngFor="let documentMeta of userCountryDocuments[countryIndex]['kycDocumentTypes'][documentTypeLoopIndex]['kycDocumentMetas'];let documentMetaLoopIndex=index">
+                                                             <td style="width:20%" class="kyc-document semi-bold">
+                                                               <span>{{documentMeta['documentName']}}<span *ngIf="documentMeta['isMandatory']" class="mandatory">*</span></span>
+                                                             </td>
+                                                             <td style="width:20%" class="kyc-document">
+                                                               <span *ngIf="documentMeta['documentStatus']">{{documentMeta['kycUserDocument']['uploadedAt']}}</span>
+                                                               <span *ngIf="!documentMeta['documentStatus']">N/A</span>
+                                                             </td>
+                                                             <td style="width:20%" class="kyc-document">
+                                                               <div *ngIf="documentMeta['documentStatus']">                                                     
+                                                                 <span class="pending" *ngIf="documentMeta['documentStatus']=='Pending'"><i class="fa fa-envelope-square"></i>{{documentMeta['documentStatus']}} </span>
+                                                                 <span class="approved" *ngIf="documentMeta['documentStatus']=='Approved'"><i class="fa fa-check"></i>{{documentMeta['documentStatus']}} </span>
+                                                                 <span class="denied" *ngIf="documentMeta['documentStatus']=='Denied'"><i class="fa fa-ban"></i>{{documentMeta['documentStatus']}} </span>
+                                                                 <span class="expired" *ngIf="documentMeta['documentStatus']=='Expired'"><i class="fa fa-exclamation-triangle"></i>{{documentMeta['documentStatus']}} </span>
+                                                               </div>
+                                                               <div *ngIf="!documentMeta['documentStatus']">N/A</div>                                                
+                                                             </td>
+                                                             <td style="width:10%" class="v-align-middle">
+                                                               <span class="">
+                                                                 <button 
+                                                                         class="btn btn-default kyc-enabled-btn" 
+                                                                         [disabled]="!(documentMeta['documentStatus']=='Denied' || documentMeta['documentStatus']=='Expired' || documentMeta['documentStatus']=='Approved') && (documentMeta['paymentStatus']=='CONFIRMED') && (documentMeta['verificationStatus']=='CONFIRMED')"
+                                                                         (click)="getDocumentByDocumentMetaIndex(documentTypeLoopIndex, documentMetaLoopIndex)">
+                                                                         <i class="fa fa-upload"> Upload</i>
+                                                                 </button>
+                                                               </span>
+                                                               <div *ngIf="documentMeta['uploadStatus'] || documentMeta['documentStatus']!='Denied'" class="dot-verified-circle"></div>
+                                                               <div *ngIf="!documentMeta['uploadStatus'] || documentMeta['documentStatus']=='Denied'" class="dot-unverified-circle"></div>
+                                                               <div *ngIf="documentMeta['uploadStatus'] || documentMeta['documentStatus']!='Denied'" class="progress-bar"></div>
+                                                               <div *ngIf="!documentMeta['uploadStatus'] || documentMeta['documentStatus']=='Denied'" class="progress-barr"></div>
+                                                             </td>
+                                                             <td style="width:10%" class="v-align-middle">
+                                                              <span class="">
+                                                                <button 
+                                                                        class="btn btn-default kyc-enabled-btn" 
+                                                                        [disabled]="!documentMeta['uploadStatus'] || documentMeta['paymentStatus']=='CONFIRMED' || documentMeta['verificationStatus']=='CONFIRMED'"
+                                                                        (click)="doumentKYCPayment(documentTypeLoopIndex, documentMetaLoopIndex)">
+                                                                        <i class="fa fa-money"> Payment</i>
+                                                                </button>
+                                                              </span>
+                                                              <div *ngIf="documentMeta['paymentStatus'] || documentMeta['documentStatus']!='Denied'" class="progress-bar"></div>
+                                                              <div *ngIf="!documentMeta['paymentStatus'] || documentMeta['documentStatus']=='Denied'" class="progress-barr"></div>
+                                                            </td>
+                                                             <td style="width:10%" class="v-align-middle">
+                                                               <span class="">
+                                                                 <button 
+                                                                         class="btn btn-default kyc-enabled-btn" 
+                                                                         [disabled]="!documentMeta['uploadStatus'] || documentMeta['paymentStatus']!='CONFIRMED' || documentMeta['verificationStatus']=='CONFIRMED' || documentMeta['documentStatus']=='Expired'"
+                                                                         (click)="requestDocumentVerification(documentTypeLoopIndex, documentMetaLoopIndex)">
+                                                                         <i class="fa fa-file-o"> Get Verified</i>
+                                                                 </button>
+                                                                 <div *ngIf="documentMeta['verificationStatus'] || documentMeta['documentStatus']!='Denied'" class="progress-bar"></div>
+                                                                 <div *ngIf="!documentMeta['verificationStatus'] || documentMeta['documentStatus']=='Denied'" class="progress-barr"></div>
+                                                               </span>
+                                                             
+                                                             </td>
+                                                             <td style="width:10%" class="v-align-middle">
+                                                                 <span *ngIf="documentMeta['kycUserDocument']">
+                                                                   <button 
+                                                                           class="btn btn-default kyc-enabled-btn" 
+                                                                           (click)="viewUploadedUserDocumentImage(documentTypeLoopIndex, documentMetaLoopIndex)">
+                                                                           <i class="fa fa-eye"> View</i>
+                                                                   </button>
+                                                                 </span>
+                                                                 <span *ngIf="!documentMeta['kycUserDocument']">
+                                                                   <button 
+                                                                         class="btn btn-default kyc-enabled-btn"
+                                                                         disabled>
+                                                                         <i class="fa fa-eye-slash">View</i>   
+                                                                   </button>                                                     
+                                                                 </span>
+                                                               </td>
+                                                           </tr>
+                                                         </tbody>
+                                                       </table>
+                                                     </div>
+                                                     </div>
+                                                  </div>
+                                               </div>
+                                            </td>
+                                         </tr>
+                                      </tbody>
+                                   </table>
+                              
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div> 
+
+       <!-- white label wallet -->
+       <div id="whiteListedWallet" class="tab-pane fade kyc_section">
+          <div class="card-block">
+              <form class="" role="form">
+                <div class="row">
+                  <div class="col-md-5  col-sm-6 col-xs-12">
+                    <div class="form-group form-group-default required">
+                        <input 
+                              type="email" 
+                              class="form-control" 
+                              placeholder="" 
+                              required
+                        />
+                    </div>
+                  </div>
+              
+                  <div class="col-md-7  col-sm-6 col-xs-12 text-right">
+                    <div class="form-group ">
+                      <!-- <a class="btn btn-default changepassword-btn" (click)="openUserWhiteListedWalletModal()">Add</a> -->
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div>
+                <data-table
+                  headerTitle="White Listed Wallet(s)"
+                  [items]="userWhiteLabelData"
+                  [itemCount]="noOfWallets"
+                  (reload)="reloadWallets($event)"
+                  [limit]="noOfWalletsPerPage"
+                  [indexColumnHeader]="'#'"
+                  >
+                  <data-table-column
+                    [property]="'walletName'"
+                    [header]="'CURRENCY NAME'"
+                    [sortable]="true">
+                  </data-table-column>
+                  <data-table-column
+                    [property]="'walletSymbol'"
+                    [header]="'CURRENCY SYMBOL'"
+                    [sortable]="true">
+                  </data-table-column>
+                  <data-table-column
+                    [property]="'address'"
+                    [header]="'WALLET ADDRESS'"
+                    [sortable]="true">
+                  </data-table-column>
+                  <!-- <data-table-column
+                    [header]="'ACTION'"
+                    [sortable]="true"
+                    [cellColors]="cellColor">
+                    <ng-template #dataTableCell let-userWallet="item">
+                      <i class="fa fa-edit" (click)="editUserWhiteWalletById(userWallet)"></i>
+                    </ng-template>
+                  </data-table-column> -->
+                </data-table>
+            </div>  
+      </div> 
+<!-- white label wallet -->
+<!--========================== PAY SLIP Section starts=========================================================-->
+<div id="certifcate" class="tab-pane fade kyc_section">
+    <div class="col-md-3 no-padding country-li">
+        <ul class="nav nav-tabs" *ngFor="let dapp of dappNames;let dappNamesLoopIndex=index;">
+          <li *ngIf="!dappNames[dappNamesLoopIndex]['active']" [ngClass]="{'inactive':!dappNames[dappNamesLoopIndex]['active']}"><a data-toggle="tab" href="#dapname" (click)="getPayslips(dapp['dappid'],limit,0,dappNamesLoopIndex, false)">{{dapp['company']}}</a></li>
+          <li *ngIf="dappNames[dappNamesLoopIndex]['active']" [ngClass]="{'active':dappNames[dappNamesLoopIndex]['active']}"><a data-toggle="tab" href="#dapname" (click)="getPayslips(dapp['dappid'],limit,0,dappNamesLoopIndex, false)">{{dapp['company']}}</a></li>                            
+        </ul>
+      </div>
+  <div class="col-md-9 kyc_content_section">
+       <div class="tab-content"> 
+    <!-- <div class="card-block"> -->
+      <form class="" role="form">
+        <div class="row">
+          <div class="col-md-12  col-sm-12 col-xs-12 text-right">
+            <div *ngIf="paySlipData" class="form-group form-group-default required">
+                
+               <!-- <a class="btn btn-default changepassword-btn" (click)="openShareAssetModal()" [attr.disabled]="noneselected1()">Share Assets</a><button [disabled]="noneselected1()">OK</button> -->
+               <button class="btn btn-default changepassword-btn" (click)="openShareAssetModal()" [disabled]="noneselected1()">Share Assets</button>
+              </div>
+          </div>
+      
+          <div class="col-md-12  col-sm-12 col-xs-12 text-right">
+            <div class="form-group ">
+              <!-- <a class="btn btn-default changepassword-btn" (click)="ShareAssetWalletModal()">Share Assets</a> -->
+            </div>
+          </div>
+        </div>
+      </form>
+      
+    </div>
+    <div>
+        <data-table
+          headerTitle="List of Payslip(s)"
+          [items]="userPaySlipArrData"
+          [itemCount]="noOfPayslips"
+          (reload)="reloadPayslips($event)"
+          [limit]="noOfPayslipsPerPage"
+          [indexColumnHeader]="'#'"
+          >
+          <data-table-column
+            [property]="'id'"
+            [header]="'Id'"
+            [sortable]="true"
+            width="25%">
+          </data-table-column>
+          <data-table-column
+            [property]="'transactionid'"
+            [header]="'Transaction ID'"
+            [sortable]="false"
+            width="25%">
+          </data-table-column>
+          <data-table-column
+            [property]="'month'"
+            [header]="'Month'"
+            [sortable]="false"
+            width="20%">
+          </data-table-column>
+          <data-table-column
+          [property]="'year'"
+          [header]="'Year'"
+          [sortable]="false"
+          width="20%">
+        </data-table-column>
+          <data-table-column
+            [header]="'ACTION'"
+            [sortable]="false"
+            [cellColors]="cellColor"
+            width="10%">
+            <ng-template #dataTableCell let-userPayslip="item">
+              <i class="fa fa-edit" (click)="viewPayslipById(userPayslip)"></i>
+            </ng-template>
+          </data-table-column>
+          <data-table-column
+          [header]="'Share'"  
+          [sortable]="false"       
+          [cellColors]="cellColor"
+          width="10%">
+          <ng-template #dataTableCell let-userPayslip="item">
+            <!-- <i class="fa fa-edit" (click)="viewPayslipById(userPayslip)"></i> -->
+            <input type="checkbox" [checked]="allRowsSelected" [(ngModel)]="userPayslip.isShareChecked" (change)="selectAsset(userPayslip)"/>
+          </ng-template>
+        </data-table-column>
+        </data-table>
+    </div>  
+    <!-- </div> -->
+  </div>
+</div> 
+<!--========================== PAY SLIP Section ends=========================================================-->
+      <!-- ========================================Wallet Section=========================== -->
+      <div id="wallet" class="tab-pane fade kyc_section in active">
+          <div class="col-md-3 no-padding">
+             <ul *ngFor="let countryWallets of countriesWallets; let countryIndex=index;" class="nav nav-tabs" data-toggle="tab">
+                <li *ngIf="countriesWallets[countryIndex]['active']" [ngClass]="{'active':countriesWallets[countryIndex]['active']}"><a data-toggle="tab" href="#countryWallet" (click)="readCountryByIndex(countryIndex)">{{countryWallets['countryName']}}</a></li>
+                <li *ngIf="!countriesWallets[countryIndex]['active']" [ngClass]="{'inactive':!countriesWallets[countryIndex]['active']}"><a data-toggle="tab" href="#countryWallet" (click)="readCountryByIndex(countryIndex)">{{countryWallets['countryName']}}</a></li>                
+             </ul>
+          </div>
+          <div class="col-md-9 kyc_content_section kyc_wallet_sec">
+             <div class="tab-content">
+                <div id="countryWallet" class="tab-pane fade in active">
+                    <div class="col-md-12 no-padding kyc_doc_table wallet-actions-margin-top">
+                    <div class="col-md-1 no-padding">
+                      <h4>WALLET:</h4>   
+                    </div>
+                    <div class="col-md-5 no-padding">
+                      <select 
+                              class="form-control wallet_select" 
+                              name="walletId" 
+                              [(ngModel)]="selectedCountryWallet['address']"  
+                              data-init-plugin="select2"
+                              #wallet="ngModel" 
+                              (change)="loginInSelectedCountryWallet()"
+                              required>
+                              <option disabled [ngValue]="undefined">Please Login In Your Wallet</option>
+                              <option [ngValue]="countryWallet['address']" *ngFor="let countryWallet of countryWallets">{{countryWallet['address']}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-offset-1 col-md-3 no-padding">
+                      <button *ngIf="userCountryLoggedInWallet['secondSecret']" class="button_position" [ngClass]="{'wallet_btn_disabled':userCountryLoggedInWallet['secondSecret']}" [disabled]="userCountryLoggedInWallet['secondSecret']" (click)="openSecondSecretModal()"><span>Create Second Secret <i class="fa fa-file" ></i></span></button>                                         
+                      <button *ngIf="!userCountryLoggedInWallet['secondSecret']" class="button_position" [ngClass]="{'wallet_btn_enabled':!userCountryLoggedInWallet['secondSecret']}" (click)="openSecondSecretModal()"><span>Create Second Secret <i class="fa fa-file" ></i></span></button>                                                               
+                    </div>
+                    <div class="col-md-2 no-padding kyc_doc_table">
+                      <button class="wallet_btn_enabled" (click)="reloadUserWallet()"><span>Refresh <i class="fa fa-refresh"></i></span></button>
+                    </div>
+                  </div>
+                  <div class="col-md-12 no-padding kyc_doc_table wallet-actions-margin-top">
+                    <div class="col-md-8 no-padding">
+                      <div class="row">
+                        <h4 class="col-md-2">ADDRESS:</h4>
+                        <h2 class="col-md-10 text_complete wallet">{{selectedCountryWallet['address'] || 'N/A'}}</h2>
+                      </div>
+                    </div>
+                    <div class="col-md-offset-1 col-md-3 no-padding">
+                      <div class="row">
+                        <h4 class="col-md-5">BALANCE:</h4>
+                        <h2 class="col-md-7 text_complete wallet">{{userWallet['balance'] || '0'}} BEL</h2>
+                      </div>
+                    </div>
+                   </div>
+                   <div class="col-md-12 no-padding wallet-actions-margin-top">
+                      <div class="col-md-12 no-padding">
+                        <button class="wallet_btn_enabled" (click)="createWalletByCountry()"><span>New Wallet <i class="fa fa-plus" ></i></span></button>
+                        <button *ngIf="userRoleName!='verifier'" class="wallet_btn_enabled" (click)="openUserWhiteListedWalletModal()"><span>White List Wallet <i class="fa fa-plus" ></i></span></button>                        
+                        <button class="wallet_btn_enabled" (click)="openWalletAddressModal()"><span>Receive <i class="fa fa-qrcode" ></i></span></button>
+                        <button class="wallet_btn_enabled" (click)="openSendTransactionModal()"><span>Send <i class="fa fa-paper-plane" ></i></span></button>                      
+                        <button [ngClass]="{'wallet_btn_disabled':userCountryLoggedInWallet['delegateStatus']=='CONFIRMED', 'wallet_btn_enabled':userCountryLoggedInWallet['delegateStatus']!='CONFIRMED'}" [disabled]="userCountryLoggedInWallet['delegateStatus']=='CONFIRMED'" (click)="openBecomeDelegateModal()"><span>Become Delegate <i class="fa fa-users"></i></span></button>                      
+                        <button class="wallet_btn_enabled" (click)="openVoteCastingModal()"><span>Cast Vote <i class="fa fa-plus"></i></span></button>
+                       <button class="wallet_btn_enabled" (click)="openVoteRevokingModal()"><span class="remove_vote9+">Revoke Vote <i class="fa fa-times"></i></span></button>    
+                       <!-- <button [ngClass]="{'wallet_btn_disabled':!isLoggedIn, 'wallet_btn_enabled':isLoggedIn}" [disabled]="!isLoggedIn" (click)="openEnableWalletKYCModal()"><span>Wallet KYC <i class="fa fa-share-square" ></i></span></button>                                                                       -->
+                     </div>
+                  </div>
+                  
+                  <div class="col-md-12 no-padding data-table-margin-top">
+                    <div class="col-lg-12 col-sm-12 no-padding">
+                        <div class="card-transparent">
+                          <div class="vote-header ">
+                              <div class="tools">
+                                <a class="collapse" href="javascript:;"></a>
+                                <a class="config" data-toggle="modal" href="#grid-config"></a>
+                                <a class="reload" href="javascript:;"></a>
+                                <a class="remove" href="javascript:;"></a>
+                              </div>
+                          </div>
+                          <div class="card-block">
+                              <div style="margin: auto; max-width: 1000px">
+                                <data-table
+                                    headerTitle="Top Delegate(s)"
+                                    [items]="delegates"
+                                    [itemCount]="countDelegates"
+                                    (reload)="reloadDelegates($event)"
+                                    [limit]="limitDelegates"
+                                    [indexColumnHeader]="'#'"
+                                    >
+                                    <data-table-column
+                                        [property]="'username'"
+                                        [header]="'Delegate'"
+                                        [sortable]="true">
+                                    </data-table-column>
+                                    <data-table-column
+                                        [property]="'rate'"
+                                        [header]="'Rank'"
+                                        [sortable]="true">
+                                    </data-table-column>
+                                    <data-table-column
+                                        [property]="'address'"
+                                        [header]="'Address'"
+                                        [sortable]="true"
+                                        [cellColors]="cellColor">
+                                    </data-table-column>
+                                    <data-table-column
+                                        [property]="'balance'"
+                                        [header]="'Balance'"
+                                        [sortable]="true"
+                                        [cellColors]="cellColor">
+                                    </data-table-column>
+                                    <data-table-column *ngIf="userCountryLoggedInWallet['address']"
+                                        [property]="'isVoted'"
+                                        [header]="'Voting Status'"
+                                        [sortable]="true"
+                                        [cellColors]="cellColor">
+                                        <ng-template #dataTableCell let-delegate="item">
+                                            <i *ngIf="delegate['isVoted']" class="fa fa-close" style="font-size:20px;color:red"></i>
+                                            <i *ngIf="!delegate['isVoted']" class="fa fa-check" style="font-size:20px;color:green"></i>
+                                        </ng-template>
+                                    </data-table-column>
+                                    <data-table-column *ngIf="userCountryLoggedInWallet['address']"
+                                        [property]="'status'"
+                                        [header]="'Cast Vote'"
+                                        [sortable]="true"
+                                        [cellColors]="cellColor">
+                                        <ng-template #dataTableCell let-delegate="item">
+                                            <input [disabled]="delegate['isVoted']" type="checkbox" #delegateStatus="ngModel" [(ngModel)] ="delegate['status']" (change)="readVoteCastingDelegatePublicKey(delegate, delegateStatus)" required/>
+                                        </ng-template>
+                                    </data-table-column>
+                                </data-table>
+                              </div>
+                              <span *ngIf="!countDelegates">  No Delegate exists.</span>                              
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-12 no-padding data-table-margin-top">
+                    <div class="col-lg-12 col-sm-12 no-padding">
+                        <div class="card-transparent">
+                          <div class="vote-header ">
+                              <div class="tools">
+                                <a class="collapse" href="javascript:;"></a>
+                                <a class="config" data-toggle="modal" href="#grid-config"></a>
+                                <a class="reload" href="javascript:;"></a>
+                                <a class="remove" href="javascript:;"></a>
+                              </div>
+                          </div>
+                          <div class="card-block">
+                              <div style="margin: auto; max-width: 1000px">
+                                  <data-table
+                                      headerTitle="Stand By Delegate(s)"
+                                      [items]="standByDelegates"
+                                      [itemCount]="countStandByDelegates"
+                                      (reload)="reloadStandByDelegates($event)"
+                                      [limit]="limitStandByDelegates"
+                                      [indexColumnHeader]="'#'"
+                                      >
+                                      <data-table-column
+                                          [property]="'username'"
+                                          [header]="'Delegate'"
+                                          [sortable]="true">
+                                      </data-table-column>
+                                      <data-table-column
+                                          [property]="'rate'"
+                                          [header]="'Rank'"
+                                          [sortable]="true">
+                                      </data-table-column>
+                                      <data-table-column
+                                          [property]="'address'"
+                                          [header]="'Address'"
+                                          [sortable]="true"
+                                          [cellColors]="cellColor">
+                                      </data-table-column>
+                                      <data-table-column
+                                          [property]="'balance'"
+                                          [header]="'Balance'"
+                                          [sortable]="true"
+                                          [cellColors]="cellColor">
+                                      </data-table-column>
+                                      <data-table-column *ngIf="userCountryLoggedInWallet['address']"
+                                          [property]="'isVoted'"
+                                          [header]="'Voting Status'"
+                                          [sortable]="true"
+                                          [cellColors]="cellColor">
+                                          <ng-template #dataTableCell let-standByDelegate="item">
+                                              <i *ngIf="standByDelegate['isVoted']" class="fa fa-close" style="font-size:20px;color:red"></i>
+                                              <i *ngIf="!standByDelegate['isVoted']" class="fa fa-check" style="font-size:20px;color:green"></i>
+                                          </ng-template>
+                                      </data-table-column>
+                                      <data-table-column *ngIf="userCountryLoggedInWallet['address']"
+                                          [property]="'status'"
+                                          [header]="'Cast Vote'"
+                                          [sortable]="true"
+                                          [cellColors]="cellColor">
+                                          <ng-template #dataTableCell let-standByDelegate="item">
+                                              <input [disabled]="standByDelegate['isVoted']" type="checkbox" #standByDelegateStatus="ngModel" [(ngModel)] ="standByDelegate['status']" (change)="readVoteCastingDelegatePublicKey(standByDelegate, standByDelegateStatus)" required/>
+                                          </ng-template>
+                                      </data-table-column>
+                                  </data-table>
+                                  <span *ngIf="!countStandByDelegates">  No Stand By Delegate exists</span>                                
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="userCountryLoggedInWallet['address']" class="col-md-12 no-padding data-table-margin-top">
+                    <div class="col-lg-12 col-sm-12 no-padding">
+                        <div class="card-transparent">
+                          <div class="vote-header ">
+                              <div class="tools">
+                                <a class="collapse" href="javascript:;"></a>
+                                <a class="config" data-toggle="modal" href="#grid-config"></a>
+                              </div>
+                          </div>
+                          <div class="card-block">
+                            <h4>My Vote(s)</h4>
+                            <p-dataTable [value]="votes" [globalFilter]="search" [rows]="limitCastedVotes" [paginator]="true" [responsive]="true">
+                                <p-column field="address" header="Address" [sortable]="true">
+                                </p-column>
+                                <p-column field="rate" header="Rank" [sortable]="true">
+                                </p-column>
+                                <p-column field="username" header="Delegate" [sortable]="true">
+                                </p-column>
+                                <p-column field="status" header="Revoke Vote" [sortable]="true">
+                                  <ng-template pTemplate="body" let-vote="rowData">
+                                    <input type="checkbox" #voteRevokingDelegateStatus="ngModel" [(ngModel)] ="vote['status']" class="verfied" (change)="readVoteRevokingDelegatePublicKey(vote, voteRevokingDelegateStatus)" required/>
+                                  </ng-template>
+                                </p-column>
+                              </p-dataTable>    
+                          </div>
+                    </div>
+                  </div>
+                  <div *ngIf="userCountryLoggedInWallet['delegateStatus']=='CONFIRMED'" class="col-md-12 no-padding data-table-margin-top">
+                      <div class="col-lg-12 col-sm-12 no-padding">
+                        <div class="card-transparent">
+                            <div class="vote-header ">
+                              <div class="tools">
+                                  <a class="collapse" href="javascript:;"></a>
+                                  <a class="config" data-toggle="modal" href="#grid-config"></a>
+                                  <a class="reload" href="javascript:;"></a>
+                                  <a class="remove" href="javascript:;"></a>
+                              </div>
+                            </div>
+                            <div class="card-block">
+                              <div style="margin: auto; max-width: 1000px">
+                                  <h4> My Voter(s)</h4>
+                                  <p-dataTable [value]="voters" [globalFilter]="search" [rows]="limitReceivedVotes" [paginator]="true" [responsive]="true">
+                                      <p-column field="address" header="Address" [sortable]="true">
+                                      </p-column>
+                                      <p-column field="rate" header="Rank" [sortable]="true">
+                                      </p-column>
+                                      <p-column field="username" header="Voter" [sortable]="true">
+                                      </p-column>
+                                  </p-dataTable> 
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
+                  <div *ngIf="userCountryLoggedInWallet['address']" class="col-md-12 no-padding data-table-margin-top">
+                    <div class="col-lg-12 col-sm-12 no-padding">
+                        <div class="card-transparent">
+                          <div class="vote-header ">
+                              <div class="tools">
+                                <a class="collapse" href="javascript:;"></a>
+                                <a class="config" data-toggle="modal" href="#grid-config"></a>
+                                <a class="reload" href="javascript:;"></a>
+                                <a class="remove" href="javascript:;"></a>
+                              </div>
+                          </div>
+                          <div class="card-block">
+                              <div style="margin: auto; max-width: 1000px">
+                                  <data-table
+                                      headerTitle="My Transaction(s)"
+                                      [items]="transactions"
+                                      [itemCount]="countTransactions"
+                                      (reload)="reloadTransactions($event)"
+                                      [limit]="limitTransactions"
+                                      [indexColumnHeader]="'#'"
+                                      >
+                                      <data-table-column
+                                          [property]="'date'"
+                                          [header]="'Date'"
+                                          [sortable]="true">
+                                      </data-table-column>
+                                      <data-table-column
+                                          [property]="'id'"
+                                          [header]="'Transaction Id'"
+                                          [sortable]="true">
+                                      </data-table-column>
+                                      <data-table-column
+                                          [property]="'senderId'"
+                                          [header]="'Sender'"
+                                          [sortable]="true">
+                                      </data-table-column>
+                                      <data-table-column
+                                          [property]="'recipientId'"
+                                          [header]="'Recipient'"
+                                          [sortable]="true">
+                                      </data-table-column>
+                                      <data-table-column
+                                          [property]="'blockId'"
+                                          [header]="'Block'"
+                                          [sortable]="true">
+                                      </data-table-column>
+                                      <data-table-column
+                                          [property]="'type'"
+                                          [header]="'Type'"
+                                          [sortable]="true"
+                                          [cellColors]="cellColor">
+                                      </data-table-column>
+                                      <data-table-column
+                                          [property]="'fee'"
+                                          [header]="'Fee'"
+                                          [sortable]="true"
+                                          [cellColors]="cellColor">
+                                      </data-table-column>
+                                      <data-table-column
+                                          [property]="'amount'"
+                                          [header]="'Amount'"
+                                          [sortable]="true"
+                                          [cellColors]="cellColor">
+                                      </data-table-column>
+                                  </data-table>
+                                <span *ngIf="!countTransactions">  No Transaction exists</span>                                
+                                </div>
+                          </div>
+                        </div>
+                    </div>
+
+                   <div *ngIf="userCountryLoggedInWallet['delegateStatus']=='CONFIRMED'" class="col-md-12 no-padding data-table-margin-top">
+                    <div class="col-lg-12 col-sm-12 no-padding">
+                       <div class="card-transparent">
+                          <div class="vote-header ">
+                             <div class="tools">
+                                <a class="collapse" href="javascript:;"></a>
+                                <a class="config" data-toggle="modal" href="#grid-config"></a>
+                                <a class="reload" href="javascript:;"></a>
+                                <a class="remove" href="javascript:;"></a>
+                             </div>
+                          </div>
+                          <div class="card-block">
+                              <h4>My Blocks</h4>
+                              <div style="margin: auto; max-width: 1000px">
+                                  <p-dataTable [value]="blocks" [globalFilter]="search" [rows]="limitBlocks" [paginator]="true" [responsive]="true">
+                                      <p-column field="date" header="Date" [sortable]="true">
+                                      </p-column>
+                                      <p-column field="height" header="Height" [sortable]="true">
+                                      </p-column>
+                                      <p-column field="id" header="Block Id" [sortable]="true">
+                                      </p-column>
+                                      <p-column field="numberOfTransactions" header="# Transactions" [sortable]="true">
+                                      </p-column>
+                                      <p-column field="totalAmount" header="Amount" [sortable]="true">
+                                      </p-column>
+                                      <p-column field="totalFee" header="Fee" [sortable]="true">
+                                      </p-column>
+                                      <p-column field="reward" header="Reward" [sortable]="true">
+                                      </p-column>
+                                  </p-dataTable> 
+                                </div>
+                          </div>
+                       </div>
+                    </div>
+                </div>
+             </div>
+          </div>
+       </div>
+      </div>
+ </div>
+
+<app-dialog [(visible)]="socialMediaModal">
+  <div class="popup_dialouge poup_edit">
+    <h5>ADD <span class="semi-bold">SOCIAL MEDIA URLs</span><button (click)="closeSocialMediaModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <form role="form" #socialMediaForm="ngForm">
+      <div class="form-group-attached">
+          <div class="row">
+              <div style="overflow-y: auto; max-height: 250px" class="col-md-12 user_doc_form">
+                <div *ngIf="registeredSocialServices && !registeredSocialServices.length">Please contact admin to add social media</div>
+                <div class="form-group form-group-default" *ngFor="let registeredSocialService of registeredSocialServices;let registeredSocialServiceIndex=index">
+                    <label><img [src]="registeredSocialServices[registeredSocialServiceIndex]['url']" style="width:20px;height:20px;border-radius:50%;display:-webkit-inline-flex" class="img-responsive"/> {{registeredSocialServices[registeredSocialServiceIndex]['profileName']}} Public URL:</label>
+                    <input 
+                          type="text" 
+                          class="form-control"
+                          name="publicURL{{registeredSocialServiceIndex}}"
+                          [value]="registeredSocialServices[registeredSocialServiceIndex]['publicUrl']"
+                          [(ngModel)]="registeredSocialServices[registeredSocialServiceIndex]['publicUrl']"  
+                    />
+                </div>
+            </div>  
+            <div class="col-md-12 user_doc_form">
+                <button [disabled]="socialMediaForm.invalid || registeredSocialServices && !registeredSocialServices.length" type="button" class="btn btn-primary changepassword-btn url" (click)="saveAndUpdateSocialMediaPublicURLs()">Submit</button>
+            </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</app-dialog>
+
+<app-dialog [(visible)]="documentUploadModal">
+  <div class="popup_dialouge poup_edit">
+    <h5>UPLOAD <span class="semi-bold">DOCUMENT</span><button (click)="closeDocumentUploadModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <form role="form" #documentForm="ngForm">
+      <div class="form-group-attached">
+        <div *ngFor='let field of formFields'>
+          <label [for]='field.label'>{{field.label}}</label>:
+          <input *ngIf="field.jspattern!='NA'" class="form-control" [type]='field.type' [name]='field.name' [pattern]="field.jspattern" [(ngModel)]='field.value' [required]="field.required"/>           
+          <input *ngIf="field.jspattern=='NA'" class="form-control" [type]='field.type' [name]='field.name' [(ngModel)]='field.value' [required]="field.required"/> 
+          <div *ngIf="fieldsDefaultErrors[field.name]" class="error">
+                <div>{{field.label}} is required</div>
+          </div>
+          <div *ngIf="fieldsInValidDataErrors[field.name]" class="error">
+                <div>{{field.validationErrorMessage}}</div>
+          </div>
+          <div *ngIf="fieldsMinLengthErrors[field.name]" class="error">
+                <div>Min Length {{field.minlength}} is required</div>
+          </div>
+          <div *ngIf="fieldsMaxLengthErrors[field.name]" class="error">
+                <div>Length is greater than Max Length {{field.maxlength}}. Press Back Button</div>
+          </div>
+        </div>
+        <div>
+          <label>Document Image</label>:
+          <input 
+                type="file"
+                accept="image/*" 
+                name="myfile" 
+                (change)="uploadDocumentImage($event)"
+                required
+                #documentImage                
+          />
+        </div>
+        <div class="form-group text-right popup_padding">
+            <button type="submit" [disabled]="documentForm.invalid || !documentImageUploaded" class="btn btn-default changepassword-btn" (click)="saveAndUpdateUserDocument()">Upload</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</app-dialog>
+
+<app-dialog [(visible)]="viewRequestedDocumentImageModal">
+  <div class="popup_dialouge poup_edit">
+    <h5>View <span class="semi-bold">Uploaded Document</span><button (click)="closeViewRequestedDocumentImageModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <form role="form" #roleForm="ngForm">
+      <div class="form-group-attached">
+          <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <div class="form-group form-group-default">
+                    <img *ngIf="requestedDocumentImage" width="310px" height="350px" [src]="requestedDocumentImage"/>
+                </div>
+              </div>
+          </div> 
+          <div class="row">
+            <div class="col-md-12">
+                <button style="float: right" type="button" class="btn btn-primary changepassword-btn" (click)="closeViewRequestedDocumentImageModal()">OK</button>
+            </div>
+          </div> 
+      </div>
+    </form>
+  </div>
+</app-dialog>
+
+<app-dialog [(visible)]="userCountryModal">
+  <div class="popup_dialouge poup_edit">
+    <h5>ADD <span class="semi-bold">USER COUNTRY</span><button (click)="closeAddCountryModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <form role="form" #userDocumentForm="ngForm">
+      <div class="form-group-attached">
+        <div class="row">
+          <div class="col-md-12 user_doc_form">
+            <div class="form-group form-group-default form-group-default-select2 required">
+              <label class="">Country Name</label>
+              <select 
+                      class="form-control" 
+                      name="countryID" 
+                      [(ngModel)]="userCountry['countryCode']" 
+                      data-placeholder="Select Country" 
+                      data-init-plugin="select2"
+                      #country="ngModel" 
+                      required>
+                      <option disabled [ngValue]="undefined">Select Country</option>
+                      <option [ngValue]="country['countryCode']" *ngFor="let country of countries">{{country['countryName']}}[{{country['countryCode']}}]</option>
+              </select>
+              <div *ngIf="country.errors && (country.touched)" class="error">
+                <div [hidden]="!country.errors.required">
+                    Country is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <button type="button" [disabled]="userDocumentForm.invalid" class="btn btn-primary changepassword-btn" (click)="saveAndUpdateUserCountry()">Submit</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</app-dialog>
+
+<app-dialog [(visible)]="walletLoginModal">
+    <div class="popup_dialouge">
+      <div class="security_warning_logo">
+          <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeWalletLoginModal()" aria-label="Close" class="dialog__close-btn">X</button>
+      </div>
+      <div class="">
+          <div class="security_warning text-center popup_padding">
+            <p>Please Enter Your Passphrase For Wallet</p>
+            <h4><b>{{selectedCountryWallet['address']}}</b></h4>
+          </div>
+          <div class="">
+            <form class="" role="form" #secretForm="ngForm">
+                <div class="form-group form-group-default popup_padding delegate_pad">
+                  <label>Passphrase:</label>
+                  <input 
+                          type="text" 
+                          class="form-control" 
+                          name="secret"
+                          #secret="ngModel"
+                          [(ngModel)]="walletLoginData['secret']"
+                          placeholder="Your Passphrase" 
+                          required
+                  />
+                  <div *ngIf="(secret.errors && (secret.dirty || secret.touched))">
+                      <div [hidden]="!secret.errors.required" class="error">
+                            Passphrase is required.
+                      </div>
+                  </div>
+                </div>
+                <div class="form-group text-right popup_padding">
+                  <button type="submit" [disabled]="secretForm.invalid" class="btn btn-default login-btn" (click)="loginUserWallet()">Wallet Sign In</button>
+                </div>
+            </form>
+          </div>
+      </div>
+    </div>
+</app-dialog>
+<app-dialog [(visible)]="receiveAddressModal">
+  <div class="popup_dialouge">
+    <div class="security_warning_logo">
+        <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeQRCodeModal()" aria-label="Close" class="dialog__close-btn">X</button>
+    </div>
+    <div class="">
+        <div class="security_warning text-center popup_padding">
+          <h5 class="qr_code_heading"><u>Address</u></h5>
+          <h4 class="wallet_address"><b>{{selectedCountryWallet['address'] || 'N/A'}}</b><clipboard-component [content]="selectedCountryWallet['address']" [faIcon]="true" [text]="'Copy'"></clipboard-component></h4>                
+          <h5 class="qr_code_heading"><u>Scan QR-Code</u></h5>
+          <qr-code [value]="selectedCountryWallet['address'] || 'N/A'" [size]="150"></qr-code>              
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-9 col-md-2">
+          <button style="float: right" type="button" class="btn btn-primary changepassword-btn qr-code" (click)="closeQRCodeModal()">OK</button>
+        </div>
+      </div> 
+  </div>
+</app-dialog>
+
+<app-dialog [(visible)]="sendTransaction">
+  <div class="popup_dialouge">
+    <div class="security_warning_logo">
+        <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeSendTransactionModal()" aria-label="Close" class="dialog__close-btn">X</button>
+    </div>
+    <div class="">
+        <div class="security_warning text-center popup_padding">
+          <h5>Send Belrium</h5>
+          <h4><b>{{selectedWalletAddress}}</b></h4>                
+          <p>Please enter the Recipient Address and Belrium Amount that you would like send below.</p>
+          <p class="fee_shift"><span><b>Fee: {{transactionFee}} BEL</b></span></p>                
+        </div>
+        <div class="">
+          <form class="" role="form" class="send-amount" #sendTransactionForm="ngForm">
+            <div class="send-transaction">
+              <div *ngIf="userCountryLoggedInWallet['secondSecret']" class="form-group form-group-default popup_padding delegate_pad">
+                <label>Second Passphrase:</label>  
+                <input 
+                          type="text" 
+                          class="form-control" 
+                          name="secondSecret"
+                          #secondSecret="ngModel"
+                          [(ngModel)]="receipientCredentials['secondSecret']"
+                          placeholder="Your Second Passphrase" 
+                          required
+                  />
+                  <div *ngIf="(secondSecret.errors && (secondSecret.dirty || secondSecret.touched))">
+                      <div [hidden]="!secondSecret.errors.required" class="error">
+                          Second Passphrase is required.
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group form-group-default popup_padding delegate_pad">
+                <label>Recipient Address:</label>
+                <input 
+                      type="text" 
+                      class="form-control" 
+                      name="recipientId"
+                      #recipientId="ngModel"
+                      [(ngModel)]="receipientCredentials['recipientId']"
+                      placeholder="Recipient Address" 
+                      (change)="readRecipientWalletAddress()"
+                      required
+                />
+                <div *ngIf="(recipientId.errors && (recipientId.dirty || recipientId.touched))">
+                  <div [hidden]="!recipientId.errors.required" class="error">
+                    Recipient address is required.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group form-group-default popup_padding delegate_pad">
+                <label>Recipient Country:</label>
+                <select 
+                      class="form-control" 
+                      name="country" 
+                      [(ngModel)]="receipientCredentials['recipientCountryCode']" 
+                      data-placeholder="Select Country" 
+                      data-init-plugin="select2"
+                      #country="ngModel" 
+                      disabled
+                      required>
+                      <option disabled [ngValue]="undefined">Select Recipient Country</option>
+                      <option [ngValue]="country['countryCode']" *ngFor="let country of recepientCountries">{{country['countryName']}}</option>
+                </select>
+                <div *ngIf="country.invalid && (country.dirty || country.touched)" class="error">
+                  <div *ngIf="country.errors.required">
+                      Country is required.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group form-group-default popup_padding delegate_pad">
+                <label>Transfer Amount(BEL):</label>
+                <input 
+                      type="text" 
+                      class="form-control" 
+                      name="amount"
+                      #amount="ngModel"
+                      [(ngModel)]="receipientCredentials['amount']"
+                      placeholder="Amount" 
+                      pattern="^\d+(\.\d{1,2})?$"
+                      required
+                />
+                <div *ngIf="(amount.errors && (amount.dirty || amount.touched))">
+                  <div [hidden]="!amount.errors.required" class="error">
+                    Amount is required.
+                  </div>
+                  <div [hidden]="!amount.errors.pattern" class="error">
+                      Integers are allowed.
+                  </div>
+              </div>
+              </div>
+              <div class="form-group text-right popup_padding">
+                <button type="submit" [disabled]="sendTransactionForm.invalid" class="btn btn-default changepassword-btn vote" (click)="readWalletTransaction()">Send</button>
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+  </div>
+</app-dialog>
+
+<app-dialog [(visible)]="becomeDelegateModal">
+  <div class="popup_dialouge">
+    <div class="security_warning_logo">
+        <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeBecomeDelegateModal()" aria-label="Close" class="dialog__close-btn">X</button>
+    </div>
+    <div class="">
+        <div class="security_warning text-center popup_padding">
+          <h5>Register as a Delegate</h5>
+          <h4><b>{{selectedWalletAddress}}</b></h4>                
+          <p>Please choose a delegate name.</p>
+          <p class="fee_shift"><span>Fee: {{delegateFee}} BEL</span></p>
+        </div>
+        <div class="">
+          <form class="" role="form" #becomeDelegateForm="ngForm" >
+              <div *ngIf="userCountryLoggedInWallet['secondSecret']" class="form-group form-group-default popup_padding delegate_pad">
+                  <label>Second Passphrase:</label>
+                  <input 
+                          type="text" 
+                          class="form-control" 
+                          name="secondSecret"
+                          #secondSecret="ngModel"
+                          [(ngModel)]="delegateCredentials['secondSecret']"
+                          placeholder="Your Second Passphrase" 
+                          required
+                  />
+                  <div *ngIf="(secondSecret.errors && (secondSecret.dirty || secondSecret.touched))">
+                      <div [hidden]="!secondSecret.errors.required" class="error">
+                          Second Passphrase is required.
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group form-group-default popup_padding delegate_pad">
+                <input type="text" 
+                    class="form-control"
+                    placeholder="Delegate Name" 
+                    name="delegate"
+                    minlength="2"
+                    maxlength="100"
+                    #delegate="ngModel"
+                    [(ngModel)]="delegateCredentials['username']"
+                    pattern="[a-zA-Z]+([\s][a-zA-Z]+)*"
+                    required
+                  />
+                  <div *ngIf="(delegate.errors && (delegate.dirty || delegate.touched))">
+                    <div [hidden]="!delegate.errors.required" class="error">
+                      Delegate name is required.
+                    </div>
+                    <div *ngIf="delegate.errors.minlength && !delegate.errors.required" class="error"> Delegate name should be atleast 2 character long.</div>
+                    <div *ngIf="delegate.errors.pattern && !delegate.errors.minlength" class="error">Only alphabets or single space is allowed.</div>
+                </div>
+              </div>
+              <div class="form-group security_warning_last popup_padding">
+                <p>Becoming a delegate requires registration. You may choose your own delegate name, which can be used to promote your delegate. Only the top 101 delegates are eligible to forge. All fees are shared equally between the top 101 delegates.</p>
+              </div>
+              <div class="form-group text-right popup_padding">
+                <button type="submit" [disabled]="becomeDelegateForm.invalid" class="btn btn-default changepassword-btn vote" (click)="readBecomeDelegate()">Register</button>
+              </div>
+          </form>
+        </div>
+    </div>
+  </div>
+</app-dialog>
+
+<app-dialog [(visible)]="voteCastingModal">
+  <div class="popup_dialouge">
+    <div class="security_warning_logo">
+        <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeVoteCastingModal()" aria-label="Close" class="dialog__close-btn">X</button>
+    </div>
+    <div class="">
+        <div class="security_warning text-center popup_padding">
+          <h5>Voting for delegates</h5>
+          <h4><b>{{selectedWalletAddress}}</b></h4>                
+          <p>Please confirm your selection and confirm your vote.</p>
+          <p class="fee_shift"><span><b>Fee: {{voteFee}} BEL</b></span></p>                
+          <div *ngIf="castingVotes.length>33">More than 33 votes can not be casted at a time.</div>
+        </div>
+        <div class="">
+          <form #voteCastingForm="ngForm" class="" role="form">
+              <div *ngIf="userCountryLoggedInWallet['secondSecret']" class="form-group form-group-default popup_padding delegate_pad">
+                  <label>Second Passphrase:</label>
+                  <input 
+                          type="text" 
+                          class="form-control" 
+                          name="secondSecret"
+                          #secondSecret="ngModel"
+                          [(ngModel)]="voteCredentials['secondSecret']"
+                          placeholder="Your Second Passphrase" 
+                          required
+                  />
+                  <div *ngIf="(secondSecret.errors && (secondSecret.dirty || secondSecret.touched))">
+                      <div [hidden]="!secondSecret.errors.required" class="error">
+                          Second Passphrase is required.
+                      </div>
+                  </div>
+              </div>
+              <div *ngIf="!castingVotes.length" class="cast-vote">
+                <span >Please Select Delegate to Cast Vote.</span>
+              </div>
+              <label *ngIf="castingVotes.length">Vote(s) to cast:</label>
+              <div  class="form-group form-group-default popup_padding delegate_pad votes-scroll">
+                <div *ngFor="let castingVote of castingVotes">{{castingVote['username']}}</div>
+              </div>
+              <div>
+                <span><b>Total Selection: {{castingVotes.length}}</b></span>
+              </div>
+              <div class="form-group security_warning_last popup_padding">
+                <p>You can select up to 33 delegates in one voting turn. Up to 101 delegates in total.</p>
+              </div>
+              <div class="form-group text-right popup_padding">
+                <button [disabled]="castingVotes.length>33 || !castingVotes.length || voteCastingForm.invalid" class="btn btn-default changepassword-btn vote" (click)="voteCasting()">Confirm</button>
+              </div>
+          </form>
+        </div>
+    </div>
+  </div>
+</app-dialog>
+
+<app-dialog [(visible)]="voteRevokingModal">
+  <div class="popup_dialouge">
+    <div class="security_warning_logo">
+        <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeVoteRevokingModal()" aria-label="Close" class="dialog__close-btn">X</button>
+    </div>
+    <div class="">
+        <div class="security_warning text-center popup_padding">
+          <h5>Vote Revoking from delegates</h5>
+          <h4><b>{{selectedWalletAddress}}</b></h4>                  
+          <p>Please confirm your selection and confirm your vote.</p>
+          <p class="fee_shift"><span><b>Fee: {{voteFee}} BEL</b></span></p>                  
+          <div *ngIf="revokingVotes.length>33">More than 33 votes can not be casted at a time.</div>                
+        </div>
+        <div class="">
+          <form class="" #voteRevokingForm="ngForm" role="form">
+              <div *ngIf="userCountryLoggedInWallet['secondSecret']" class="form-group form-group-default popup_padding delegate_pad">
+                  <label>Second Passphrase:</label>
+                  <input 
+                          type="text" 
+                          class="form-control" 
+                          name="secondSecret"
+                          #secondSecret="ngModel"
+                          [(ngModel)]="voteCredentials['secondSecret']"
+                          placeholder="Your Second Passphrase" 
+                          required
+                  />
+                  <div *ngIf="(secondSecret.errors && (secondSecret.dirty || secondSecret.touched))">
+                      <div [hidden]="!secondSecret.errors.required" class="error">
+                          Second Passphrase is required.
+                      </div>
+                  </div>
+              </div>
+              <div *ngIf="!revokingVotes.length" class="cast-vote">
+                <span>Please Select Delegate to Revoke Vote.</span>
+              </div>
+              <label *ngIf="revokingVotes.length">Vote(s) to revoke:</label>              
+              <div  class="form-group form-group-default popup_padding delegate_pad votes-scroll">
+                <div *ngFor="let revokingVote of revokingVotes">{{revokingVote['username']}}</div>
+              </div>
+              <div>
+                <span><b>Total Selection: </b>{{revokingVotes.length}}</span>
+              </div>
+              <div class="form-group security_warning_last popup_padding">
+                <p>You can select up to 33 delegates in one voting turn. Up to 101 delegates in total.</p>
+              </div>
+              <div class="form-group text-right popup_padding">
+                <button [disabled]="revokingVotes.length>33 || !revokingVotes.length" type="submit" class="btn btn-default changepassword-btn vote" (click)="voteRevoking()">Confirm</button>
+              </div>
+          </form>
+        </div>
+    </div>
+  </div>
+</app-dialog>
+
+<app-dialog [(visible)]="secondSecretModal"> 
+  <div class="popup_dialouge"> 
+    <div class="security_warning_logo"> 
+      <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeSecondSecretModal()" aria-label="Close" class="dialog__close-btn">X</button> 
+    </div> 
+    <div class=""> 
+      <div class="security_warning text-center popup_padding"> 
+        <h5>Generate Second Passphrase</h5> 
+        <h4><b>{{selectedWalletAddress}}</b></h4>
+        <p class="fee_shift"><span><b>Fee: {{secondSecretFee}} BEL</b></span></p>               
+      </div> 
+      <div class=""> 
+        <form class="" role="form" #secondSecretForm="ngForm" > 
+          <div class="form-group form-group-default popup_padding delegate_pad"> 
+            <label>Second Passphrase:</label>
+            <input 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="Second Passphrase" 
+                  name="secondSecret" 
+                  #secondSecret="ngModel" 
+                  [(ngModel)]="enteredSecondSecret['secondSecret']" 
+                  required 
+            /> 
+            <div *ngIf="(secondSecret.errors && (secondSecret.dirty || secondSecret.touched))"> 
+              <div [hidden]="!secondSecret.errors.required" class="error"> Second passphrase is required. 
+              </div> 
+          </div> 
+          </div> 
+          <div class="form-group text-right popup_padding"> 
+            <button type="submit" [disabled]="secondSecretForm.invalid" class="btn btn-default changepassword-btn vote" (click)="generateSecondSecret()">Generate</button> 
+          </div> 
+        </form> 
+      </div> 
+    </div> 
+  </div> 
+</app-dialog>
+
+ <app-dialog [(visible)]="documentKYCPaymentModal">
+    <div class="popup_dialouge">
+      <div class="security_warning_logo">
+        <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeDocumentKYCPaymentModal()" aria-label="Close" class="dialog__close-btn">X</button>          
+      </div>
+      <div class="security_warning text-center popup_padding"> 
+          <p class="fee_shift"><span><b>Fee: {{documentChannelData['fee']}} BEL</b></span></p>               
+      </div> 
+      <div class="">
+        <form #documentKYCPaymentForm="ngForm" class="" role="form">
+            <div class="form-group form-group-default popup_padding delegate_pad">
+              <label>Passphrase:</label>
+              <input 
+                      type="text" 
+                      class="form-control" 
+                      name="secret"
+                      #secret="ngModel"
+                      [(ngModel)]="paymentCredentials['secret']"
+                      placeholder="Your Passphrase" 
+                      required
+              />
+              <div *ngIf="(secret.errors && (secret.dirty || secret.touched))">
+                  <div [hidden]="!secret.errors.required" class="error">
+                    Passphrase is required.
+                  </div>
+              </div>
+            </div>
+            <div *ngIf="secondSecretStatus" class="form-group form-group-default popup_padding delegate_pad">
+              <label>Second Passphrase:</label>
+              <input 
+                      type="text" 
+                      class="form-control" 
+                      name="secondSecret"
+                      #secondSecret="ngModel"
+                      [(ngModel)]="paymentCredentials['secondSecret']"
+                      placeholder="Second Passphrase" 
+                      required
+              />
+              <div *ngIf="(secondSecret.errors && (secondSecret.dirty || secondSecret.touched))">
+                  <div [hidden]="!secondSecret.errors.required" class="error">
+                    Second Passphrase is required.
+                  </div>
+              </div>
+            </div>
+            <div class="form-group text-right popup_padding"> 
+              <button *ngIf="secondSecretStatus" type="submit" [disabled]="documentKYCPaymentForm.invalid" class="btn btn-default changepassword-btn vote" (click)="saveAndUpdateDocumentKYCPayment()">Submit</button> 
+              <button *ngIf="!secondSecretStatus" type="submit" [disabled]="documentKYCPaymentForm.invalid" class="btn btn-default changepassword-btn vote" (click)="checkPaymentSecondSecretBySecret()">Submit</button> 
+            </div> 
+        </form>
+      </div>
+    </div>
+</app-dialog>
+
+<app-dialog [(visible)]="documentVerificationModal"> 
+  <div class="popup_dialouge"> 
+    <div class="security_warning_logo"> 
+      <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeDocumentVerificationModal()" aria-label="Close" class="dialog__close-btn">X</button> 
+    </div> 
+    <div class="">  
+      <div class=""> 
+        <form class="" role="form" #documentVerificationForm="ngForm" > 
+          <div class="form-group form-group-default popup_padding delegate_pad">
+              <label>Passphrase:</label>
+              <input 
+                      type="text" 
+                      class="form-control" 
+                      name="secret"
+                      #secret="ngModel"
+                      [(ngModel)]="documentVerificationCredentials['secret']"
+                      placeholder="Your Passphrase" 
+                      required
+              />
+              <div *ngIf="(secret.errors && (secret.dirty || secret.touched))">
+                  <div [hidden]="!secret.errors.required" class="error">
+                    Passphrase is required.
+                  </div>
+              </div>
+          </div>
+          <div *ngIf="secondSecretStatus" class="form-group form-group-default popup_padding delegate_pad"> 
+            <label>Second Passphrase:</label>
+            <input 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="Second Passphrase" 
+                  name="secondSecret" 
+                  #secondSecret="ngModel" 
+                  [(ngModel)]="documentVerificationCredentials['secondSecret']" 
+                  required 
+            /> 
+            <div *ngIf="(secondSecret.errors && (secondSecret.dirty || secondSecret.touched))"> 
+              <div [hidden]="!secondSecret.errors.required" class="error"> Second passphrase is required. 
+            </div> 
+          </div> 
+          </div> 
+          <div class="form-group text-right popup_padding"> 
+            <button *ngIf="secondSecretStatus" type="submit" [disabled]="documentVerificationForm.invalid" class="btn btn-default changepassword-btn vote" (click)="requestDocumentVerificationByUser()">Submit</button> 
+            <button *ngIf="!secondSecretStatus" type="submit" [disabled]="documentVerificationForm.invalid" class="btn btn-default changepassword-btn vote" (click)="checkDocumentVerificationSecondSecretBySecret()">Submit</button> 
+          </div> 
+        </form> 
+      </div> 
+    </div> 
+  </div> 
+</app-dialog>
+
+<app-dialog [(visible)]="walletKYCModal"> 
+    <div class="popup_dialouge"> 
+      <div class="security_warning_logo"> 
+        <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeEnableWalletKYCModal()" aria-label="Close" class="dialog__close-btn">X</button>                  
+      </div> 
+      <div class=""> 
+        <div class="security_warning text-center popup_padding"> 
+          <h5>Enable Wallet KYC</h5> 
+          <h4><b>{{walletKYC['address']}}</b></h4>
+          <p class="fee_shift"><span><b>Fee: 5 BEL</b></span></p>               
+        </div> 
+        <div class=""> 
+          <form class="" role="form" #walletSecretForm="ngForm" > 
+            <div class="form-group form-group-default popup_padding delegate_pad"> 
+              <label>Select Wallet:</label>
+              <select 
+                      class="form-control" 
+                      name="walletAddress" 
+                      [(ngModel)]="walletKYC['address']"  
+                      data-init-plugin="select2"
+                      #walletAddress="ngModel" 
+                      required>
+                      <option disabled [ngValue]="undefined">Select Wallet</option>
+                      <option [ngValue]="kycDisabledWallet['address']" *ngFor="let kycDisabledWallet of kycDisabledWallets">{{kycDisabledWallet['address']}}</option>
+              </select>
+            </div>
+            <div class="form-group form-group-default popup_padding delegate_pad"> 
+              <label>Wallet Passphrase:</label>
+              <input 
+                    type="text" 
+                    class="form-control" 
+                    placeholder="Wallet Passphrase" 
+                    name="walletSecret" 
+                    #walletSecret="ngModel" 
+                    [(ngModel)]="walletKYC['secret']" 
+                    required 
+              /> 
+              <div *ngIf="(walletSecret.errors && (walletSecret.dirty || walletSecret.touched))"> 
+                <div [hidden]="!walletSecret.errors.required" class="error"> Wallet Passphrase is required. 
+                </div> 
+            </div> 
+            </div> 
+            <div class="form-group text-right popup_padding"> 
+              <button type="submit" [disabled]="walletSecretForm.invalid" class="btn btn-default changepassword-btn vote" (click)="saveAndUpdateWalletKYC()">Submit</button> 
+            </div> 
+          </form> 
+        </div> 
+      </div> 
+    </div> 
+</app-dialog>
+
+<app-dialog [(visible)]="userWhiteListedWalletModal">
+    <div class="popup_dialouge poup_edit">
+      <h5 *ngIf="!userListedWallet['walletId']">White Listed<span class="semi-bold"> Wallet</span><button (click)="closeUserWhiteListedWalletModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+      <h5 *ngIf="userListedWallet['walletId']">Edit White Listed<span class="semi-bold"> Wallet</span><button (click)="closeUserWhiteListedWalletModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+      <form role="form" #userWhiteListedWalletForm="ngForm">
+        <div class="form-group-attached">
+            <div class="row">
+                <div *ngIf="userListedWallet['walletId']" class="col-md-12 user_doc_form">
+                    <div class="form-group form-group-default form-group-default-select2 required">
+                        <label class="">Select Country</label>
+                        <select 
+                                class="form-control" 
+                                name="countryID" 
+                                data-placeholder="Select Country" 
+                                data-init-plugin="select2"
+                                [(ngModel)]="userListedWallet['countryCode']"
+                                #country="ngModel"
+                                disabled
+                                required>
+                                <option disabled [ngValue]="undefined">Select Country</option>
+                                <option [ngValue]="userCountry['country']['countryCode']" *ngFor="let userCountry of userCountries">{{userCountry['country']['countryName']}}[{{userCountry['country']['countryCode']}}]</option>
+                        </select>
+                        <div *ngIf="country.invalid && (country.dirty || country.touched)" class="error">
+                          <div *ngIf="country.errors.required">
+                            Country is required.
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="userListedWallet['walletId']" class="col-md-12 user_doc_form">
+                    <div class="form-group form-group-default">
+                      <label>Phasphrase</label>
+                      <input 
+                        type="text" 
+                        name="secret"
+                        #secret="ngModel"
+                        [(ngModel)]="userListedWallet['secret']"
+                        class="form-control" 
+                        placeholder="Enter Phasphrase"
+                        minlength="5"
+                        maxlength="100"
+                        pattern="[A-Za-z0-9 _.,!'/$@-]*" 
+                        required 
+                      />
+                    <div *ngIf="secret.errors && secret.dirty">
+                      <div [hidden]="secret.errors.required || secret.errors.pattern || (secret.errors.minlength && secret.errors.minlength['requiredLength']<secret.errors.minlength['actualLength'])" class="error">
+                        Phasphrase should be at least 5 characters long.
+                      </div>
+                      <div [hidden]="!secret.errors.required" class="error">
+                        Phasphrase is required.
+                      </div>
+                    </div>
+                    <div [hidden]="secret.errors || !maxLengthExceeded['secret']" class="error">
+                      Phasphrase should not exceed 100 characters.
+                    </div>
+                    <div [hidden]="(!secret.touched || secret.dirty) || (secret.value && secret.value.length)" class="error">
+                      Phasphrase is required.
+                    </div>
+                    </div>
+                </div>
+                <div class="col-md-12 user_doc_form">
+                    <div class="form-group form-group-default">
+                      <label>Cryptocurrency Name</label>
+                      <select  
+                        name="walletId" 
+                        class="form-control" 
+                        #walletCurrencyField="ngModel"
+                        [(ngModel)]="userListedWallet['walletWhiteLabelId']"
+                        required>
+                        <option disabled [ngValue]="undefined">Select Currency</option>
+                        <option *ngFor="let whiteLabelMeta of whiteLabelMetas" [ngValue]="whiteLabelMeta['walletWhiteLabelId']">{{whiteLabelMeta['walletName']}}</option>
+                      </select>
+                      <div *ngIf="walletCurrencyField.invalid && (walletCurrencyField.dirty || walletCurrencyField.touched)" class="error">
+                        <div *ngIf="walletCurrencyField.errors.required">
+                          Currency is required.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 user_doc_form">
+                    <div class="form-group form-group-default">
+                      <label>Wallet Address</label>
+                      <input 
+                        type="text" 
+                        name="walletAddress"
+                        #walletAddressField="ngModel"
+                        [(ngModel)]="userListedWallet['secondWalletAddress']"
+                        class="form-control" 
+                        placeholder="Enter Wallet Address"
+                        minlength="5"
+                        maxlength="100"
+                        pattern="[A-Za-z0-9 _.,!'/$@-]*" 
+                        required 
+                      />
+                    <div *ngIf="walletAddressField.errors && walletAddressField.dirty">
+                      <div [hidden]="walletAddressField.errors.required || walletAddressField.errors.pattern || (walletAddressField.errors.minlength && walletAddressField.errors.minlength['requiredLength']<walletAddressField.errors.minlength['actualLength'])" class="error">
+                        Wallet Address should be at least 5 characters long.
+                      </div>
+                      <div [hidden]="!walletAddressField.errors.required" class="error">
+                          Wallet Address is required.
+                      </div>
+                    </div>
+                    <div [hidden]="walletAddressField.errors || !maxLengthExceeded['walletAddressField']" class="error">
+                        Wallet Address should not exceed 100 characters.
+                    </div>
+                    <div [hidden]="(!walletAddressField.touched || walletAddressField.dirty) || (walletAddressField.value && walletAddressField.value.length)" class="error">
+                        Wallet Address is required.
+                    </div>
+                      </div>
+                  </div>
+                  <div *ngIf="userCountryLoggedInWallet['secondSecret'] && !userListedWallet['walletId']" class="col-md-12 user_doc_form">
+                    <div class="form-group form-group-default">
+                      <label>Second Phasphrase</label>
+                      <input 
+                        type="text" 
+                        name="secondSecret"
+                        #secondSecret="ngModel"
+                        [(ngModel)]="userListedWallet['secondSecret']"
+                        class="form-control" 
+                        placeholder="Enter Second Phasphrase"
+                        minlength="5"
+                        maxlength="100"
+                        pattern="[A-Za-z0-9 _.,!'/$@-]*" 
+                        required 
+                      />
+                    <div *ngIf="secondSecret.errors && secondSecret.dirty">
+                      <div [hidden]="secondSecret.errors.required || secondSecret.errors.pattern || (secondSecret.errors.minlength && secondSecret.errors.minlength['requiredLength']<secondSecret.errors.minlength['actualLength'])" class="error">
+                        Second Phasphrase should be at least 5 characters long.
+                      </div>
+                      <div [hidden]="!secondSecret.errors.required" class="error">
+                        Second Phasphrase is required.
+                      </div>
+                    </div>
+                    <div [hidden]="secondSecret.errors || !maxLengthExceeded['secondSecret']" class="error">
+                      Second Phasphrase should not exceed 100 characters.
+                    </div>
+                    <div [hidden]="(!secondSecret.touched || secondSecret.dirty) || (secondSecret.value && secondSecret.value.length)" class="error">
+                        Second Phasphrase is required.
+                    </div>
+                      </div>
+                  </div>
+              <div class="col-md-12 user_doc_form">
+                <!-- <button type="button" *ngIf="!userProfileData['secondSecretStatus']" [disabled]="userWhiteListedWalletForm.invalid" class="btn btn-primary changepassword-btn" (click)="checkSecondSecretBySecret()">Submit</button> -->
+                <button type="button" [disabled]="userWhiteListedWalletForm.invalid" class="btn btn-primary changepassword-btn" (click)="saveAndUpdateUserWhiteListedWallet()">Submit</button>
+              </div>
+            </div> 
+        </div>
+      </form>
+  </div>
+</app-dialog>
+<app-dialog [(visible)]="primaryWalletSecretModal">
+    <div class="popup_dialouge">
+      <div class="security_warning_logo">
+          <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closePrimaryWalletSecretModal()" aria-label="Close" class="dialog__close-btn">X</button>
+      </div>
+      <div class="">
+          <div class="security_warning text-center popup_padding">
+            <p>Please Enter Your Passphrase For Primary Wallet</p>
+            <h4><b>{{primaryWalletAddress}}</b></h4>
+          </div>
+          <div class="">
+            <form class="" role="form" #primaryWalletSecretForm="ngForm">
+                <div class="form-group form-group-default popup_padding delegate_pad">
+                  <label>Passphrase:</label>
+                  <input 
+                          type="text" 
+                          class="form-control" 
+                          name="secret"
+                          #secret="ngModel"
+                          [(ngModel)]="userKYC['secret']"
+                          placeholder="Your Primary Wallet's Passphrase" 
+                          required
+                  />
+                  <div *ngIf="(secret.errors && (secret.dirty || secret.touched))">
+                      <div [hidden]="!secret.errors.required" class="error">
+                            Passphrase is required.
+                      </div>
+                  </div>
+                </div>
+                <div class="form-group text-right popup_padding">
+                  <button type="submit" [disabled]="primaryWalletSecretForm.invalid" class="btn btn-default login-btn" (click)="saveAndUpdateUserKYCByCountry()">Submit</button>
+                </div>
+            </form>
+          </div>
+      </div>
+    </div>
+  </app-dialog>
+
+  <app-dialog [(visible)]="newWalletModalCreationModal"> 
+      <div class="popup_dialouge"> 
+        <div class="security_warning_logo"> 
+          <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeNewWalletCreationModal()" aria-label="Close" class="dialog__close-btn">X</button> 
+        </div> 
+        <div class=""> 
+          <div class="security_warning text-center popup_padding"> 
+            <!-- <h4><b>{{selectedWalletAddress}}</b></h4> -->
+            <!-- <p class="fee_shift"><span><b>Fee: {{secondSecretFee}} BEL</b></span></p>                -->
+          </div> 
+          <div class=""> 
+            <form class="" role="form" #userNewWalletSecondSecretForm="ngForm" > 
+              <div class="form-group form-group-default popup_padding delegate_pad"> 
+                <label>Second Passphrase:</label>
+                <input 
+                      type="text" 
+                      class="form-control" 
+                      placeholder="Second Passphrase" 
+                      name="userNewWalletSecondSecret" 
+                      #userNewWalletSecondSecret="ngModel" 
+                      [(ngModel)]="userNewWallet['secondSecret']" 
+                      required 
+                /> 
+                <div *ngIf="(userNewWalletSecondSecret.errors && (userNewWalletSecondSecret.dirty || userNewWalletSecondSecret.touched))"> 
+                  <div [hidden]="!userNewWalletSecondSecret.errors.required" class="error"> Second passphrase is required. 
+                  </div> 
+              </div> 
+              </div> 
+              <div class="form-group text-right popup_padding"> 
+                <button type="submit" [disabled]="userNewWalletSecondSecretForm.invalid" class="btn btn-default changepassword-btn vote" (click)="saveAndUpdateUserNewWallet()">Submit</button> 
+              </div> 
+            </form> 
+          </div> 
+        </div> 
+      </div> 
+    </app-dialog>
+
+      <app-dialog [(visible)]="userCountryKYCStatusModal"> 
+          <div class="popup_dialouge"> 
+            <div class="security_warning_logo"> 
+              <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeUserCountryKYCStatusModal()" aria-label="Close" class="dialog__close-btn">X</button> 
+            </div> 
+            <div class=""> 
+              <div class="security_warning text-center popup_padding"> 
+              </div> 
+              <div class=""> 
+                <form class="" role="form" #userCountryKYCStatusForm="ngForm" > 
+                  <h4 class="kyc-verification-modal-text">Your KYC is not verified. You are getting redirected to KYC page.</h4>
+                  <div class="form-group text-right popup_padding"> 
+                    <button type="submit" [disabled]="userCountryKYCStatusForm.invalid" class="btn btn-default changepassword-btn vote" (click)="redirectToKYCStatusVerification()">Ok</button> 
+                  </div> 
+                </form> 
+              </div> 
+            </div> 
+          </div> 
+      </app-dialog>
+    
+      <app-dialog [(visible)]="walletAuthenticationModal"> 
+          <div class="popup_dialouge"> 
+            <div class="security_warning_logo"> 
+              <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeWalletAuthenticationModal()" aria-label="Close" class="dialog__close-btn">X</button> 
+            </div> 
+            <div class=""> 
+              <div class="security_warning text-center popup_padding"> 
+              </div> 
+              <div class=""> 
+                <form class="" role="form" #walletAuthenticationModalForm="ngForm" > 
+                  <h4 class="not-logged-in-modal-text"> You are not logged in. Please press Ok to get logged in.</h4>
+                  <div class="form-group text-right popup_padding"> 
+                    <button type="submit" [disabled]="walletAuthenticationModalForm.invalid" class="btn btn-default changepassword-btn vote" (click)="redirectToWalletLoginModal()">Ok</button> 
+                  </div> 
+                </form> 
+              </div> 
+            </div> 
+          </div> 
+      </app-dialog>
+      <app-dialog [(visible)]="walletSelectionModal"> 
+        <div class="popup_dialouge"> 
+          <div class="security_warning_logo"> 
+            <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeWalletSelectionModal()" aria-label="Close" class="dialog__close-btn">X</button> 
+          </div> 
+          <div class=""> 
+            <div class="security_warning text-center popup_padding"> 
+            </div> 
+            <div class=""> 
+              <form class="" role="form" #closeWalletSelectionForm="ngForm" > 
+                <h4 class="wallet-selection-modal-text">Please select a wallet to get logged in</h4>
+                <div class="form-group text-right popup_padding"> 
+                  <button type="submit" [disabled]="closeWalletSelectionForm.invalid" class="btn btn-default changepassword-btn vote" (click)="closeWalletSelectionModal()">Ok</button> 
+                </div> 
+              </form> 
+            </div> 
+          </div> 
+        </div> 
+    </app-dialog>
+    <app-assetdialog [(visible)]="userCertificateModal">
+      <div class="popup_dialouge poup_edit">
+        <div class="security_warning_logo"> 
+          <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeUserCertificateModal()" aria-label="Close" class="dialog__close-btn">X</button> 
+        </div> 
+        <!-- <div class="" id="contentToConvert"> 
+          
+          <div class="" style="text-align:left;margin-left:10px"> 
+            <br>
+           <span style="float:right;margin-right:10px"><button (click)="download()" aria-label="Download">Download</button> </span><br>
+              <h4>Belrium Certification View</h4><br> 
+              <b>DATE OF ISSUE:</b><span id="timestamp">{{userCertificateData['timestamp']}}</span><br>
+              <b>ISSUED TO:</b><span id="name">{{userCertificateData['name']}}</span><br>
+              <b>ISSUED BY:</b><span id="publickey">{{userCertificateData['publlickey']}}</span><br><br>
+            
+              <b>SIGNATURE:</b><span id="signature">{{userCertificateData['signature']}}</span><br><br>
+                    
+          </div>
+          <div class="">
+          
+            <div style="margin-left:10px;width:500px; height:550px; padding:20px; text-align:center; border: 1px solid #000000" style="float:center">
+              <p><b><span style="float:center;margin-left:10px" id="disp_month">{{userCertificateData['month']}}</span></b><b><span style="float:center" id="disp_year">{{userCertificateData['year']}}</span></b>
+                <b><span style="float:center;margin-left:10px"> Payslip</span></b><b><span style="float:right;margin-right:10px">Belfrics Cryptex</span></b> </p>  
+              
+            
+            <p style="float:right;margin-right:10px"><b>Address:</b><span id="employer">{{userCertificateData['employer']}}</span></p><br>
+                     <br>
+                                 
+                    <div style="margin-left:10px;width: 100%">    
+                        <div style="width: 50%; float:left ">
+                          <div> EMPLOYEE ID: <span id="empid">{{userCertificateData['empid']}}</span></div>
+                        </div>
+  
+                        <div style="width: 50%; float:right">
+                            <div> EMPNAME: <span id="name1">{{userCertificateData['name']}}</span></div>
+                        </div>
+                    </div><br>
+    
+                     <div style="margin-left:10px;width: 100%">    
+                        <div style="width: 50%; float:left ">
+                            <div> BANK NAME: <span id="bank">{{userCertificateData['bank']}}</span></div>
+                          </div> 
+  
+                          <div style="width: 50%; float:right ">
+                              <div> DESIGNATION: <span id="designation">{{userCertificateData['designation']}}</span> </div>
+                          </div>
+                    </div>
+  
+                    <div style="margin-left:10px;width: 100%">
+                        <div style="width: 50%; float:left ">
+                            <div> A/C NO: <span id="accountNumber">{{userCertificateData['accountnumber']}}</span> </div>
+                          </div>
+  
+                        <div style="width: 50%; float:right ">
+                            <div> PAN: <span id="pan">{{userCertificateData['pan']}}</span> </div>
+                          </div>
+                    </div>
+  
+                     
+                     <table class="table table-bordered table-striped" style="width:95%;margin-left:10px;margin-right:10px;float:left;">
+          
+                      <thead>
+                          <tr>
+                              <th style="text-align:center">FIELDS</th>
+                              <th>AMOUNT</th>
+                              
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                              <td>BASIC SALARY</td>
+                              <td>
+                                <span id="basicPay">{{userCertificateData['basicpay']}}</span>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td>HRA</td>
+                              <td> <span id="hra">{{userCertificateData['hra']}}</span></td>
+                              
+                          </tr>
+                          <tr>
+                              <td>TA</td>
+                              <td><span id="lta">{{userCertificateData['lta']}}</span></td>
+                              
+                          </tr>
+                          <tr>
+                              <td>MA</td>
+                              <td><span id="ma">{{userCertificateData['ma']}}</span></td>
+                             
+                          </tr>
+                          <tr>
+                              <td><b>GROSS SALARY</b></td>
+                              <td><span id="grossSalary">{{userCertificateData['grossSalary']}}</span></td>
+                              
+                          </tr>
+                          <tr>
+                            <td>PF</td>
+                            <td><span id="providentFund">{{userCertificateData['providentFund']}}</span></td>
+                           
+                        </tr>
+                        <tr>
+                          <td>PROFESSIONAL TAX</td>
+                          <td><span id="professionalTax">{{userCertificateData['professionalTax']}}</span></td>
+                         
+                      </tr>
+                      <tr>
+                        <td><b>TOTAL DEDUCTION</b></td>
+                        <td><span id="totalDeductions">{{userCertificateData['totalDeductions']}}</span></td>
+                       
+                      </tr>
+                      <tr>
+                        <td><b>NET SALARY</b></td>
+                        <td><span id="netSalary">{{userCertificateData['netSalary']}}</span></td>
+                       
+                      </tr>
+  
+                        </tbody>
+                      </table>
+</div> 
+
+</div> -->  
+
+<!-- &nbsp; <h4 style="text-align:center">This certificate was issued using Belrium smart contract</h4>
+        
+        </div> -->
+        <div class="container-fluid">
+            <!-- <button style="float:right;margin-right:10px" class="btn btn-default" (click)="download()" aria-label="Download">Download</button>  -->
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+              <ul class="nav navbar-nav menu">
+                 
+                  <!-- <li class="nav-item"><a href="../verifier_new/verifier.html" class="nav-link active"><img class="menuicon n"><img class="menuicon a" src="">&#xA0;&#xA0;Back</a>
+                  </li>
+                  <li class="nav-item"><a href="#" class="nav-link active"><img class="menuicon n" src="../../lib/img/print.svg"><img class="menuicon a" src="">&#xA0;&#xA0;Print</a>
+                  </li> -->
+                  <li class="nav-item"><a href="javascript:void(0)" (click)="download(userCertificateData['name'],userCertificateData['month'],userCertificateData['year']);" class="nav-link active"><img class="menuicon n" src="../../../assets/img/download.svg"><img class="menuicon a" src="">&#xA0;&#xA0;Download</a>
+                  </li>
+                 
+              </ul>
+          </div>
+            <!-- <span style="float:right;margin-right:10px"> <a href="#" class="nav-link active"><img class="menuicon n" src="lib/img/download.svg"><img class="menuicon a" src="">&#xA0;&#xA0;Download</a></span> -->
+          <div class="row" id="contentToConvert">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-12 nopadding certificate">
+                      <div class="col-12 nopadding iss_new_certify">
+                          <div class="col-xl-12 col-lg-12 col-md-12 col-12 iss_new_certifysec1">
+                              <div class="iss_new_certify_payslip">
+                                  <div class="title_sec_certify">
+                                      <h4>PAY SLIP</h4>
+                                      <h5 class="heading">{{userCertificateData['employer']}}</h5>
+                                  </div>
+                                  <form class="form-inline" role="form" method="post" action="#" id="payslip">
+                                      <div class="form-group col-md-6 col-12">
+                                          <label for="ps_empname" class="col-md-5 col-12 paysliplabel">Employee name <span>:</span></label>
+                                          <input type="text" class="form-control col-md-7 col-12 payslipinput" id="ps_empname" name="ps_empname" value="{{userCertificateData['name']}}" disabled="">
+                                      </div>
+                                      <div class="form-group col-md-6 col-12">
+                                          <label for="ps_pay" class="col-md-5 col-12 paysliplabel">Designation <span>:</span></label>
+                                          <input type="text" class="form-control col-md-7 col-12 payslipinput" id="ps_pay" name="ps_pay" value="{{userCertificateData['designation']}}" disabled=""> 
+                                      </div>
+                                      <div class="form-group col-md-6 col-12">
+                                          <label for="ps_idnum" class="col-md-5 col-12 paysliplabel">ID Number <span>:</span></label>
+                                          <input type="text" class="form-control col-md-7 col-12 payslipinput" id="ps_idnum" name="ps_idnum" value="{{userCertificateData['empid']}}" disabled=""> 
+                                      </div>
+                                      <div class="form-group col-md-6 col-12">
+                                          <label for="ps_paycycle" class="col-md-5 col-12 paysliplabel">Paycycle <span>:</span></label>
+                                          <input type="text" class="form-control col-md-7 col-12 payslipinput" id="ps_paycycle" name="ps_paycycle" value="{{userCertificateData['month']}}, {{userCertificateData['year']}}" disabled=""> 
+                                      </div>
+                                      <div class="form-group col-md-6 col-12">
+                                          <label for="ps_bankdetails" class="col-md-5 col-12 paysliplabel ">Bank Details <span>:</span></label>
+                                          <input type="text" class="form-control col-md-7 col-12 payslipinput" id="ps_bankdetails" name="ps_bankdetails" value="{{userCertificateData['bank']}}" disabled=""> 
+                                      </div>
+                                </form>
+                              </div>
+                          </div>
+                          <div class="col-xl-12 col-lg-12 col-md-12 col-12 iss_new_certifysec2">
+                              <div class="iss_new_certify_earnings">
+                                  <div class="table-responsive">
+                                      <table class="display" style="width:100%;">
+                                        <tr>
+                                          <th>Earnings</th>
+                                          <th>Amount</th>
+                                        </tr>
+                                        <tr>
+                                          <td>Basic Salary</td>
+                                          <td>{{userCertificateData['basicpay']}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>HRA</td>
+                                            <td>{{userCertificateData['hra']}}</td>
+                                          </tr>
+                                          <tr>
+                                              <td>LTA</td>
+                                              <td>{{userCertificateData['lta']}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>MA</td>
+                                                <td>{{userCertificateData['ma']}}</td>
+                                              </tr>
+                                        <tr>
+                                          <td>Total Earnings</td>
+                                          <td>{{userCertificateData['grossSalary']}}</td>
+                                        </tr>
+                                      </table>
+                                  </div>
+                              </div>
+                              <div class="iss_new_certify_deductions">
+                                  <div class="table-responsive">
+                                      <table class="display" style="width:100%;">
+                                        <tr>
+                                          <th>Deductions</th>
+                                          <th>Amount</th>
+                                        </tr>
+                                        <tr>
+                                          <td>Provident Fund</td>
+                                          <td>{{userCertificateData['providentFund']}}</td>
+                                        </tr>
+                                        <tr>
+                                          <td>Professional Tax</td>
+                                          <td>{{userCertificateData['professionalTax']}}</td>
+                                        </tr>
+                                        <tr>
+                                          <td>Total Deductions</td>
+                                          <td>{{userCertificateData['totalDeductions']}}</td>
+                                        </tr>
+                                      </table>
+                                  </div>
+                              </div>
+                              <div class="iss_new_certify_netsal">
+                                  <h4>Net Salary:{{userCertificateData['netSalary']}}</h4>
+                                  <p>{{userCertificateData['netSalary'] | numberToWords}}</p>
+                              </div>
+                          </div>
+                              
+                      </div>
+                  </div>
+          </div>
+      </div>
+      </div>
+    </app-assetdialog>
+    <app-dialog [(visible)]="shareAssetModal"> 
+      <div class="popup_dialouge"> 
+        <div class="security_warning_logo"> 
+          <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeShareAssetModal" aria-label="Close" class="dialog__close-btn">X</button> 
+        </div> 
+        <div class=""> 
+          <div class="security_warning text-center popup_padding"> 
+            <!-- <h4><b>{{selectedWalletAddress}}</b></h4> -->
+            <!-- <p class="fee_shift"><span><b>Fee: {{secondSecretFee}} BEL</b></span></p>                -->
+          </div> 
+          <div class=""> 
+            <form class="" role="form" #userAssetEmailForm="ngForm" > 
+              <div class="form-group form-group-default popup_padding delegate_pad"> 
+                <label>Email to share:</label>
+                <input 
+                      type="text" 
+                      class="form-control" 
+                      placeholder="Email to share" 
+                      name="email" 
+                      #userAssetEmail="ngModel" 
+                      [(ngModel)]="userAsset['email']" 
+                      pattern="^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$" 
+                      required 
+                /> 
+                <!-- <div [hidden]="!email.errors.pattern" class="error captcha">
+                  Email is not valid
+           </div> -->
+                <div *ngIf="(userAsset.errors && (userAsset.dirty || userAsset.touched))"> 
+                  <div [hidden]="!userAsset.errors.required" class="error"> Email to share is required. 
+                  </div> 
+              </div> 
+              </div> 
+              <div class="form-group text-right popup_padding"> 
+                <button type="submit" [disabled]="userAssetEmailForm.invalid" class="btn btn-default changepassword-btn vote" (click)="shareAssets()">Submit</button> 
+              </div> 
+            </form> 
+          </div> 
+        </div>      
+        
+      </div> 
+    </app-dialog> 
+     

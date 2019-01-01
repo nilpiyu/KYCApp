@@ -1,0 +1,238 @@
+<div  class=" container-fluid no-padding ">
+    <div class="col-md-12 no-padding bitmap_bk">
+        <div class="col-md-7 login_left no-padding">
+            <div class="col-md-12 no-padding login_head">
+                <img src="../../assets/img/logo-belrium-b.png" class="img-responsive" alt="logo">
+                <p>Enhanced Compliance Blockchain</p>
+                <p>Empowering individuals and businesses with the world’s<br/>
+                        smartest enterprise grade compliant blockchain solution.</p>
+                <ul class="login_ul">
+                    <li>
+                        <h3>DPOS Consensus</h3>
+                        <p>Reduces the use of energy proving security like that of bitcoin.</p>
+                    </li>
+                    <li>
+                            <h3>Secured Contract Ability</h3>
+                            <p>Empowers to fulfill plethora of use cases</p>
+                        </li>
+                        <li>
+                                <h3>Side Chain Capabilities</h3>
+                                <p>Private networks for Data Storage</p>
+                            </li>
+                            <li>
+                                <h3>Real-World Data Oracles</h3>
+                                <p>Supports Real-World Data to automate use cases</p>
+                            </li>
+
+                </ul>
+                <a href="#" class="btn btn-default changepassword-btn">Know More</a>
+            </div>
+        </div>
+        <div class="col-md-5 login no-padding">
+                <div class="col-md-12 login_welcome">
+                        <p>Welcome to the</p>
+                        <h2>Belrium Verification System</h2>
+                </div>
+          <div class="col-md-6 login_inner">
+              <p>Enter details to Register</p>
+              <form class="" role="form" #createUserForm="ngForm">
+                <div class="form-group form-group-default required">
+                    <input 
+                            type="text" 
+                            class="form-control register_input" 
+                            placeholder="First Name" 
+                            name="name"
+                            #name="ngModel" 
+                            [(ngModel)]="userRegistration['name']"
+                            minlength="2"
+                            maxlength="101" 
+                            (keyup)="checkMaxLength(101, userRegistration['name'], 'name')" 
+                            pattern="[a-zA-Z]+([\s][a-zA-Z]+)*"
+                            required
+                    />
+                    <div *ngIf="(name.errors && (isFormSubmitted == true || (name.dirty || name.touched)))" class="error">
+                            <div *ngIf="name.errors.required && !name.errors.minlength && !name.errors.pattern && !name.errors.maxlength">Name is required.</div>
+                            <div *ngIf="!(name.errors && (isFormSubmitted == true || (name.dirty || name.touched))) && fieldErrors.name" class="error"></div>
+                            <div *ngIf="name.errors.minlength && !name.errors.required">Name should be atleast 2 character long.</div>
+                            <div *ngIf="name.errors.pattern && !name.errors.minlength">Only alphabets or single space is allowed.</div>
+                        </div>
+                        <div *ngIf="!name?.errors?.minlength && !name?.errors?.pattern && !name?.errors?.required && fieldErrors.name" class="error">
+                            Name cannot be more than 100 characters.
+                        </div>
+                </div>
+                <div class="form-group form-group-default required">
+                    <input 
+                            type="text" 
+                            class="form-control register_input" 
+                            placeholder="Last Name" 
+                            name="lastName"
+                            #lastName="ngModel" 
+                            [(ngModel)]="userRegistration['lastName']"
+                            maxlength="101" 
+                            (keyup)="checkMaxLength(101, userRegistration['lastName'], 'lastName')" 
+                            pattern="^[A-Za-z0-9]*[A-Za-z0-9][A-Za-z0-9 _@#*$./]*$"
+                    />
+                        <!-- <div *ngIf="(lastName.errors && (isFormSubmitted == true || (lastName.dirty || lastName.touched)))" class="error">
+                            <div *ngIf="!(lastName.errors && (isFormSubmitted == true || (lastName.dirty || lastName.touched))) && fieldErrors.lastName" class="error"></div>
+                            <div *ngIf="lastName.errors.minlength">Last name should be atleast 2 character long.</div>
+                            <div *ngIf="lastName.errors.pattern && !lastName.errors.minlength">Only alphabets or single space is allowed.</div>
+                        </div> -->
+                        <!-- <div *ngIf="!lastName?.errors?.minlength && !lastName?.errors?.pattern  && fieldErrors.lastName" class="error">
+                            Last name cannot be more than 100 characters.
+                        </div> -->
+                </div>
+                <div class="form-group form-group-default required">
+                    <input 
+                            type="email" 
+                            class="form-control register_input" 
+                            placeholder="Email" 
+                            name="email"
+                            #email="ngModel"
+                            [(ngModel)]="userRegistration['email']"
+                            pattern="^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$" 
+                            maxlength="254" 
+                            (keydown.space)="$event.preventDefault()"
+                            (keyup)="checkMaxLength(250, userRegistration['email'], 'email')"                             
+                            required
+                    />
+                    <div *ngIf="(email.errors && ((email.dirty || email.touched)))" class="error"> 
+                            <div *ngIf="email.errors.required && !email.errors.minlength && !email.errors.pattern && !email.errors.maxlength">Email is required.</div>
+                            <div [hidden]="!email.errors.pattern" class="error">
+                                   Email is not valid.
+                            </div>
+                    </div>
+                    <div *ngIf="!email?.errors?.minlength && !email?.errors?.pattern && !email?.errors?.required && email?.errors?.maxlength && fieldErrors.email" class="error">
+                            Email cannot be more than 254 characters.
+                        </div>
+                </div>
+                <div class="form-group form-group-default required">
+                    <input 
+                            type="password" 
+                            class="form-control register_input" 
+                            placeholder="Password"
+                            name="password"
+                            #password="ngModel"
+                            (keydown.space)="$event.preventDefault()"                             
+                            [(ngModel)]="userRegistration['password']" 
+                            minlength="7" 
+                            maxlength="20" 
+                            (keyup)="checkMaxLength(20, userRegistration.password, 'password')" 
+                            pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{7,21})" 
+                            required
+                    />
+                    <div class="password-strength-bar">
+                        <ng2-password-strength-bar
+                            [passwordToCheck]="userRegistration['password']"
+                            [barLabel]="barLabel"
+                            [barColors]="myColors"
+                            [strengthLabels]="strengthLabels">
+                        </ng2-password-strength-bar>
+                    </div>
+                    <div *ngIf="(password.errors && ((password.dirty || password.touched)))" class="error password-strength-bar"> 
+                            <div *ngIf="password.errors.required && !password.errors.minlength && !password.errors.pattern && !password.errors.maxlength">Password is required.</div>
+                            <div *ngIf="!(password.errors && (isFormSubmitted == true || (password.dirty || password.touched))) && fieldErrors.password" class="error"></div>
+                            <div *ngIf="password.errors.minlength && !password.errors.required">Password should be atleast 7 character long.</div>
+                            <div *ngIf="password.errors.pattern && !password.errors.minlength && !password?.errors?.maxlength && !fieldErrors.password ">Password should contains atleast one uppercase, one lowercase , one number and one special character.</div>
+                    </div>
+                    <div *ngIf="!password?.errors?.minlength && !password?.errors?.required && fieldErrors.password" class="error password-strength-bar">
+                            Password cannot be more than 20 characters.
+                    </div>
+                </div>
+
+                <div class="form-group form-group-default required">
+                    <input 
+                          type="password" 
+                          [(ngModel)]="userRegistration['confirmPassword']" 
+                          name="confirmPassword"
+                          #confirmPassword="ngModel"
+                          class="form-control register_input" 
+                          placeholder="Confirm Password"
+                          minlength="7"
+                          maxlength="20"
+                          pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{7,21})" 
+                          (keyup)="checkMaxLength(20, userRegistration['confirmPassword'], 'confirmPassword')" 
+                          required
+                    />
+                    <div *ngIf="(confirmPassword.errors && ((confirmPassword.dirty || confirmPassword.touched)))" class="error"> 
+                        <div *ngIf="confirmPassword.errors.required && !confirmPassword.errors.minlength && !confirmPassword.errors.pattern && !confirmPassword.errors.maxlength"> Confirm password is required.</div>
+                    </div>
+                    <div *ngIf="userRegistration['password'] && userRegistration['password'].length > 0 && userRegistration['confirmPassword'] && userRegistration['confirmPassword'].length > 0 &&  userRegistration['confirmPassword'] != userRegistration['password']" class="error">Confirm password not matched</div>
+                </div>
+
+                <div class="form-group form-group-default required">
+                    <select 
+                            class="form-control register_input" 
+                            name="country" 
+                            [(ngModel)]="userRegistration['countryCode']" 
+                            data-placeholder="Select Country" 
+                            data-init-plugin="select2"
+                            #country="ngModel" 
+                            required>
+                            <option disabled [ngValue]="undefined">Select User Country</option>
+                            <option [ngValue]="country['countryCode']" *ngFor="let country of countries">{{country['countryName']}}</option>
+                    </select>
+                    <div *ngIf="country.invalid && (country.dirty || country.touched)" class="error">
+                            <div *ngIf="country.errors.required">
+                                    Country is required.
+                            </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-default required">
+                    <select 
+                            class="form-control register_input" 
+                            name="type" 
+                            [(ngModel)]="userRegistration['type']" 
+                            data-placeholder="Select User Type" 
+                            data-init-plugin="select2"
+                            #type="ngModel" 
+                            required>
+                            <option disabled [ngValue]="undefined">Select User Type</option>
+                            <option value="user">user</option>
+                            <option value="merchant">merchant</option>
+                    </select>
+                    <div *ngIf="type.invalid && (type.dirty || type.touched)" class="error">
+                            <div *ngIf="type.errors.required">
+                            Type is required.
+                            </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <p-captcha [siteKey]="captchaSiteKey" (onResponse)="showResponse($event)" #captcha></p-captcha>
+                    <div *ngIf="!isCapatcha" class="error">{{captchaError}}</div>
+                </div>
+                
+                <div class="form-group col-md-6  col-sm-6 col-xs-6 no-padding pad_8">
+                  <a routerLink="/forget-password" routerLinkActive="active">Forgot Password</a>
+                </div>
+                <div class="form-group col-md-6  col-sm-6 col-xs-6 no-padding text-right login-register-button">
+                    <button [disabled]="createUserForm.invalid || maxLengthExceeded['name'] || maxLengthExceeded['email'] || maxLengthExceeded['password'] || maxLengthExceeded['country'] || maxLengthExceeded['type'] || maxLengthExceeded['lastName'] || !isCapatcha " class="btn btn-default changepassword-btn" (click)="saveAndUpdateUserRegistration()">Register</button>
+                </div>
+            </form>
+            <div class="col-md-12 need_account no-padding">
+                <hr>
+                <div class="form-group col-md-6  col-sm-6 col-xs-6 no-padding pad_8">
+                    <a routerLink="/login" >Already Have account?</a>
+                  </div>
+                  <div class="form-group col-md-6  col-sm-6 col-xs-6 no-padding text-right login-register-button">
+                      <button  routerLink="/login" routerLinkActive="active" class="btn btn-default changepassword-btn register_btn">Login Now</button>
+                  </div>
+            </div>
+          <!--
+              <div class="col-md-12 need_account no-padding">
+                  <hr>
+                  <div class="form-group col-md-6 no-padding pad_8">
+                      <a >Need an Account?</a>
+                    </div>
+                    <div class="form-group col-md-6 no-padding text-right">
+                        <button class="btn btn-default changepassword-btn register_btn">Register Now</button>
+                    </div>
+              </div>-->
+          
+          </div>
+        </div>
+    </div>
+     <!-- Secret Key Modal -->
+     
+  </div>
+
+

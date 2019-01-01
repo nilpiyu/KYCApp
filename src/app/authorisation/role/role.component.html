@@ -1,0 +1,181 @@
+<div class=" container ">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-default">
+        <div class="card-header ">
+          <div class="card-title">
+            Search Role
+          </div>
+        </div>
+        <div class="card-block">
+          <form class="" role="form">
+            <div class="row">
+              <div class="col-md-5  col-sm-6 col-xs-12">
+                <div class="form-group form-group-default required">
+                   <input type="email" class="form-control" placeholder="" required>
+                </div>
+              </div>
+              <div class="col-md-7  col-sm-6 col-xs-12 text-right">
+                <div class="form-group ">
+                  <a class="btn btn-default changepassword-btn" (click)="openModal()">Add</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div>
+            <data-table
+                headerTitle="Role(s)"
+                [items]="roles"
+                [itemCount]="totalRoles"
+                (reload)="reloadRoles($event)"
+                [limit]="noOfRolesPerPage"
+                [indexColumnHeader]="'#'"
+                >
+                <data-table-column
+                    [property]="'roleName'"
+                    [header]="'Role Name'"
+                >
+                </data-table-column>
+                <data-table-column
+                    [property]="'roleDescription'"
+                    [header]="'Role Description'"
+                >
+            </data-table-column>
+                <data-table-column
+                    [property]="'active'"
+                    [header]="'Status'"
+                    [cellColors]="cellColor">
+                    <ng-template #dataTableCell let-role="item">
+                        <span [ngClass]="{'role_activated':role['active'], 'role_deactivated':!role['active']}">{{role['active']? 'Active' : 'Deactive'}}</span>
+                    </ng-template>
+                </data-table-column>
+                <data-table-column
+                    [header]="'Action'"
+                    [cellColors]="cellColor">
+                    <ng-template #dataTableCell let-role="item">
+                        <i class="fa fa-edit" (click)="editRoleById(role)"></i>
+                    </ng-template>
+              </data-table-column>
+            </data-table>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="roleModal" class="overlay" (click)="closeModal()"></div>
+</div>
+
+<app-dialog [(visible)]="roleModal">
+  <div class="popup_dialouge poup_edit">
+    <h5 *ngIf="!userRole['roleId']">ADD <span class="semi-bold">Role</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button> </h5>
+    <h5 *ngIf="userRole['roleId']">EDIT <span class="semi-bold">Role</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button> </h5>
+    <form role="form" #roleForm="ngForm">
+      <div class="form-group-attached">
+          <div class="row">
+              <div class="col-md-12 user_doc_form">
+                  <div class="form-group form-group-default">
+                    <label>Role Name</label>
+                    <input 
+                          type="text" 
+                          [(ngModel)]="userRole['roleName']"
+                          name="roleName"
+                          class="form-control" 
+                          #roleNameField="ngModel"
+                          placeholder="Enter Role Name" 
+                          minlength="2"
+                          maxlength="101"   
+                          pattern="[a-zA-Z]+([\s][a-zA-Z]+)*" 
+                          [disabled]="userRole['roleId']"
+                          (keyup)="checkMaxLength(roleNameField, 101)"
+                          required 
+                    />
+                    <div *ngIf="roleNameField.errors && roleNameField.dirty">
+                      <div [hidden]="roleNameField.errors.required || !roleNameField.errors.pattern" class="error">
+                            Only alphabets are allowed.
+                      </div>
+                      <div [hidden]="roleNameField.errors.required || roleNameField.errors.pattern || (roleNameField.errors.minlength && roleNameField.errors.minlength['requiredLength']<roleNameField.errors.minlength['actualLength'])" class="error">
+                            Role Name should be at least 2 characters long.
+                      </div>
+                      <div [hidden]="!roleNameField.errors.required" class="error">
+                            Role Name is required.
+                      </div>
+                    </div>
+                    <div [hidden]="roleNameField.errors || !maxLengthExceeded['roleName']" class="error">
+                          Role Name should not exceed 100 characters.
+                    </div>
+                    <div [hidden]="(!roleNameField.touched || roleNameField.dirty) || (roleNameField.value && roleNameField.value.length)" class="error">
+                          Role Name is required.
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 user_doc_form">
+                  <div class="form-group form-group-default">
+                    <label>Role Description</label>
+                    <input 
+                          type="text" 
+                          [(ngModel)]="userRole['roleDescription']"
+                          name="roleDescription"
+                          #roleDescriptionField="ngModel"
+                          class="form-control" 
+                          placeholder="Enter Role Description" 
+                          minlength="5"
+                          maxlength="101"   
+                          pattern="[A-Za-z0-9 _.,!'/$@-]*" 
+                          required 
+                          (keyup)="checkMaxLength(roleDescriptionField, 101)"
+                    />
+                    <div *ngIf="roleDescriptionField.errors && roleDescriptionField.dirty">
+                      <!-- <div [hidden]="roleDescriptionField.errors.required || !roleDescriptionField.errors.pattern" class="error">
+                            Numbers are not allowed.
+                      </div> -->
+                      <div [hidden]="roleDescriptionField.errors.required || roleDescriptionField.errors.pattern || (roleDescriptionField.errors.minlength && roleDescriptionField.errors.minlength['requiredLength']<roleDescriptionField.errors.minlength['actualLength'])" class="error">
+                            Role Description should be at least 5 characters long.
+                      </div>
+                      <div [hidden]="!roleDescriptionField.errors.required" class="error">
+                            Role Description is required.
+                      </div>
+                    </div>
+                    <div [hidden]="roleDescriptionField.errors || !maxLengthExceeded['roleDescription']" class="error">
+                          Role Description should not exceed 100 characters.
+                    </div>
+                    <div [hidden]="(!roleDescriptionField.touched || roleDescriptionField.dirty) || (roleDescriptionField.value && roleDescriptionField.value.length)" class="error">
+                          Role Description is required.
+                    </div>
+                  </div>
+                </div>
+              <div class="col-md-12">
+                <div class="checkbox check-success  ">
+                  <input 
+                        type="checkbox" 
+                        [(ngModel)]="userRole['active']"
+                        name="active"   
+                  />
+                  <label for="checkbox2">Active</label>
+                </div>
+                </div>
+              <div class="col-md-12">
+                  <div class="form-group form-group-default form-group-default-select2">
+                  <label>Select Activities</label>
+                  <select 
+                          class="form-control" 
+                          data-init-plugin="select2" 
+                          [(ngModel)]="activityIds" 
+                          name="activityIds"
+                          multiple
+                          #roleActivity="ngModel"
+                          required>
+                    <option *ngFor="let activity of activities" [ngValue]="activity['activityId']">{{activity['activityName']}}</option>
+                  </select>
+                  </div>
+                  <div [hidden]="roleActivity && roleActivity.errors && !roleActivity.errors.required" class="error">
+                    At least one activity is required.
+              </div>
+                </div>
+            <div class="col-md-12 user_doc_form">
+              <button type="button" [disabled]="roleForm.invalid" class="btn btn-primary changepassword-btn" (click)="saveAndUpdateRole()">Submit</button>
+            </div>
+          </div>  
+      </div>
+    </form>
+  </div>
+</app-dialog>

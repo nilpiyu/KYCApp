@@ -1,0 +1,61 @@
+.login{display: -webkit-box;    height: 100vh;
+    padding: 6% 18% !important; 
+     /* overflow: hidden; */
+    }
+.login img{margin: auto;margin-bottom: 30px;}
+.login_inner{display: table-cell;vertical-align: middle;}
+.login_left {height: 100vh;background: #b10102;    overflow: hidden;}
+.login_head{    padding: 15% 15%;}
+.changepassword-btn{background: #cd2122;color: #fff;border: none;border-radius: 0;}
+.login_left img{width: 100%;}
+.login_head h2, .login_head p{color: #fff;}
+.login_head p{margin-bottom: 30px;}
+.login_head a{color: #000;
+    padding: 8px 40px;
+    border-radius: 20px;
+    background: #fff;}
+.form-group {
+    /* margin-bottom: 30px; */
+}
+.form-control{
+    margin-bottom: 26px;
+}
+.need_account hr{margin-top: 0px;
+    margin-bottom: 30px;
+    border: 0;
+    border-top: 1px solid #b1b1b1;}
+.login_inner a{color: #b1b1b1}
+.login_inner .changepassword-btn{    padding: 8px 40px;
+    border-radius: 20px;
+    background: #cd2122;
+    outline-style: none;
+}
+.login_inner .register_btn{    background: #f5f6f7;
+    color: #000 !important;
+    border: 2px solid #cd2122;}
+.pad_8{    padding-top: 8px !important;}
+.login_left hr{    width: 50px;
+    margin-left: 0;
+    border-top: 2px solid #fff;
+    margin-top: 10px;}
+.content-center{padding: 0;}
+/* .form-group.col-md-6.no-padding.pad_8.forgot{
+    margin-top: 20px;
+}
+.form-group.col-md-6.no-padding.text-right login{
+margin-top: 20px;
+} */
+button.changepassword-btn{
+    margin-top: 12px;
+    background: #cd2122;
+}
+.form-group.col-md-6.no-padding.pad_8{
+    margin-top: 10px;
+}
+.error.captcha{
+    position: relative;
+    bottom: 20px;
+}
+button.btn.btn-primary.changepassword-btn.secret{
+    background: #cd2122 !important;
+}

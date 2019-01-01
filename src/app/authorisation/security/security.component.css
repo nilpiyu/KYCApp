@@ -1,0 +1,105 @@
+.changepassword-btn{background: #cd2122 !important;color: #fff;border: none;border-radius: 6px; float: left;}
+.card{padding: 20px;background: #fff;border: 1px solid rgba(230, 230, 230, 0.7);margin-bottom: 20px;}
+.card-title{padding-bottom: 10px;}
+.table-bordered th{background: #e1e1e1;}
+.table-bordered .btn{    border: 1px solid #e8e9ea;
+    box-shadow: none;
+    color: #333;margin-right: 5px;}
+.account_profile{background: url(../../../assets/img/2.jpg);padding: 20% 0;}
+.fallback label {
+    color: #000;
+    background: #fff;
+    padding: 9px 25px;
+    cursor: pointer;
+    font-size: 22px;
+}
+.account_profile_verified {
+    background: #fff;
+    padding: 20px;
+    margin: 10px 0;
+}
+.account_profile_document_main{background: #fff;
+    padding: 10px 10px 0px 10px;}
+.account_profile_edit {margin-bottom: 40px;background: #fff;    padding: 10px;}
+.account_profile_verified img{margin:auto;}
+.account_profile_edit h5>span {float: right;}
+.table_profile .table{background:#fff;}
+.account_profile_thumb {
+    margin: auto;
+    width: 50px;
+    border-radius: 50px;
+    height: 50px;
+}
+.message{
+    text-align:-webkit-auto;
+}
+h3,h4{
+    text-align: left;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+  .dialog {
+    z-index: 99999;
+    position: fixed;
+    right: 0;
+    left: 0;
+    top: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    min-height: 200px;
+    width: 90%;
+    max-width: 750px;
+    background-color: #fff;
+    padding: 0px;
+    box-shadow: 0 7px 8px -4px rgba(0, 0, 0, 0.2), 0 13px 19px 2px rgba(0, 0, 0, 0.14), 0 5px 24px 4px rgba(0, 0, 0, 0.12);
+  }
+  
+  
+  @media (min-width: 768px) {
+    .dialog {
+      top: 40px;
+    }
+  }
+  
+  .dialog__close-btn {
+    border: 0;
+    background: none;
+    color: #2d2d2d;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 1.2em;
+  }
+  
+  span.copy-gcode{
+    float: right;
+    margin-right: -21px;
+    position: relative;
+    bottom: 33px;
+  }
+  qr-code{
+    position: relative;
+    top: 35px;
+    right: -5px;
+  }
+  .authenticator-steps{
+    padding-top: 17px;
+    text-align: -webkit-auto;
+    font-size: 12px;
+  }
+  .authenticator-message{
+    font-size: 12px;
+    font-weight: bold;
+    padding-top: 15px;
+  }
+  .authenticator-click-message{
+      position: relative;
+      top: 26px;
+      font-size: 12px;
+      font-weight: bold;
+  }
+  button.btn.btn-primary.changepassword-btn.authenticator{
+      float: right;
+  }
+  

@@ -1,0 +1,17 @@
+<div class=" container-fluid no-padding ">
+    <div class="col-md-12 no-padding">
+        <div class="col-md-12 thankyou_left no-padding">
+            <div class="login_head">
+              <div class="thankyou_middle">
+                <img src="./../assets/img/account-created.png" class="img-responsive" alt="logo">
+                <h2>Belrium KYC can not be processed </h2>
+                <hr>
+                <!-- <a routerLink="/login" routerLinkActive="active">Login</a>
+               --> <br> 
+               <p class="register-login" *ngIf='message!=undefind && message!=null'>{{message}}</p> 
+               <p class="register-login" *ngIf='message===null || message===undefined'>Please contact your admin.</p>
+                <button type="button" *ngIf='isGoBackButtonShow()' class="btn" (click)="goBack()">Go Back</button>
+            </div>
+        </div>
+    </div>
+  </div>

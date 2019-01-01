@@ -1,0 +1,104 @@
+<div class=" container ">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-transparent">
+        <div class="card-header myvotes">
+          <form class="navbar-form" role="search">
+            <div class="input-group col-md-12 col-sm-12 col-xs-12">
+              <input type="text" class="form-control" placeholder="Search Delegate">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 no-padding">
+      <div class="col-lg-12 col-sm-12 ">
+        <div class="card card-transparent">
+          <div class="card-header ">
+            <div class="card-title">
+            </div>
+            <div class="tools">
+              <a class="collapse" href="javascript:;"></a>
+              <a class="config" data-toggle="modal" href="#grid-config"></a>
+              <a class="reload" href="javascript:;"></a>
+              <a class="remove" href="javascript:;"></a>
+            </div>
+          </div>
+          <div class="card-block">
+            <div style="margin: auto; max-width: 1000px">
+              <data-table 
+                headerTitle="Top Delegate(s)" 
+                [items]="delegates" 
+                [itemCount]="countDelegates" 
+                (reload)="reloadDelegates($event)"
+                [limit]="limitDelegates" 
+                [indexColumnHeader]="'#'">
+                <data-table-column 
+                  [property]="'username'" 
+                  [header]="'DELEGATES'" 
+                  [sortable]="true">
+                </data-table-column>
+                <data-table-column 
+                  [property]="'rate'" 
+                  [header]="'RANK'" 
+                  [sortable]="true">
+                </data-table-column>
+                <data-table-column 
+                  [property]="'address'" 
+                  [header]="'ADDRESS'" 
+                  [sortable]="true" 
+                  [cellColors]="cellColor">
+                </data-table-column>
+              </data-table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 no-padding">
+      <div class="col-lg-12 col-sm-12 ">
+        <div class="card card-transparent">
+          <div class="card-header ">
+            <div class="card-title">
+            </div>
+            <div class="tools">
+              <a class="collapse" href="javascript:;"></a>
+              <a class="config" data-toggle="modal" href="#grid-config"></a>
+              <a class="reload" href="javascript:;"></a>
+              <a class="remove" href="javascript:;"></a>
+            </div>
+          </div>
+          <div class="card-block">
+            <div style="margin: auto; max-width: 1000px">
+              <data-table 
+                headerTitle="Stand By Delegate(s)" 
+                [items]="standByDelegates" 
+                [itemCount]="countStandByDelegates" 
+                (reload)="reloadStandByDelegates($event)"
+                [limit]="limitStandByDelegates" 
+                [indexColumnHeader]="'#'"
+                >
+                <data-table-column 
+                  [property]="'username'" 
+                  [header]="'DELEGATES'" 
+                  [sortable]="true">
+                </data-table-column>
+                <data-table-column 
+                  [property]="'rate'" 
+                  [header]="'Rank'" 
+                  [sortable]="true">
+                </data-table-column>
+                <data-table-column 
+                  [property]="'address'" 
+                  [header]="'ADDRESS'" 
+                  [sortable]="true" 
+                  [cellColors]="cellColor">
+                </data-table-column>
+              </data-table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

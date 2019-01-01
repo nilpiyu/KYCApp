@@ -1,0 +1,131 @@
+<div class=" container ">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-default">
+          <div class="card-header ">
+            <div class="card-title">
+              Search Wallet:
+            </div>
+          </div>
+          <div class="card-block">
+            <form class="" role="form">
+              <div class="row">
+                <div class="col-md-5  col-sm-6 col-xs-12">
+                  <div class="form-group form-group-default required">
+                     <input type="email" class="form-control" placeholder="" required>
+                  </div>
+                </div>
+                <div class="col-md-7  col-sm-6 col-xs-12 text-right">
+                    <div class="form-group ">
+                      <a class="btn btn-default changepassword-btn" (click)="loginAdminWallet()">Wallet Sign In</a>
+                    </div>
+                  </div>
+              </div>
+            </form>
+          </div>
+          <div>
+              <data-table
+                  headerTitle="User Wallet(s)"
+                  [items]="userWallets"
+                  [itemCount]="userWalletCount"
+                  (reload)="reloadUserWallet($event)"
+                  [limit]="userWalletPerPage"
+                  [indexColumnHeader]="'#'"
+                  >
+                  <data-table-column
+                      [property]="'countryName'"
+                      [header]="'COUNTRY NAME'"
+                  >
+                  </data-table-column>
+                  <data-table-column
+                      [property]="'email'"
+                      [header]="'USER EMAIL'"
+                  >
+                  </data-table-column>
+                  <data-table-column
+                      [property]="'address'"
+                      [header]="'ADDRESS'"
+                  >
+                  </data-table-column>
+                  <data-table-column
+                      [property]="'status'"
+                      [header]="'USER KYC STATUS'">
+                      <ng-template #dataTableCell let-userWallet="item">
+                        <b [ngClass]="{'inactive':userWallet['status']=='INACTIVE'}">{{userWallet['status']}}</b>
+                      </ng-template>
+                  </data-table-column>
+                  <data-table-column
+                      [property]="'blockchainStatus'"
+                      [header]="'BLOCKCHAIN STATUS'">
+                      <ng-template #dataTableCell let-userWallet="item">
+                        <b [ngClass]="{'active':userWallet['blockchainStatus']=='ACTIVE'}">{{userWallet['blockchainStatus']}}</b>
+                      </ng-template>
+                  </data-table-column>
+                  <data-table-column
+                      [header]="'ACTION'"
+                      [cellColors]="cellColor">
+                      <ng-template #dataTableCell let-userWallet="item">
+                        <i class="fa fa-edit" (click)="disableUserWalletBlockchainStatus(userWallet)"></i>
+                      </ng-template>
+                  </data-table-column>
+              </data-table>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="loginAdminWalletModal" class="overlay" (click)="closeLoginAdminWalletModal()"></div>
+  </div>
+
+<app-dialog [(visible)]="loginAdminWalletModal">
+  <div class="popup_dialouge">
+    <div class="security_warning_logo">
+      <img src="assets/img/logo-belrium.png" class="img-responsive"/><button (click)="closeLoginAdminWalletModal()" aria-label="Close" class="dialog__close-btn">X</button>
+    </div>
+    <div class="">
+        <div class="security_warning text-center popup_padding">
+          <p>Please Enter Admin Wallet Passphrase</p>
+        </div>
+        <div class="">
+          <form class="" role="form" #secretForm="ngForm">
+              <div class="form-group form-group-default popup_padding delegate_pad">
+                <label>Passphrase:</label>
+                <input 
+                        type="text" 
+                        class="form-control" 
+                        name="secret"
+                        #secret="ngModel"
+                        [(ngModel)]="loginAdminWalletCredentials['secret']"
+                        placeholder="Admin Wallet Passphrase" 
+                        required
+                />
+                <div *ngIf="(secret.errors && (secret.dirty || secret.touched))">
+                    <div [hidden]="!secret.errors.required" class="error">
+                          Passphrase is required.
+                    </div>
+                </div>
+              </div>
+              <div *ngIf="secondSecretStatus" class="form-group form-group-default popup_padding delegate_pad">
+                <label>Second Passphrase:</label>  
+                <input 
+                          type="text" 
+                          class="form-control" 
+                          name="secondSecret"
+                          #secondSecret="ngModel"
+                          [(ngModel)]="receipientCredentials['secondSecret']"
+                          placeholder="Your Second Passphrase" 
+                          required
+                  />
+                  <div *ngIf="(secondSecret.errors && (secondSecret.dirty || secondSecret.touched))">
+                      <div [hidden]="!secondSecret.errors.required" class="error">
+                          Second Passphrase is required.
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group text-right popup_padding">
+                <button type="submit" [disabled]="secretForm.invalid" class="btn btn-default login-btn" (click)="loginAdminWalletBySecret()">Wallet Sign In</button>
+              </div>
+          </form>
+        </div>
+    </div>
+  </div>
+</app-dialog>

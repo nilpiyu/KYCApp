@@ -1,0 +1,422 @@
+<div class="container sm-padding-10 p-t-20 p-l-0 p-r-0">
+    <!-- <div *ngIf="socialMediaModal" class="overlay" (click)="closeSocialMediaModal()"></div> -->
+  <div class="row">
+    <div class="tab-content main_section_tab">
+      <div id="profile" class="tab-pane fade in active">
+         <div class="col-md-12 no-padding ">
+            <div class="col-md-5 col-sm-6 no-padding">
+               <div class="card social-card" data-social="item">
+                  <div class="user_profile user_profile_top">
+                     <div class="col-md-12 no-padding">
+                        <div class="user_profile_wallet text-center col-md-4">
+                           <img [src]="userProfileData['profileImagePath']" accept="image/*" class="img-responsive"/>
+                           <i class="fa fa-check-circle text_succes"></i>
+                           <input 
+                                 *ngIf="isEdited"
+                                 type="file" 
+                                 accept="image/*"
+                                 (change)="saveProfileImage($event)"
+                                 #userProfileImage
+                           />
+                        </div>
+                        <div class="user_profile_wallet col-md-8">
+                           <h3 class="">{{userProfileData['name']}} {{userProfileData['lastName']}}</h3>
+                           <p>{{userProfileData['email']}}</p>
+                        </div>
+                     </div>
+                     <p *ngIf="isEdited">Note :</p><p *ngIf="isEdited" class="note">File size limit: 10MB. File types supported: jpeg/png</p>
+                     <h3 class="">Profile </h3>
+                     <div class="profile-edit-btn">
+                        <i *ngIf="!isEdited" class="fa fa-pencil" (click)="editUserProfile()" ngbTooltip="Edit"></i>
+                     </div>
+                     <div class="table-responsive table_profile">
+                        <form #updateUserProfileForm="ngForm">
+                           <table class="table " id="stripedTable">
+                               <tbody>
+                                   <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                       <p>First Name:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                       <p *ngIf="!isEdited">{{userProfileData['name']}}</p>
+                                       <div *ngIf="isEdited">
+                                           <input 
+                                                 type="text" 
+                                                 class="form-control" 
+                                                 name="nameField" 
+                                                 #nameField="ngModel"  
+                                                 [(ngModel)]="userProfileData['name']" 
+                                                 minlength="2" 
+                                                 maxlength="101" 
+                                                 pattern="[a-zA-Z]+([\s][a-zA-Z]+)*" 
+                                                 required
+                                                 [disabled]="!isEdited"
+                                                 [ngClass]="{'editable-input-field':isEdited}"
+                                                 (keyup)="checkMaxLength(nameField, 101)"
+                                                 required
+                                           />
+                                           <div *ngIf="nameField.errors && nameField.dirty">
+                                               <div [hidden]="nameField.errors.required || !nameField.errors.pattern" class="error-block">
+                                                 Not allowed
+                                               </div>
+                                               <div [hidden]="nameField.errors.required || nameField.errors.pattern || (nameField.errors.minlength && nameField.errors.minlength['requiredLength']<nameField.errors.minlength['actualLength'])" class="error-block">
+                                                 First Name should be at least 2 characters long
+                                               </div>
+                                               <div [hidden]="!nameField.errors.required" class="error-block">
+                                                 First Name is required
+                                               </div>
+                                           </div>
+                                           <div [hidden]="nameField.errors || !maxLengthExceeded['nameField']" class="error-block">
+                                             First Name should not 100 characters
+                                           </div>
+                                           <div [hidden]="(!nameField.touched || nameField.dirty) || (nameField.value && nameField.value.length)" class="error-block">
+                                             First Name is required
+                                           </div>
+                                   </div>
+                                    </td>
+                                   </tr>
+                                   <tr>
+                                     <td class="v-align-middle semi-bold table_title">
+                                        <p>Last Name:</p>
+                                     </td>
+                                     <td class="v-align-middle semi-bold">
+                                        <p *ngIf="!isEdited">{{userProfileData['lastName']}}</p>
+                                        <div *ngIf="isEdited">
+                                            <input 
+                                                  type="text" 
+                                                  class="form-control" 
+                                                  name="lastNameField" 
+                                                  #lastNameField="ngModel"  
+                                                  pattern="[a-zA-Z]+([a-zA-Z\s0-9]*)"
+                                                  [(ngModel)]="userProfileData['lastName']" 
+                                                  maxlength="101" 
+                                                  [disabled]="!isEdited"
+                                                  [ngClass]="{'editable-input-field':isEdited}"
+                                                  (keyup)="checkMaxLength(lastNameField, 101)"
+                                                  pattern="^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _@./]*$"
+                                            />
+                                            <div *ngIf="lastNameField.errors && lastNameField.dirty">
+                                            </div>
+                                            <div [hidden]="lastNameField.errors || !maxLengthExceeded['lastNameField']" class="error-block">
+                                              Last name should not exceed 100 characters
+                                            </div>
+                                    </div>
+                                     </td>
+                                    </tr>
+                                 <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                       <p>Email:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                       <p>{{userProfileData['email']}}</p>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                       <p>Mobile no:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                       <p *ngIf="!isEdited">{{userProfileData['address']['phone']}}</p>    
+                                   <div *ngIf="isEdited" >
+                                       <input 
+                                             type="tel" 
+                                             class="form-control" 
+                                             name="phoneNo" 
+                                             #phoneField="ngModel" 
+                                             [(ngModel)]="userProfileData['address']['phone']" 
+                                             minlength="8" 
+                                             maxlength="15" 
+                                             pattern="([1-9]){1}([0-9]*)"  
+                                             required
+                                             [disabled]="!isEdited"
+                                             [ngClass]="{'editable-input-field':isEdited}"
+                                             (keyup)="checkMaxLength(phoneField, 16)"                                               
+                                       />
+                                     <div *ngIf="phoneField.errors && phoneField.dirty">
+                                         <div [hidden]="phoneField.errors.required || !phoneField.errors.pattern" class="error-block">
+                                               Only Numbers are allowed
+                                         </div>
+                                         <div [hidden]="phoneField.errors.required || phoneField.errors.pattern || (phoneField.errors.minlength && phoneField.errors.minlength['requiredLength']<phoneField.errors.minlength['actualLength'])" class="error-block">
+                                               Mob No. should be at least 8 characters long
+                                         </div>
+                                         <div [hidden]="!phoneField.errors.required" class="error-block">
+                                               Mob No. is required
+                                         </div>
+                                   </div>
+                                   <div [hidden]="phoneField.errors || !maxLengthExceeded['phoneField']" class="error-block">
+                                         Mob No. should not exceed 15 characters
+                                   </div>
+                                   <div [hidden]="(!phoneField.touched || phoneField.dirty) || (phoneField.value && phoneField.value.length)" class="error-block">
+                                         Mob No. is required
+                                   </div>
+                                   </div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                       <p>Pincode:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                       <p *ngIf="!isEdited">{{userProfileData['address']['pincode']}}</p>
+                               <div *ngIf="isEdited">
+                                       <input 
+                                             type="text" 
+                                             class="form-control" 
+                                             name="pincodeField" 
+                                             #pincodeField="ngModel"  
+                                             [(ngModel)]="userProfileData['address']['pincode']" 
+                                             minlength="5" 
+                                             maxlength="16" 
+                                             pattern="([1-9]){1}([0-9]*)"  
+                                             required
+                                             [disabled]="!isEdited"
+                                             [ngClass]="{'editable-input-field':isEdited}"
+                                             (keyup)="checkMaxLength(pincodeField, 16)"
+                                       />
+                                       <div *ngIf="pincodeField.errors && pincodeField.dirty">
+                                         <div [hidden]="pincodeField.errors.required || !pincodeField.errors.pattern" class="error-block">
+                                           Only Numbers are allowed
+                                         </div>
+                                         <div [hidden]="pincodeField.errors.required || pincodeField.errors.pattern || (pincodeField.errors.minlength && pincodeField.errors.minlength['requiredLength']<pincodeField.errors.minlength['actualLength'])" class="error-block">
+                                           Pincode should be at least 5 characters long
+                                         </div>
+                                         <div [hidden]="!pincodeField.errors.required" class="error-block">
+                                           Pincode is required
+                                         </div>
+                                       </div>
+                                       <div [hidden]="pincodeField.errors || !maxLengthExceeded['pincodeField']" class="error-block">
+                                         Pincode should not exceed 15 characters
+                                       </div>
+                                       <div [hidden]="(!pincodeField.touched || pincodeField.dirty) || (pincodeField.value && pincodeField.value.length)" class="error-block">
+                                         Pincode is required
+                                       </div>
+                               </div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                       <p>Address:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                       <p *ngIf="!isEdited">{{userProfileData['address']['addressLine1']}}</p>
+                                       <div *ngIf ="isEdited">
+                                       <input 
+                                             type="text" 
+                                             class="form-control" 
+                                             name="addressLine1Field" 
+                                             #addressLine1Field="ngModel"  
+                                             [(ngModel)]="userProfileData['address']['addressLine1']" 
+                                             minlength="2" 
+                                             maxlength="101" 
+                                             pattern="[a-zA-Z0-9.,-_/ ]*"
+                                             required
+                                             [ngClass]="{'editable-input-field':isEdited}"
+                                             [disabled]="!isEdited"
+                                             (keyup)="checkMaxLength(addressLine1Field, 101)"
+                                             
+                                       />
+                                       <div *ngIf="addressLine1Field.errors && addressLine1Field.dirty">
+                                           <div [hidden]="addressLine1Field.errors.required || !addressLine1Field.errors.pattern" class="error-block">
+                                                 Invalid Characters
+                                           </div>
+                                           <div [hidden]="addressLine1Field.errors.required || addressLine1Field.errors.pattern || (addressLine1Field.errors.minlength && addressLine1Field.errors.minlength['requiredLength']<addressLine1Field.errors.minlength['actualLength'])" class="error-block">
+                                                 Address should be at least 5 characters long.
+                                           </div>
+                                           <div [hidden]="!addressLine1Field.errors.required" class="error-block">
+                                                 Address is required
+                                           </div>
+                                     </div>
+                                     <div [hidden]="addressLine1Field.errors || !maxLengthExceeded['addressLine1Field']" class="error-block">
+                                           Address should not exceed 100 characters
+                                     </div>
+                                     <div [hidden]="(!addressLine1Field.touched || addressLine1Field.dirty) || (addressLine1Field.value && addressLine1Field.value.length)" class="error-block">
+                                           Address is required
+                                     </div>
+                                   </div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                     <td class="v-align-middle semi-bold table_title">
+                                        <p>City:</p>
+                                     </td>
+                                     <td class="v-align-middle semi-bold">
+                                        <p *ngIf="!isEdited">{{userProfileData['address']['city']}}</p>
+                                        <div *ngIf="isEdited">
+                                        <input 
+                                              type="text" 
+                                              class="form-control" 
+                                              name="cityField" 
+                                              #cityField="ngModel"  
+                                              [(ngModel)]="userProfileData['address']['city']" 
+                                              minlength="3" 
+                                              maxlength="21" 
+                                              pattern="[a-zA-Z ]*" 
+                                              required
+                                              [ngClass]="{'editable-input-field':isEdited}"
+                                              [disabled]="!isEdited"
+                                              (keyup)="checkMaxLength(cityField, 21)"
+                                        />
+                                        <div *ngIf="cityField.errors && cityField.dirty">
+                                            <div [hidden]="cityField.errors.required || !cityField.errors.pattern" class="error-block">
+                                                  Only Alphabets, including space, are allowed
+                                            </div>
+                                            <div [hidden]="cityField.errors.required || cityField.errors.pattern || (cityField.errors.minlength && cityField.errors.minlength['requiredLength']<cityField.errors.minlength['actualLength'])" class="error-block">
+                                                  City should be at least 3 characters long
+                                            </div>
+                                            <div [hidden]="!cityField.errors.required" class="error-block">
+                                                  City is required
+                                            </div>
+                                      </div>
+                                      <div [hidden]="cityField.errors || !maxLengthExceeded['cityField']" class="error-block">
+                                            City should not exceed 20 characters
+                                      </div>
+                                      <div [hidden]="(!cityField.touched || cityField.dirty) || (cityField.value && cityField.value.length)" class="error-block">
+                                            City is required
+                                      </div>
+                                        </div>
+                                     </td>
+                                  </tr>
+                                 <tr>
+                                    <td class="v-align-middle semi-bold table_title">
+                                       <p>State:</p>
+                                    </td>
+                                    <td class="v-align-middle semi-bold">
+                                       <p *ngIf="!isEdited">{{userProfileData['address']['state']}}</p>
+                                      <div *ngIf="isEdited">
+                                       <input 
+                                             type="text" 
+                                             class="form-control" 
+                                             name="stateField" 
+                                             #stateField="ngModel"  
+                                             [(ngModel)]="userProfileData.address.state" 
+                                             minlength="2" 
+                                             maxlength="21" 
+                                             pattern="[a-zA-Z. ]*"
+                                             [disabled]="!isEdited"
+                                             [ngClass]="{'editable-input-field':isEdited}"
+                                             (keyup)="checkMaxLength(stateField, 21)"
+                                       />
+                                       <div *ngIf="stateField.errors && stateField.dirty">
+                                           <div [hidden]="stateField.errors.required || !stateField.errors.pattern" class="error-block">
+                                                 Only Alphabets, including space, are allowed
+                                           </div>
+                                           <div [hidden]="stateField.errors.required || stateField.errors.pattern || (stateField.errors.minlength && stateField.errors.minlength['requiredLength']<stateField.errors.minlength['actualLength'])" class="error-block">
+                                                 State Name should be at least 5 characters long
+                                           </div>
+                                     </div>
+                                     <div [hidden]="stateField.errors || !maxLengthExceeded['stateField']" class="error-block">
+                                         State should not exceed 20 characters
+                                   </div>
+                                   </div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                   <td class="v-align-middle semi-bold table_title">
+                                       <p>Country:</p>
+                                   </td>
+                                   <td class="v-align-middle semi-bold">
+                                       <p>{{userProfileData['address']['country']}}</p>
+                                   </td>
+                                 </tr>
+                               </tbody>
+                           </table>
+                           <div *ngIf="isEdited">
+                              <button [disabled]="updateUserProfileForm.invalid" class="btn btn-primary changepassword-btn" (click)="updateUserProfile(updateUserProfileForm)">Submit</button>     
+                           </div>
+                        </form>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-7 col-sm-6 no-padding">
+              <div class="col-md-6 col-sm-6 no-padding">
+                 <div class="card social-card share social_bk" data-social="item">
+                     <div class="card-header clearfix user_profile">
+                        <div class="user_profile_wallet_right">
+                           <h3 class="">Social Media</h3>
+                              <i class="fa fa-pencil socialMediaEditPencil" (click)="OpenSocialMediaModal()" ngbTooltip="Edit"></i>
+                           <div class="row social-media-urls">
+                             <div *ngFor="let registeredSocialServicesURL of registeredSocialServicesURLs" class="col-md-3 social-media"><a [href]="registeredSocialServicesURL['value']" target="_blank"><img [src]="registeredSocialServicesURL['logo']"/></a></div>                            
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="card social-card share social_bk  full-width m-b-10 no-border" data-social="item">
+                     <div class="card-header clearfix user_profile">
+                        <div class="kyc_status">
+                           <h3 class="">KYC Status</h3>
+                           <ul>
+                              <li *ngFor="let userCountry of userCountries">{{userCountry['country']['countryName']}}
+                                 <span *ngIf="userCountry['kycstatus']" [ngClass]="{'verfied': userCountry['kycstatus']}">Verified</span>  
+                                 <span *ngIf="!userCountry['kycstatus']" [ngClass]="{'unverfied': !userCountry['kycstatus']}">Unverified</span>                                     
+                              </li>
+                           </ul>
+                        </div>
+                     </div>
+                  </div>
+                  
+              </div>
+              <div class="col-md-6 col-sm-6 no-padding">
+                 <div class="card social-card share" data-social="item">
+                     <div class="card-header clearfix user_profile">
+                        <div class="user_profile_wallet_right">
+                           <h3 class="">Last Login Date/Time</h3>
+                        </div>
+                        <p class="kyc_status">{{loginDateAndTime}} from {{loginIPAddress}}</p>                        
+                     </div>
+                  </div>
+                  <div class="card social-card share  full-width m-b-10 no-border" data-social="item">
+                     <div class="card-header clearfix user_profile">
+                        <div class="kyc_status">
+                          <h3 class="">Recently Requested Document(s) </h3>
+                          <div class="row">
+                            <ul>
+                              <li *ngFor="let userRequestedDocument of userRequestedDocuments">
+                                <div class="col-md-4">{{userRequestedDocument['kycdoc']['kycDocumentMeta']['documentName']}}</div>
+                                <div class="col-md-4">{{userRequestedDocument['requester']['name']}}</div>
+                                <div class="col-md-4">
+                                  <button *ngIf="userRequestedDocument['status']=='Requested'" type="button" class="btn btn-warning user-requested-document-status"><span>{{userRequestedDocument['status']}}</span></button>
+                                  <button *ngIf="userRequestedDocument['status']=='Accepted'" type="button" class="btn btn-success user-requested-document-status"><span>{{userRequestedDocument['status']}}</span></button>
+                                  <button *ngIf="userRequestedDocument['status']=='Rejected'" type="button" class="btn btn-danger user-requested-document-status"><span>{{userRequestedDocument['status']}}</span></button>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <app-dialog [(visible)]="socialMediaModal">
+          <div class="popup_dialouge poup_edit">
+            <h5>ADD <span class="semi-bold">SOCIAL MEDIA URLs</span><button (click)="closeSocialMediaModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+            <form role="form" #socialMediaForm="ngForm">
+              <div class="form-group-attached">
+                  <div class="row">
+                      <div style="overflow-y: auto; max-height: 250px" class="col-md-12 user_doc_form">
+                        <div *ngIf="registeredSocialServices && !registeredSocialServices.length">Please contact admin to add social media</div>
+                        <div class="form-group form-group-default" *ngFor="let registeredSocialService of registeredSocialServices;let registeredSocialServiceIndex=index">
+                            <label><img [src]="registeredSocialServices[registeredSocialServiceIndex]['url']" style="width:20px;height:20px;border-radius:50%;display:-webkit-inline-flex" class="img-responsive"/> {{registeredSocialServices[registeredSocialServiceIndex]['profileName']}} Public URL:</label>
+                            <input 
+                                  type="text" 
+                                  class="form-control"
+                                  name="publicURL{{registeredSocialServiceIndex}}"
+                                  [value]="registeredSocialServices[registeredSocialServiceIndex]['publicUrl']"
+                                  [(ngModel)]="registeredSocialServices[registeredSocialServiceIndex]['publicUrl']"  
+                            />
+                        </div>
+                    </div>  
+                    <div class="col-md-12 user_doc_form">
+                        <button [disabled]="socialMediaForm.invalid || registeredSocialServices && !registeredSocialServices.length" type="button" class="btn btn-primary changepassword-btn url" (click)="saveAndUpdateSocialMediaPublicURLs()">Submit</button>
+                    </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </app-dialog>
+  </div>
+  <div *ngIf="socialMediaModal" class="overlay" (click)="closeSocialMediaModal()"></div>
+</div>

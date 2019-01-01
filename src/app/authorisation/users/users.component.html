@@ -1,0 +1,54 @@
+<div class=" container ">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-default">
+        <div class="card-header ">
+          <div class="card-title">
+            Search Users
+          </div>
+        </div>
+        <div class="card-block">
+          <form class="" role="form">
+            <div class="row">
+              <div class="col-md-5  col-sm-6 col-xs-12">
+                <div class="form-group form-group-default required">
+                  <input type="email" class="form-control" placeholder="" required>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div>
+            <data-table headerTitle="User(s)" 
+              [items]="users" 
+              [itemCount]="noOfUsers" 
+              (reload)="reloadUsers($event)" 
+              [limit]="noOfUsersPerPage"
+              [indexColumnHeader]="'#'"
+              >
+              <data-table-column 
+                [property]="'name'" 
+                [header]="'USER NAME'" 
+                [sortable]="true">
+              </data-table-column>
+              <data-table-column 
+                [property]="'email'" 
+                [header]="'USER REGISTERED EMAIL ID'" 
+                [sortable]="true" 
+                [cellColors]="cellColor">
+              </data-table-column>
+              <data-table-column 
+                [property]="'isKYCVerified'" 
+                [header]="'KYC STATUS (BASE COUNTRY)'" 
+                [sortable]="true" 
+                [cellColors]="cellColor">
+                <ng-template #dataTableCell let-user="item">
+                  <span [ngClass]="{'role_activated':user['isKYCVerified'], 'role_deactivated':!user['isKYCVerified']}">{{user['isKYCVerified']? 'Verified' : 'Unverified'}}</span>
+                </ng-template>
+              </data-table-column>
+            </data-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

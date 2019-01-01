@@ -1,0 +1,193 @@
+<div  class=" container-fluid no-padding ">
+    <div class="col-md-12 no-padding bitmap_bk">
+        <div class="col-md-7 login_left no-padding">
+            <div class="col-md-12 no-padding login_head">
+                <img src="../../assets/img/logo-belrium-b.png" class="img-responsive" alt="logo">
+                <p>Enhanced Compliance Blockchain</p>
+                <p>Empowering individuals and businesses with the world’s<br/>
+                        smartest enterprise grade compliant blockchain solution.</p>
+                <ul class="login_ul">
+                    <li>
+                        <h3>DPOS Consensus</h3>
+                        <p>Reduces the use of energy proving security like that of bitcoin.</p>
+                    </li>
+                    <li>
+                            <h3>Secured Contract Ability</h3>
+                            <p>Empowers to fulfill plethora of use cases</p>
+                        </li>
+                        <li>
+                                <h3>Side Chain Capabilities</h3>
+                                <p>Private networks for Data Storage</p>
+                            </li>
+                            <li>
+                                <h3>Real-World Data Oracles</h3>
+                                <p>Supports Real-World Data to automate use cases</p>
+                            </li>
+
+                </ul>
+                <a href="#" class="btn btn-default changepassword-btn">Know More</a>
+            </div>
+        </div>
+        <div class="col-md-5 login no-padding">
+                <div class="col-md-12 login_welcome">
+                        <p>Welcome to the</p>
+                        <h2>Belrium Verification System</h2>
+                </div>
+          <div class="col-md-6 login_inner">
+              <p>Enter Details to SignIn</p>
+              <form class="" role="form" #loginForm="ngForm">
+                <div class="form-group form-group-default required">
+                    <input 
+                        type="email" 
+                        class="form-control login_input" 
+                        name="email"
+                        #email="ngModel"
+                        [(ngModel)]="userLoginData.email"
+                        placeholder="Enter Your Email" 
+                        pattern="^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$" 
+                        maxlength="250" 
+                        (keydown.space)="$event.preventDefault()"
+                        required
+                    />
+                    <!-- <div *ngIf="email.errors && email.dirty && email.touched"> -->
+                          <div *ngIf="(email.errors && (email.dirty || email.touched))"> 
+                            <div [hidden]="!email.errors.required" class="error captcha">
+                                Email is required
+                            </div>
+                            <div [hidden]="!email.errors.pattern" class="error captcha">
+                                   Email is not valid
+                            </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-default required form-error">
+                    <input 
+                        type="password" 
+                        class="form-control login_input" 
+                        name="password"
+                        #password="ngModel" 
+                        (keydown.space)="$event.preventDefault()" 
+                        [(ngModel)]="userLoginData.password"
+                        placeholder="Enter Your Password" 
+                        minlength="1" 
+                        maxlength="20" 
+                        required
+                    />
+                    <div *ngIf="(password.errors && ((password.dirty || password.touched)))" class="error captcha"> 
+                            <div *ngIf="password.errors.required">Password is required</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <!-- <p-captcha [siteKey]="captchaSiteKey" (onResponse)="showResponse($event)" #captcha></p-captcha>
+                    <div *ngIf="!isCapatcha" class="error">{{captchaError}}</div> -->
+                </div>
+                
+                <div class="form-group col-md-6  col-sm-6 col-xs-6 no-padding pad_8">
+                  <a routerLink="/forget-password" routerLinkActive="active">Forgot Password</a>
+                </div>
+                <div class="form-group col-md-6  col-sm-6 col-xs-6 no-padding text-right login-register-button">
+                    <button [disabled]="loginForm.invalid || maxLengthExceeded['email']" class="btn btn-default changepassword-btn" (click)="userLogin()">Sign In</button>
+                </div>
+            </form>
+            <div class="col-md-12 need_account no-padding">
+                <hr>
+                <div class="form-group col-md-6 col-sm-6 col-xs-6 no-padding pad_8">
+                    <a routerLink="/register">Need an Account?</a>
+                  </div>
+                  <div class="form-group col-md-6  col-sm-6 col-xs-6 no-padding text-right login-register-button">
+                      <button  routerLink="/register" routerLinkActive="active" class="btn btn-default changepassword-btn register_btn">Register Now</button>
+                  </div>
+            </div>
+          <!--
+              <div class="col-md-12 need_account no-padding">
+                  <hr>
+                  <div class="form-group col-md-6 no-padding pad_8">
+                      <a >Need an Account?</a>
+                    </div>
+                    <div class="form-group col-md-6 no-padding text-right">
+                        <button class="btn btn-default changepassword-btn register_btn">Register Now</button>
+                    </div>
+              </div>-->
+          
+          </div>
+        </div>
+    </div>
+    <div *ngIf="secretModal" class="overlay" (click)="closeSecretKeyLoginModal()"></div>                      
+  </div>
+    <!-- Secret Key Modal -->
+    <app-dialog [(visible)]="secretModal">
+        <div class="popup_dialouge poup_edit">
+          <h5>Enter Secret Key <span class="semi-bold"></span>
+            <button (click)="closeSecretKeyLoginModal()" aria-label="Close" class="dialog__close-btn">X</button>                    
+          </h5>
+          <form role="form" #secretKeyForm="ngForm">
+            <div class="form-group-attached">
+              <div class="row">
+                <div class="col-md-12">
+                    <div *ngIf="authenticationOTP" class="form-group form-group-default otp">
+                        <label class="">Google 2FA OTP</label>
+                        <input 
+                            type="totp" 
+                            class="form-control" 
+                            name="totp"
+                            #otp="ngModel" 
+                            (keydown.space)="$event.preventDefault()" 
+                            [(ngModel)]="userLoginData.totp"
+                            placeholder="Enter Google 2FA OTP" 
+                            pattern="^[0-9]{6}$" 
+                            minlength="6" 
+                            maxlength="6" 
+                            required
+                        />
+                        <div *ngIf="otp.errors && otp.dirty">
+                            <div [hidden]="otp.errors.required || !otp.errors.pattern" class="error">
+                                Invalid OTP.
+                            </div>
+                            <div [hidden]="otp.errors.required || otp.errors.pattern || (roleNameField.errors.minlength && roleNameField.errors.minlength['requiredLength']<roleNameField.errors.minlength['actualLength'])" class="error">
+                                OTP should be at least 6 characters long.
+                            </div>
+                            <div [hidden]="!otp.errors.required" class="error">
+                                <p *ngIf="otpMessage">{{otpMessage}}</p>
+                                <p *ngIf="!otpMessage">OTP is required.</p>
+                            </div>
+                            </div>
+                            <div [hidden]="otp.errors || !maxLengthExceeded['totp']" class="error">
+                                OTP should not exceed 6 characters.
+                            </div>
+                            <div [hidden]="(!otp.touched || otp.dirty) || (otp.value && otp.value.length)" class="error">
+                                <p *ngIf="otpMessage">{{otpMessage}}</p>
+                                <p *ngIf="!otpMessage">OTP is required.</p>
+                            </div>
+                    </div>
+                    <div class="form-group form-group-default">
+                        <label class="">Secret Key</label>
+                        <input 
+                            type="password" 
+                            class="form-control" 
+                            name="secret"
+                            #secret="ngModel"
+                            placeholder="Enter Secret Key"
+                            [(ngModel)]="secretLoginData.secret"
+                            maxlength="21"
+                            (keyup)="checkMaxLength(21, secretLoginData['secret'], 'secret')" 
+                            required
+                        />
+                        <div *ngIf="(secret.errors && (isFormSubmitted == true || (secret.dirty || secret.touched)))" class="error captcha">
+                                <div *ngIf="secret.errors.required && !secret.errors.minlength  && !secret.errors.maxlength">Secret Key is required.</div>
+                            </div>
+                            <div *ngIf="!secret?.errors?.minlength && !secret?.errors?.required && fieldErrors.secret" class="error captcha">
+                                    Secret cannot be more than 20 characters.
+                            </div>
+                    </div>
+                    <button *ngIf="!authenticationOTP" [disabled]="secret.invalid || fieldErrors['secret'] || fieldErrors['totp']" type="button" class="btn btn-primary changepassword-btn secret" (click)="userSecretLogin()">Submit</button>
+                    <button *ngIf="authenticationOTP" [disabled]="secret.invalid || fieldErrors['secret'] || fieldErrors['totp']" type="button" class="btn btn-primary changepassword-btn secret" (click)="userLogin()">Submit</button>                    
+                    <!-- <button type="button" class="btn btn-primary changepassword-btn secret" (click)="closeSecretKeyLoginModal()">Cancel</button> -->
+                </div>
+              </div>
+            </div>
+          </form>
+      </div>
+      </app-dialog>
+
+
+
+

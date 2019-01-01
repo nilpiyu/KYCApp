@@ -1,0 +1,154 @@
+<div class=" container ">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-transparent">
+                <div class="card-header myvotes">
+                    <form class="navbar-form" role="search">
+                        <div class="input-group col-md-12 col-sm-12 col-xs-12">
+                            <input type="text" class="form-control" placeholder="Search Block">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 no-padding">
+            <div class="col-lg-12 col-sm-12 ">
+                <div class="card card-transparent">
+                    <div class="card-header ">
+                        <div class="card-title">
+                        </div>
+                        <div class="tools">
+                            <a class="collapse" href="javascript:;"></a>
+                            <a class="config" data-toggle="modal" href="#grid-config"></a>
+                            <a class="reload" href="javascript:;"></a>
+                            <a class="remove" href="javascript:;"></a>
+                        </div>
+                    </div>
+                    <div class="card-block">
+                        <div style="margin: auto; max-width: 1000px">
+                            <data-table 
+                                headerTitle="Block(s)" 
+                                [items]="blocks" 
+                                [itemCount]="countBlocks" 
+                                (reload)="reloadBlocks($event)" 
+                                [limit]="limitBlocks"
+                                [indexColumnHeader]="'#'"
+                                >
+                                <data-table-column 
+                                    [property]="'date'" 
+                                    [header]="'DATE'" 
+                                    [sortable]="true">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'height'" 
+                                    [header]="'HEIGHT'" 
+                                    [sortable]="true">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'id'" 
+                                    [header]="'ID'" 
+                                    [sortable]="true">
+                                    <ng-template #dataTableCell let-block="item">
+                                        <a (click)="readBlockId(block['id'])">{{block['id']}}</a>
+                                    </ng-template>
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'numberOfTransactions'" 
+                                    [header]="'TRANSACTION'" 
+                                    [sortable]="true" 
+                                    [cellColors]="cellColor">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'totalAmount'" 
+                                    [header]="'AMOUNT'" 
+                                    [sortable]="true">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'totalFee'" 
+                                    [header]="'FEE'" 
+                                    [sortable]="true" 
+                                    [cellColors]="cellColor">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'reward'" 
+                                    [header]="'TOTAL REWARD'" 
+                                    [sortable]="true" 
+                                    [cellColors]="cellColor">
+                                </data-table-column>
+                            </data-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="blockTransactionModal" class="overlay" (click)="closeBlockTransactionModal()"></div>
+</div>
+<app-dialog [(visible)]="blockTransactionModal">
+    <div class="popup_dialouge">
+        <div class="security_warning_logo">
+            <img src="assets/img/logo-belrium.png" class="img-responsive" />
+            <button (click)="closeBlockTransactionModal()" aria-label="Close" class="dialog__close-btn">X</button>
+        </div>
+        <div class="">
+            <div class="table-responsive">
+                <data-table 
+                    [items]="blockTransaction" 
+                    [itemCount]="countBlockTransactions" 
+                    (reload)="reloadBlockTransactions($event)" 
+                    [limit]="limitTransactions"
+                    [indexColumnHeader]="'#'"
+                    >
+                    <data-table-column 
+                        [property]="'date'" 
+                        [header]="'Date'" 
+                        [sortable]="true">
+                    </data-table-column>
+                    <data-table-column 
+                        [property]="'id'" 
+                        [header]="'Transaction Id'" 
+                        [sortable]="true">
+                    </data-table-column>
+                    <data-table-column 
+                        [property]="'senderId'" 
+                        [header]="'Sender'" 
+                        [sortable]="true">
+                    </data-table-column>
+                    <data-table-column 
+                        [property]="'recipientId'" 
+                        [header]="'Recipient'" 
+                        [sortable]="true">
+                    </data-table-column>
+                    <data-table-column 
+                        [property]="'blockId'" 
+                        [header]="'Block'" 
+                        [sortable]="true">
+                    </data-table-column>
+                    <data-table-column 
+                        [property]="'type'" 
+                        [header]="'Type'" 
+                        [sortable]="true" 
+                        [cellColors]="cellColor">
+                    </data-table-column>
+                    <data-table-column 
+                        [property]="'fee'" 
+                        [header]="'Fee'" 
+                        [sortable]="true" 
+                        [cellColors]="cellColor">
+                    </data-table-column>
+                    <data-table-column 
+                        [property]="'amount'" 
+                        [header]="'Amount'" 
+                        [sortable]="true" 
+                        [cellColors]="cellColor">
+                    </data-table-column>
+                </data-table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-9 col-md-2">
+                <button style="float: right" type="button" class="btn btn-primary changepassword-btn" (click)="closeBlockTransactionModal()">OK</button>
+            </div>
+        </div>
+    </div>
+</app-dialog>

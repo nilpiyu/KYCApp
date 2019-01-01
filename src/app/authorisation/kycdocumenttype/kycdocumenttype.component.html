@@ -1,0 +1,104 @@
+<div class=" container ">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-default">
+        <div class="card-header ">
+          <div class="card-title">
+            Search Document Type
+          </div>
+        </div>
+        <div class="card-block">
+          <form class="" role="form">
+            <div class="row">
+              <div class="col-md-5 col-sm-6 col-xs-12">
+                <div class="form-group form-group-default required">
+                   <input type="text" class="form-control"  required>
+                </div>
+              </div>
+          
+              <div class="col-md-7 col-sm-6 col-xs-12 text-right">
+                <div class="form-group ">
+                  <a class="btn btn-default changepassword-btn" (click)="openModal()">Add</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div>
+            <data-table
+                headerTitle="Document Type(s)"
+                [items]="documentTypes"
+                [itemCount]="totalDocumentTypes"
+                (reload)="reloadDocumentTypes($event)"
+                [limit]="noOfDocumentTypesPerPage"
+                [indexColumnHeader]="'#'"
+                >
+                <data-table-column
+                    [property]="'documentType'"
+                    [header]="'DOCUMENT TYPE'"
+                    [sortable]="true">
+                </data-table-column>
+                <data-table-column
+                    [header]="'ACTION'"
+                    [sortable]="true"
+                    [cellColors]="cellColor">
+                  <ng-template #dataTableCell let-documentType="item">
+                      <i class="fa fa-edit" (click)="editDocumentTypeId(documentType)"></i>
+                  </ng-template>
+                </data-table-column>
+            </data-table>
+            <!-- <span *ngIf="!documentTypeCount"> No Document Type Exists</span>   -->
+          </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="kycDocumentType" class="overlay" (click)="closeModal()"></div> 
+</div>
+<app-dialog [(visible)]="kycDocumentType">
+  <div class="popup_dialouge poup_edit">
+    <h5 *ngIf="!documentType['kycDocumentTypeId']">ADD  <span class="semi-bold">DOCUMENT TYPE</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <h5 *ngIf="documentType['kycDocumentTypeId']">Edit  <span class="semi-bold">DOCUMENT TYPE</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <form role="form" #documentTypeForm="ngForm">
+      <div class="form-group-attached">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group form-group-default">
+                <label class="">Document Type Name</label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    name="documentType"
+                    #documentTypeField="ngModel"
+                    [(ngModel)]="documentType.documentType" 
+                    placeholder="Enter Document Type Name"
+                    pattern="[a-zA-Z]+([\s][a-zA-Z]+)*" 
+                    minlength="2" 
+                    maxlength="101" 
+                    (keyup)="checkMaxLength(documentTypeField, 101)"
+                    required
+                />
+                <div *ngIf="(documentTypeField.errors && (documentTypeField.dirty|| documentTypeField.touched))">
+                  <div [hidden]="documentTypeField.errors.required || !documentTypeField.errors.pattern" class="error">
+                      Only alphabets are allowed.
+                  </div>
+                  <div [hidden]="documentTypeField.errors.required || documentTypeField.errors.pattern || (documentTypeField.errors.minlength && documentTypeField.errors.minlength['requiredLength']<documentTypeField.errors.minlength['actualLength'])" class="error">
+                      Document Type should be at least 2 characters long.
+                  </div>
+                  <div [hidden]="!documentTypeField.errors.required" class="error">
+                      Document Type is required.
+                  </div>
+                </div>
+                <div [hidden]="documentTypeField.errors || !maxLengthExceeded['documentType']" class="error">
+                    Document Type Name should not exceed 100 characters.
+                </div>
+                <!-- <div [hidden]="(!documentTypeField.touched || documentTypeField.dirty) || (documentTypeField.value && documentTypeField.value.length)" class="error">
+                    Document Type is required.
+                </div> -->
+            </div>
+            <button [disabled]="documentTypeForm.invalid || maxLengthExceeded['documentType']" type="button" class="btn btn-primary changepassword-btn doctype" (click)="saveAndUpdateDocumentType()" >Submit</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</app-dialog>

@@ -1,0 +1,146 @@
+<div class=" container ">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- START card -->
+      <div class="card card-default">
+        <div class="card-header ">
+          <div class="card-title">
+            Search Document Name
+          </div>
+        </div>
+        <div class="card-block">
+          <form class="" role="form">
+            <div class="row">
+              <div class="col-md-5  col-sm-6 col-xs-12">
+                <div class="form-group form-group-default required">
+                   <input type="text" class="form-control" required>
+                </div>
+              </div>
+          
+              <div class="col-md-7  col-sm-6 col-xs-12 text-right">
+                <div class="form-group ">
+                  <a class="btn btn-default changepassword-btn" (click)="openModal()">Add</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div>
+            <data-table
+                headerTitle="DOCUMENT NAME(s)"
+                [items]="documentMetas"
+                [itemCount]="totalDocumentMetas"
+                (reload)="reloadDocumentMetas($event)"
+                [limit]="noOfDocumentMetasPerPage"
+                [indexColumnHeader]="'#'"
+                >
+                <data-table-column
+                    [property]="'documentName'"
+                    [header]="'DOCUMENT NAME'"
+                    [sortable]="true">
+                </data-table-column>
+                <data-table-column
+                    [property]="'description'"
+                    [header]="'DOCUMENT DESCRIPTION'"
+                    [sortable]="true">
+            </data-table-column>
+                <data-table-column
+                    [header]="'ACTION'"
+                    [sortable]="true"
+                    [cellColors]="cellColor">
+                  <ng-template #dataTableCell let-documentMeta="item">
+                      <i class="fa fa-edit" (click)="editDocumentMeta(documentMeta)"></i>
+                  </ng-template>
+                </data-table-column>
+            </data-table>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="kycDocumentMeta" class="overlay" (click)="closeModal()"></div>
+</div>
+<app-dialog [(visible)]="kycDocumentMeta">
+  <div class="popup_dialouge poup_edit">
+    <h5 *ngIf="!documentMeta['kycDocumentMetaId']" >ADD  <span class="semi-bold">DOCUMENT NAME</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <h5 *ngIf="documentMeta['kycDocumentMetaId']">EDIT  <span class="semi-bold">DOCUMENT NAME</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>                    
+    <form role="form" #documentMetaForm="ngForm">
+      <div class="form-group-attached">
+          <div class="row">
+              <div class="col-md-12 user_doc_form">
+                <div class="form-group form-group-default">
+                  <label>Document Name</label>
+                  <input 
+                        type="text" 
+                        name="documentName"
+                        #documentNameField="ngModel"
+                        class="form-control"
+                        [(ngModel)]="documentMeta['documentName']"
+                        placeholder="Enter Document Name"
+                        minlength="2"
+                        maxlength="101" 
+                        pattern="[a-zA-Z]+([\s][a-zA-Z]+)*" 
+                        (keyup)="checkMaxLength(documentNameField, 101)"
+                        required
+                  />
+                  <div *ngIf="documentNameField.errors && documentNameField.dirty">
+                    <div [hidden]="documentNameField.errors.required || !documentNameField.errors.pattern" class="error">
+                        Only alphabets are allowed.
+                    </div>
+                    <div [hidden]="documentNameField.errors.required || documentNameField.errors.pattern || (documentNameField.errors.minlength && documentNameField.errors.minlength['requiredLength']<documentNameField.errors.minlength['actualLength'])" class="error">
+                        Document Name should be at least 2 characters long.
+                    </div>
+                    <div [hidden]="!documentNameField.errors.required" class="error">
+                        Document Name is required.
+                    </div>
+                  </div>
+                  <div [hidden]="documentNameField.errors || !maxLengthExceeded['documentName']" class="error">
+                      Document Name should not exceed 100 characters.
+                  </div>
+                  <div [hidden]="!documentNameField.touched || documentNameField.dirty" class="error">
+                      Document Name is required.
+                  </div>
+                </div>
+              </div>
+            <div class="col-md-12 user_doc_form">
+                <div class="form-group form-group-default">
+                  <label>Document Description</label>
+                  <input 
+                        type="text" 
+                        name="description"
+                        class="form-control"
+                        #descriptionField="ngModel"
+                        [(ngModel)]="documentMeta['description']"
+                        placeholder="Enter Document Description"
+                        minlength="2" 
+                        maxlength="251" 
+                        pattern="[A-Za-z0-9 _.,!'/$@-]*"  
+                        (keyup)="checkMaxLength(descriptionField, 251)"
+                        required
+                  />
+                  <div *ngIf="descriptionField.errors && descriptionField.dirty">
+                    <!-- <div [hidden]="descriptionField.errors.required || !descriptionField.errors.pattern" class="error">
+                        Only Alphabets are allowed.
+                    </div> -->
+                    <div [hidden]="descriptionField.errors.required || descriptionField.errors.pattern || (descriptionField.errors.minlength && descriptionField.errors.minlength['requiredLength']<descriptionField.errors.minlength['actualLength'])" class="error">
+                        Description should be at least 2 characters long.
+                    </div>
+                    <div [hidden]="!descriptionField.errors.required" class="error">
+                        Description is required.
+                    </div>
+                  </div>
+                  <div [hidden]="descriptionField.errors || !maxLengthExceeded['description']" class="error">
+                      Description Name should not exceed 250 characters.
+                  </div>
+                  <div [hidden]="(!descriptionField.touched || descriptionField.dirty) || (descriptionField.value && descriptionField.value.length)" class="error">
+                      Description is required.
+                  </div>
+                </div>
+              </div>
+            <div class="col-md-12 user_doc_form">
+              <button type="button" [disabled]="documentMetaForm.invalid || maxLengthExceeded['documentName'] || maxLengthExceeded['description']" class="btn btn-primary changepassword-btn" (click)="saveAndUpdateDocumentMeta()">Submit</button>
+            </div>
+          </div>  
+      </div>
+    </form>
+</div>
+</app-dialog>

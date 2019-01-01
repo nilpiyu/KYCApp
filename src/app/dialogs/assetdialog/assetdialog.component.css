@@ -1,0 +1,345 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+*,body,p,h1,h2,h3,h4,h5,h6,span,label,a{
+	font-family: NexaLight, sans-serif; 
+}
+.dialog {
+  z-index: 99999;
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 20px;
+  margin-right: auto;
+  margin-left: auto;
+  min-height: 180px;
+  width: 90%;
+  max-width: 1580px;
+  background-color: #fff;
+  padding: 0px;
+  box-shadow: 0 7px 8px -4px rgba(0, 0, 0, 0.2), 0 13px 19px 2px rgba(0, 0, 0, 0.14), 0 5px 24px 4px rgba(0, 0, 0, 0.12);
+}
+
+
+@media (min-width: 768px) {
+  .dialog {
+    top: 40px;
+  }
+}
+
+.dialog__close-btn {
+  border: 0;
+  background: none;
+  color: #2d2d2d;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 1.2em;
+}
+
+
+form#payslip input {
+  border: 0;
+  border-bottom: 1px solid #000;
+  border-radius: 0;
+  background: transparent;
+}
+form#payslip label {
+  font-size: 12px;
+  position: relative;
+  top: 7px;
+  display: block;
+}
+form#payslip label span {
+  float: right;
+}
+#issCertify .topsec {
+  margin: auto;
+}
+#issCertify .topsec svg {
+  background: #415BF6;
+  border-radius: 50px;
+  padding: 10px;
+}
+#issCertify .modal-header {
+  background: #3535F0;
+  padding-bottom: 100px;
+  border: 0;
+  border-radius: 10px;
+}
+#issCertify .modal-body {
+  position: relative;
+  width: 95%;
+  margin: auto;
+  padding: 35px 10px 30px;
+  top: -75px;
+  background: #ffffff;
+  border-radius: 10px;
+  text-align: center;
+}
+#issCertify .modal-content {
+  background: transparent;
+  border: 0;
+}
+#issCertify button.btn.btn-info.btn-lg {
+  background: #415BF6;
+  border-color: #415BF6;
+  border-radius: 5px;
+  border-width: 2px;
+   font-weight: 700;
+}
+#issCertify button.btn.btn-default {
+  border-color: #415BF6;
+  background: #ffffff;
+  border-radius: 5px;
+  width: 125px;
+  border-width: 2px;
+  color: #3535f0;
+  font-weight: 700;
+}
+#issCertify p.p2 {
+  color: #F14444;
+  font-weight: 700;
+  padding: 0px 28px;
+}
+#issCertify p.p1{
+  color: #8F8F8F;
+  font-weight: 700;
+  padding: 0px 25px;
+}
+.enter_details h4 {
+  color: #6A82B4;
+  font-size: 18px;
+}
+.iss_new_certify_payslip h4 {
+  color: #415BF6;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+.iss_new_certify_payslip h5 {
+  color: #000000 !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  text-transform: uppercase !important;
+  background-color: transparent !important;
+}
+.iss_new_certify {
+  padding-top: 4px;
+  background: #ffffff;
+}
+.enter_details {
+  padding: 25px 0px;
+}
+form#enter_details_form input {
+  font-size: 12px;
+}
+.iss_new_certify .left {
+  border: 2px solid #F6F8F9;
+
+}
+.iss_new_certify_payslip {
+  border: 2px solid #F6F8F9;
+   padding: 2px 0px;
+}
+.iss_new_certify .right {
+  background: #F9FAFB;
+}
+.title_sec_certify {
+  padding: 25px 0px;
+  background: #ffffff;
+}
+.iss_new_certify_earnings .table-responsive {
+  background: #f9fafb;
+  box-shadow: none;
+  padding: 30px 30px;
+}
+.iss_new_certify_earnings tr:first-child {
+  background: #4DA1FF;
+}
+.iss_new_certify_earnings tr:first-child th {
+  color: #fff;
+  padding: 7px 15px;
+}
+.iss_new_certify_earnings tr td {
+  padding: 7px 20px;
+}
+.iss_new_certify_earnings tr:last-child td {
+  padding: 7px 15px;
+  border-top: 2px solid #415bf694;
+  border-bottom: 2px solid #415bf694;
+  font-weight: bold;
+}
+.iss_new_certify_deductions .table-responsive {
+  background: #f9fafb;
+  box-shadow: none;
+  padding: 30px 30px;
+}
+.iss_new_certify_deductions tr:first-child {
+  background: #4DA1FF;
+}
+.iss_new_certify_deductions tr:first-child th {
+  color: #fff;
+  padding: 7px 15px;
+}
+.iss_new_certify_deductions tr td {
+  padding: 7px 20px;
+}
+.iss_new_certify_deductions tr:last-child td {
+  padding: 7px 15px;
+  border-top: 2px solid #415bf694;
+  border-bottom: 2px solid #415bf694;
+  font-weight: bold;
+}
+.iss_new_certify_netsal {
+  padding: 7px 30px;
+  margin-bottom: 20px;
+}
+.iss_new_certify_netsal h4{
+  color: #415BF6;
+  font-weight: 700;
+  font-size: 18px;
+}
+.iss_new_certify_netsal button {
+  background: #fff;
+  color: #415BF6;
+  border-color: #415BF6;
+  font-weight: 700;
+  width: 150px;
+}
+
+
+.iss_new_certify_payslip h4 {
+  color: #415BF6;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+.iss_new_certify_payslip h5 {
+  color: #000000;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  background-color: blue !important;
+}
+.iss_new_certify {
+  padding-top: 4px;
+  background: #ffffff;
+}
+.enter_details {
+  padding: 25px 0px;
+}
+form#enter_details_form input {
+  font-size: 12px;
+}
+.iss_new_certify .left {
+  border: 2px solid #F6F8F9;
+
+}
+.iss_new_certify_payslip {
+  border: 2px solid #F6F8F9;
+   padding: 2px 0px;
+}
+.iss_new_certify .right {
+  background: #F9FAFB;
+}
+
+.iss_new_certify_earnings .table-responsive {
+  background: #f9fafb;
+  box-shadow: none;
+  padding: 30px 30px;
+}
+.iss_new_certify_earnings tr:first-child {
+  background: #4DA1FF;
+}
+.iss_new_certify_earnings tr:first-child th {
+  color: #fff;
+  padding: 7px 15px;
+}
+.iss_new_certify_earnings tr td {
+  padding: 7px 20px;
+}
+.iss_new_certify_earnings tr:last-child td {
+  padding: 7px 15px;
+  border-top: 2px solid #415bf694;
+  border-bottom: 2px solid #415bf694;
+  font-weight: bold;
+}
+.iss_new_certify_deductions .table-responsive {
+  background: #f9fafb;
+  box-shadow: none;
+  padding: 30px 30px;
+}
+.iss_new_certify_deductions tr:first-child {
+  background: #4DA1FF;
+}
+.iss_new_certify_deductions tr:first-child th {
+  color: #fff;
+  padding: 7px 15px;
+}
+.iss_new_certify_deductions tr td {
+  padding: 7px 20px;
+}
+.iss_new_certify_deductions tr:last-child td {
+  padding: 7px 15px;
+  border-top: 2px solid #415bf694;
+  border-bottom: 2px solid #415bf694;
+  font-weight: bold;
+}
+.iss_new_certify_netsal {
+  padding: 7px 30px;
+  margin-bottom: 20px;
+}
+.iss_new_certify_netsal h4{
+  color: #415BF6;
+  font-weight: 700;
+  font-size: 18px;
+}
+.iss_new_certify_netsal button {
+  background: #fff;
+  color: #415BF6;
+  border-color: #415BF6;
+  font-weight: 700;
+  width: 150px;
+}
+
+div#navbarTogglerDemo02 {display: block !important;}
+          div#navbarTogglerDemo02 .menu {float: right;}
+          section.bel_dashboard_sec1 {top: 70px;position: relative;z-index: 99;}
+          .certificate {padding: 0px 50px;}
+          .iss_new_certify {overflow-y: auto;height: 90vh;padding-top: 4px;background: #F9FAFB;    border-radius: 10px;}
+          form#payslip {padding-top: 20px;}
+          header.bel_dashboard_header { padding-bottom: 200px;}
+          form#payslip input {border: 0;border-bottom: 0;}
+          form#payslip input { border: 0; border-bottom: 0; font-weight: 600; font-size: 13px;}
+          form#payslip label {top: 0;}
+          .iss_new_certify_payslip {border: 0;}
+          @media (min-width: 1024px){
+              .iss_new_certifysec1 {
+                  padding: 0px 20%;
+                  background: #fff;
+              }
+              .iss_new_certifysec2 {
+                  padding: 0px 20%;
+              }
+          }
+
+@media (min-width: 576px){
+  #issCertify .modal-dialog {
+      max-width: 350px;
+      margin: 7.75rem auto;
+  }
+}
+@media(min-width: 1280px){
+  .certificate .card ul.nav>li{        
+    width: 24%;
+  }
+}

@@ -1,0 +1,182 @@
+<div class=" container ">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-transparent">
+                <div class="card-header myvotes">
+                    <form class="navbar-form" role="search">
+                        <div class="input-group col-md-12 col-sm-12 col-xs-12">
+                            <input type="text" class="form-control" placeholder="Search Transaction">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 no-padding">
+            <div class="col-lg-12 col-sm-12 ">
+                <div class="card card-transparent">
+                    <div class="card-header ">
+                        <div class="card-title"></div>
+                        <div class="tools">
+                            <a class="collapse" href="javascript:;"></a>
+                            <a class="config" data-toggle="modal" href="#grid-config"></a>
+                            <a class="reload" href="javascript:;"></a>
+                            <a class="remove" href="javascript:;"></a>
+                        </div>
+                    </div>
+                    <div class="card-block">
+                        <div style="margin: auto; max-width: 1000px">
+                            <data-table 
+                                headerTitle="Transaction(s)" 
+                                [items]="transactions" 
+                                [itemCount]="countTransactions" 
+                                (reload)="reloadTransactions($event)"
+                                [limit]="limitTransactions" 
+                                [indexColumnHeader]="'#'"
+                                >
+                                <data-table-column 
+                                    [property]="'date'" 
+                                    [header]="'Date'" 
+                                    [sortable]="true">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'id'" 
+                                    [header]="'Transaction Id'" 
+                                    [sortable]="true">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'senderId'" 
+                                    [header]="'Sender'" 
+                                    [sortable]="true">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'recipientId'" 
+                                    [header]="'Recipient'" 
+                                    [sortable]="true">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'blockId'" 
+                                    [header]="'Block'" 
+                                    [sortable]="true">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'type'" 
+                                    [header]="'Type'" 
+                                    [sortable]="true" 
+                                    [cellColors]="cellColor">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'fee'" 
+                                    [header]="'Fee'" 
+                                    [sortable]="true" 
+                                    [cellColors]="cellColor">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'amount'" 
+                                    [header]="'Amount'" 
+                                    [sortable]="true" 
+                                    [cellColors]="cellColor">
+                                </data-table-column>
+                            </data-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="roleName!='admin'">
+        <div class="row user-transaction">
+            <div class="col-md-3 no-padding">
+                <select class="form-control" name="countryCode" data-placeholder="Select Country" [(ngModel)]="userTransactionCredentials['countryCode']"
+                    required>
+                    <option disabled [ngValue]="undefined">Select Country</option>
+                    <option value="all">All</option>
+                    <option [ngValue]="country['countryCode']" *ngFor="let country of countriesWallets">{{country['countryName']}}[{{country['countryCode']}}]</option>
+                </select>
+            </div>
+            <div class="col-md-3 no-padding">
+                <select class="form-control" name="address" data-placeholder="Select Wallet" [(ngModel)]="userTransactionCredentials['address']"
+                    required>
+                    <option disabled [ngValue]="undefined">Select Wallet</option>
+                    <option value="all">All</option>
+                    <option [ngValue]="walletAddress" *ngFor="let walletAddress of wallet">{{walletAddress}}</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+                <div class="form-group ">
+                    <button type="submit" class="btn btn-primary changepassword-btn" (click)="SearchByWalletAndCountry();">Search</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 no-padding">
+            <div class="col-lg-12 col-sm-12 ">
+                <div class="card card-transparent">
+                    <div class="card-header ">
+                        <div class="card-title"></div>
+                        <div class="tools">
+                            <a class="collapse" href="javascript:;"></a>
+                            <a class="config" data-toggle="modal" href="#grid-config"></a>
+                            <a class="reload" href="javascript:;"></a>
+                            <a class="remove" href="javascript:;"></a>
+                        </div>
+                    </div>
+                    <div class="card-block">
+                        <div style="margin: auto; max-width: 1000px">
+                            <data-table 
+                                [items]="userTransactions" 
+                                [itemCount]="userCountTransaction" 
+                                (reload)="reloadUserTransactions($event)" 
+                                [limit]="limitUserTransaction"
+                                headerTitle="User Transaction(s)" 
+                                [indexColumnHeader]="'#'"
+                                >
+                                <data-table-column 
+                                    [property]="'date'" 
+                                    [header]="'Date'" 
+                                    [sortable]="true">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'id'" 
+                                    [header]="'Transaction Id'" 
+                                    [sortable]="true">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'senderId'" 
+                                    [header]="'Sender'" 
+                                    [sortable]="true">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'recipientId'" 
+                                    [header]="'Recipient'" 
+                                    [sortable]="true">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'blockId'" 
+                                    [header]="'Block'" 
+                                    [sortable]="true">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'type'" 
+                                    [header]="'Type'" 
+                                    [sortable]="true" 
+                                    [cellColors]="cellColor">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'fee'" 
+                                    [header]="'Fee'" 
+                                    [sortable]="true" 
+                                    [cellColors]="cellColor">
+                                </data-table-column>
+                                <data-table-column 
+                                    [property]="'amount'" 
+                                    [header]="'Amount'" 
+                                    [sortable]="true" 
+                                    [cellColors]="cellColor">
+                                </data-table-column>
+                            </data-table>
+                            <span *ngIf="!userCountTransaction"> No Transaction Type Exists</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

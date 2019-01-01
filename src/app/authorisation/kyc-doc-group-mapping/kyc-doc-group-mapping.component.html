@@ -1,0 +1,202 @@
+<div class=" container ">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- START card -->
+      <div class="card card-default">
+        <!-- <div class="card-header ">
+                  <div class="card-title">
+                    Search Role:
+                  </div>
+                  </div> -->
+        <div class="card-block">
+          <form class="" role="form">
+            <div class="row">
+              <div class="col-md-5  col-sm-6 col-xs-12">
+                <div class="form-group form-group-default required">
+                  <input type="email" class="form-control" placeholder="" required>
+                </div>
+              </div>
+              <div class="col-md-7  col-sm-6 col-xs-12 text-right">
+                <div class="form-group ">
+                  <a class="btn btn-default changepassword-btn" (click)="openGroupMappingModal()">Add</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card card-transparent">
+        <div class="card-header ">
+          <div class="tools">
+            <a class="collapse" href="javascript:;"></a>
+            <a class="config" data-toggle="modal" href="#grid-config"></a>
+            <a class="reload" href="javascript:;"></a>
+            <a class="remove" href="javascript:;"></a>
+          </div>
+        </div>
+        <div class="card-block">
+          <div style="margin: auto; max-width: 1000px">
+            <data-table
+                headerTitle="USER DOCUMENT"
+                [items]="documentGroupMappings"
+                [itemCount]="totalDocGroupMappings"
+                (reload)="reloadDocGroupMapping($event)"
+                [limit]="noOfDocGroupsMappingPerPage"
+                [indexColumnHeader]="'#'"
+                >
+                <data-table-column
+                    [property]="'groupName'"
+                    [header]="'Group Name'"
+                    [sortable]="true">
+                </data-table-column>
+                <data-table-column>
+                    <ng-template #dataTableCell let-documentGroupMapping="item">
+                       <table class="table table-bordered" id="stripedTable">
+                          <thead>
+                            <tr>
+                                <th style="width:30%">Country</th>
+                                <th style="width:30%">Document Name</th>
+                                <th style="width:30%">Document Type</th>
+                                <th style="width:10%">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let kycDoc of documentGroupMapping['kycDocs']; let kycDocIndex=index;">
+                                <td style="width:30%">{{kycDoc['country']['countryName']}}</td>
+                                <td style="width:30%">{{kycDoc['kycDocumentMeta']['documentName']}}</td>
+                                <td style="width:30%">{{kycDoc['kycDocumentType']['documentType']}}</td>
+                                <td style="width:10%">
+                                    <a (click)="editDocumentGroupMapping(documentGroupMapping, kycDocIndex)">
+                                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </a>
+                                  </td>
+                            </tr>
+                          </tbody>
+                      </table>
+                  </ng-template>
+                </data-table-column>
+            </data-table>
+          </div>    
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="documentGroupMappingModal" class="overlay" (click)="closeGroupMappingModal()"></div>
+</div>
+
+<app-dialog [(visible)]="documentGroupMappingModal">
+  <div class="popup_dialouge poup_edit">
+    <h5 *ngIf="addDocumentGroupMapping">ADD
+      <span class="semi-bold">Group Mapping</span>
+      <button (click)="closeGroupMappingModal()" aria-label="Close" class="dialog__close-btn">X</button>
+    </h5>
+    <h5 *ngIf="!addDocumentGroupMapping">EDIT
+      <span class="semi-bold">Group Mapping</span>
+      <button (click)="closeGroupMappingModal()" aria-label="Close" class="dialog__close-btn">X</button>
+    </h5>
+    <form role="form" #documentGroupMappingForm="ngForm">
+      <div class="form-group-attached">
+        <div class="row">
+          <form #documentGroupMappingSearchForm="ngForm">
+              <div class="form-group-attached">
+                  <div class="row">
+            <div class="col-md-12 user_doc_form">
+              <div class="form-group form-group-default">
+                <label>Country</label>
+                <select 
+                        [disabled]="!addDocumentGroupMapping" 
+                        name="country" 
+                        #country="ngModel" 
+                        class="form-control" 
+                        [(ngModel)]="documentGroupMapping['countryCode']"
+                        required>
+                  <option disabled [ngValue]="undefined">Select Country</option>
+                  <option *ngFor="let country of countries" [ngValue]="country['countryCode']">{{country['countryName']}}</option>
+                </select>
+                <div *ngIf="country.invalid && (country.dirty || country.touched)" class="error">
+                    <div *ngIf="country.errors.required">
+                      Country is required.
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          </form>
+          <div class="col-md-12 user_doc_form">
+            <button type="button" class="btn btn-primary changepassword-btn" [disabled]="documentGroupMappingSearchForm.invalid" (click)="getKycDocumentByCountry();">Search</button>
+          </div>
+          <div class="col-md-12 user_doc_form">
+            <div class="form-group form-group-default">
+              <label class="group">Group</label>
+              <select 
+                      [disabled]="!addDocumentGroupMapping" 
+                      name="groupname" 
+                      #groupname="ngModel" 
+                      class="form-control" 
+                      [(ngModel)]="documentGroupMapping['kycDocGroupId']"
+                      required>
+                <option disabled [ngValue]="undefined">Select Group Name</option>
+                <option *ngFor="let group of groups" [ngValue]="group['kycDocGroupId']">{{group['groupName']}}</option>
+              </select>
+              <div *ngIf="groupname.invalid && (groupname.dirty || groupname.touched)" class="error">
+                  <div *ngIf="groupname.errors.required">
+                  Group is required.
+                  </div>
+          </div>
+            </div>
+          </div>
+      <div class="col-md-12 user_doc_form">
+      <div class="scrollmap">
+        <div class="form-group form-group-default">
+          <table class="table table-bordered" id="stripedTable">
+            <thead>
+              <tr>
+                <th style="width:20%">Country</th>
+                <th style="width:30%">Document Name</th>
+                <th style="width:40%">Document Type</th>
+                <th style="width:10%">Select</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="kycDocuments.length==0"><td colspan="4">No document Mapped.</td></tr>                                                  
+              <tr *ngFor="let kycDocument of kycDocuments;let kycDocumentIndex=index">
+                <td class="v-align-middle semi-bold">
+                  <p>{{kycDocument['country']['countryName']}}</p>
+                </td>
+                <td class="v-align-middle">
+                  <p>{{kycDocument['kycDocumentMeta']['documentName']}}</p>
+                </td>
+                <td class="v-align-middle">
+                  <p>
+                    <span class="role_activated">{{kycDocument['kycDocumentType']['documentType']}}</span>
+                  </p>
+                </td>
+                <td class="v-align-middle">
+                  <p>
+                    <input 
+                          type="checkbox" 
+                          name="status{{kycDocumentIndex}}" 
+                          #status="ngModel" 
+                          [(ngModel)]="kycDocuments[kycDocumentIndex]['status']" 
+                          class="role_activated"
+                          (change)="readSelectedDocumentIds(kycDocumentIndex, status)" 
+                    />
+                  </p>
+                </td>
+              </tr>
+            </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="form-group ">
+        <button class="btn btn-default changepassword-btn sub" [disabled]="documentGroupMappingForm.invalid" (click)="saveAndUpdateDocumentMapping()">Submit</button>
+      </div>
+    </div>
+  </div>
+  </form>
+  </div>
+</app-dialog>

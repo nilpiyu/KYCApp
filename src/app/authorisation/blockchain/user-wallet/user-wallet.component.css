@@ -1,0 +1,46 @@
+.changepassword-btn{background: #cd2122 !important; color: #fff;border: none;border-radius: 0;}
+.card{padding: 20px;background: #fff;border: 1px solid rgba(230, 230, 230, 0.7);margin-bottom: 20px;}
+.card-title{padding-bottom: 10px;}
+.table-bordered th{background: #e1e1e1;}
+.table-bordered .btn{    border: 1px solid #e8e9ea;
+    box-shadow: none;
+    color: #333;margin-right: 5px;}
+
+.inactive{
+    color: #dc3545;
+    padding: 5px 15px;
+    border-radius: 6px;
+    border: 1px solid #dc3545;
+    font-size: 15px;
+}
+.active{
+    color: #28a745;
+    padding: 5px 15px;
+    border-radius: 6px;
+    border: 1px solid #28a745;
+    font-size: 15px;
+}
+
+.wallet_btn ul li span>i{padding-left: 4px;}
+.kyc_doc_table h2{margin-top: 10px;}
+.security_warning_logo{    background: #cd2122;}
+.security_warning_logo img{margin:auto;}
+.security_warning{    padding: 20px 0;}
+.popup_dialouge h5{padding-bottom: 0;    font-weight: bold;}
+.delegate_pad{    
+    padding: 4px 20px;
+    border-top: 1px solid #cacaca;
+    border-bottom: 1px solid #cacaca;
+}
+.fee_shift{float: right;}
+button.btn.btn-default.login-btn{
+    background: #dc3545;
+    color: #fff;
+    border-radius: 6px;
+    position: relative;
+    right: 20px;
+}
+
+.text-center {
+    text-align: center;
+}

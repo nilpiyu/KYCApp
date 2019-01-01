@@ -1,0 +1,77 @@
+<div class=" container ">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- START card -->
+            <div class="card card-default">
+                <div class="card-header ">
+                    <div class="card-title">
+                        Search Document:
+                    </div>
+                </div>
+                <div class="card-block">
+                    <form class="" role="form">
+                        <div class="row">
+                            <div class="col-md-5  col-sm-6 col-xs-12">
+                                <div class="form-group form-group-default required">
+                                    <input type="text" class="form-control" placeholder="Search Document" required>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div>
+                    <data-table headerTitle="Document(s) Requested By Merchant" [items]="userRequestDocuments" [itemCount]="totalRequestedDocuments"
+                        (reload)="reloadRequestedDocuments($event)" [limit]="noOfRequestedDocumentsPerPage">
+                        <data-table-column 
+                            [property]="'countryName'" 
+                            [header]="'COUNTRY'" 
+                            [sortable]="true">
+                        </data-table-column>
+                        <data-table-column 
+                            [property]="'documentType'" 
+                            [header]="'DOCUMENT TYPE'" 
+                            [sortable]="true">
+                        </data-table-column>
+                        <data-table-column 
+                            [property]="'documentName'" 
+                            [header]="'DOCUMENT NAME'" 
+                            [sortable]="true">
+                        </data-table-column>
+                        <data-table-column 
+                            [property]="'requesterName'" 
+                            [header]="'REQUESTED BY'" 
+                            [sortable]="true">
+                        </data-table-column>
+                        <data-table-column 
+                            [property]="'status'" 
+                            [header]="'STATUS'" 
+                            [sortable]="true">
+                        </data-table-column>
+                        <data-table-column 
+                            [property]="'active'" 
+                            [header]="'ACTION'" 
+                            [sortable]="true" 
+                            [cellColors]="cellColor">
+                            <ng-template #dataTableCell let-userRequestDocument="item">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p *ngIf="userRequestDocument['status']=='Requested' || userRequestDocument['status']=='Rejected'" class="form-group col-md-6 no-padding text-right">
+                                            <input type="hidden" value="Accepted" #documentStatusInputFieldApproved/>
+                                            <button [disabled]="userRequestDocument['documentStatus']!='Approved'" type="button" class="btn btn-success" (click)="updateSharedDocuments(userRequestDocument['documentSharingId'], documentStatusInputFieldApproved.value)">Approved</button>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p *ngIf="userRequestDocument['status']=='Requested' || userRequestDocument['status']=='Accepted'" class="form-group col-md-6 no-padding text-right">
+                                            <input type="hidden" value="Rejected" #documentStatusInputFieldRejected/>
+                                            <button [disabled]="userRequestDocument['documentStatus']!='Approved'" type="button" class="btn btn-danger" (click)="updateSharedDocuments(userRequestDocument['documentSharingId'], documentStatusInputFieldRejected.value)">Rejected</button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </data-table-column>
+                    </data-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

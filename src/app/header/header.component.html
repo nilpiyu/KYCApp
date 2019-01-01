@@ -1,0 +1,70 @@
+<div class="container-fluid no-padding">
+  <div class="col-md-12 col-sm-12 col-xs-12  top-header no-padding">
+      <div class="col-md-2 col-sm-2  col-xs-6">
+              <img src="../../assets/img/logo-belrium.png" alt="logo" height="40px"> Belrium
+      </div>
+      <div class="col-md-10 col-sm-10  col-xs-6 text-right user">
+        <span class="notification dropdown"><a class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell" (click)="getUserNotification()"></i><sup>{{notifications.length}}</sup></a>
+            <ul class="dropdown-menu notification">
+                <!-- <li [ngClass]="{'notification_deactivated':!notification['isRead']}">No Notification Exists.</li> -->
+                <li *ngIf="!notifications.length" [ngClass]="{'notification_deactivated':true}">No Notification Exists.</li>                
+                <li *ngFor="let notification of notifications; let notificationIndex=index;"  (click)="readNotificationIdByIndex(notification)">
+                    <a *ngIf="notification['isRead']" [ngClass]="{'notification_activated':notification['isRead']}"><i class="fa fa-users" aria-hidden="true"></i>{{notification['message']}}</a>
+                    <a *ngIf="!notification['isRead']" [ngClass]="{'notification_deactivated':!notification['isRead']}"><i class="fa fa-users" aria-hidden="true"></i>{{notification['message']}}</a>
+                    <!-- <span [ngClass]="{'role_activated':role['active'], 'role_deactivated':!role['active']}">{{role['active']? 'Active' : 'Deactive'}}</span> -->
+                    
+                </li>
+            </ul>
+        </span> 
+        <span>{{userName}}</span> 
+        <span class="profile_dropdown profile_image dropdown">
+            <img *ngIf="userName=='admin'" src="../../assets/img/profile-pic.jpg" height="40px" class="dropdown-toggle" data-toggle="dropdown"/>
+            <img *ngIf="!profileImagePath && userName!='admin'" src="../../assets/img/profile-pic.jpg" height="40px" class="dropdown-toggle" data-toggle="dropdown"/>            
+            <img *ngIf="profileImagePath && userName!='admin'" [src]="profileImagePath" alt="user" height="40px" class="dropdown-toggle" data-toggle="dropdown"/>            
+            <ul class="dropdown-menu">
+                    <li>
+                        <a routerLink="/changepassword" routerLinkActive="active">Change Password</a>
+                    </li>
+                    <li>
+                        <a routerLink="/profile" routerLinkActive="active">Profile</a>
+                    </li>
+                    <li>
+                        <a routerLink="/security" routerLinkActive="active">Security</a>                        
+                    </li>
+                    <li>
+                        <a (click)="userSignOut()" routerLink="/login">Signout</a>
+                    </li>
+                </ul>
+        </span>
+  </div>
+  </div>
+</div>
+<section class="header_section">
+<div class="container">
+  <div id="navbar">    
+      <nav class="navbar navbar-default navbar-static-top" role="navigation">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" (click)="collapse=!collapse" type="button" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" (click)="collapse=true" [hidden]="collapse" id="myNavbar">
+                        <a class="community" href="https://community.belrium.io" target="_blank">Communicate with Belrium Community!</a> 
+                    <ul class="nav navbar-nav">
+                        <li *ngFor="let menu of menus">
+                            <a [ngClass]="{'disable_cursor':menu.children}" routerLink='/{{menu.state}}' routerLinkActive="active">{{menu.name}}</a>         
+                            <ul [ngClass]="{'dropdown-menu':menu.children}">
+                                <li *ngFor="let subMenu of menu.children">
+                                    <a routerLink="/{{subMenu.state}}" routerLinkActive="active">{{subMenu.name}}</a>
+                                </li>                       
+                            </ul>                       
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+    </div>
+</div>
+</section>

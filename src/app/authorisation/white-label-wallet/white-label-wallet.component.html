@@ -1,0 +1,202 @@
+<div class=" container ">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-default">
+          <div class="card-header ">
+            <div class="card-title">
+              Search Cryptocurrency
+            </div>
+          </div>
+          <div class="card-block">
+            <form class="" role="form">
+              <div class="row">
+                <div class="col-md-5  col-sm-6 col-xs-12">
+                  <div class="form-group form-group-default required">
+                      <input 
+                            type="email" 
+                            class="form-control" 
+                            placeholder="" 
+                            required
+                      />
+                  </div>
+                </div>
+            
+                <div class="col-md-7  col-sm-6 col-xs-12 text-right">
+                  <div class="form-group ">
+                    <a class="btn btn-default changepassword-btn" (click)="openWhiteLabelModal()">Add</a>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div>
+              <data-table
+                  headerTitle="Availed Cryptocurrency(s)"
+                  [items]="whiteLabelMetas"
+                  [itemCount]="noOfWallets"
+                  (reload)="reloadWallets($event)"
+                  [limit]="noOfWalletsPerPage"
+                  [indexColumnHeader]="'#'"
+                  >
+                  <data-table-column
+                      [property]="'walletName'"
+                      [header]="'CURRENCY NAME'"
+                      [sortable]="true">
+                  </data-table-column>
+                  <data-table-column
+                      [property]="'walletDescription'"
+                      [header]="'CURRENCY DESCRIPTION'"
+                      [sortable]="true">
+                  </data-table-column>
+                  <data-table-column
+                      [property]="'walletSymbol'"
+                      [header]="'CURRENCY SYMBOL'"
+                      [sortable]="true">
+                  </data-table-column>
+                  <data-table-column
+                    [property]="'active'"
+                    [header]="'STATUS'"
+                    [cellColors]="cellColor">
+                    <ng-template #dataTableCell let-wallet="item">
+                        <span [ngClass]="{'role_activated':wallet['active'], 'role_deactivated':!wallet['active']}">{{wallet['active']? 'Active' : 'Deactive'}}</span>
+                    </ng-template>
+                  </data-table-column>
+                  <data-table-column
+                      [header]="'ACTION'"
+                      [sortable]="true"
+                      [cellColors]="cellColor">
+                    <ng-template #dataTableCell let-wallet="item">
+                        <i class="fa fa-edit" (click)="editWhiteWalletById(wallet)"></i>
+                    </ng-template>
+                  </data-table-column>
+              </data-table>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="whiteLabelModal" class="overlay" (click)="closeModal()"></div>
+  </div>
+<app-dialog [(visible)]="whiteLabelModal">
+    <div class="popup_dialouge poup_edit">
+      <h5 *ngIf="!whiteLabelMeta['walletWhiteLabelId']">ADD <span class="semi-bold">CryptoCurrency</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+      <h5 *ngIf="whiteLabelMeta['walletWhiteLabelId']">EDIT <span class="semi-bold">CryptoCurrency</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+      <form role="form" #whiteLabelWalletForm="ngForm">
+        <div class="form-group-attached">
+            <div class="row">
+                <div class="col-md-12 user_doc_form">
+                    <div class="form-group form-group-default">
+                      <label>Cryptocurrency Name</label>
+                      <input 
+                            type="text" 
+                            [(ngModel)]="whiteLabelMeta['walletName']"
+                            name="cryptoCurrencyName"
+                            class="form-control" 
+                            #cryptoCurrencyNameField="ngModel"
+                            placeholder="Enter Crypto Currency Name" 
+                            minlength="2"
+                            maxlength="101"   
+                            pattern="[a-zA-Z]+([\s][a-zA-Z]+)*"
+                            (keyup)="checkMaxLength(cryptoCurrencyNameField, 101)"
+                            required 
+                      />
+                        <div *ngIf="cryptoCurrencyNameField.errors && cryptoCurrencyNameField.dirty">
+                          <div [hidden]="cryptoCurrencyNameField.errors.required || !cryptoCurrencyNameField.errors.pattern" class="error">
+                                Only alphabets are allowed.
+                          </div>
+                          <div [hidden]="cryptoCurrencyNameField.errors.required || cryptoCurrencyNameField.errors.pattern || (cryptoCurrencyNameField.errors.minlength && cryptoCurrencyNameField.errors.minlength['requiredLength']<cryptoCurrencyNameField.errors.minlength['actualLength'])" class="error">
+                                Currency Name should be at least 2 characters long.
+                          </div>
+                          <div [hidden]="!cryptoCurrencyNameField.errors.required" class="error">
+                              Currency Name is required.
+                          </div>
+                        </div>
+                        <div [hidden]="cryptoCurrencyNameField.errors || !maxLengthExceeded['cryptoCurrencyName']" class="error">
+                            Currency Name should not exceed 100 characters.
+                        </div>
+                        <div [hidden]="(!cryptoCurrencyNameField.touched || cryptoCurrencyNameField.dirty) || (cryptoCurrencyNameField.value && cryptoCurrencyNameField.value.length)" class="error">
+                            Currency Name is required.
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 user_doc_form">
+                    <div class="form-group form-group-default">
+                      <label>Cryptocurrency Description</label>
+                      <input 
+                            type="text" 
+                            [(ngModel)]="whiteLabelMeta['walletDescription']"
+                            name="cryptoCurrencyDescription"
+                            #cryptoCurrencyDescriptionField="ngModel"
+                            class="form-control" 
+                            placeholder="Enter Crypto Currency Description" 
+                            minlength="5"
+                            maxlength="101"   
+                            pattern="[A-Za-z0-9 _.,!'/$@-]*" 
+                            (keyup)="checkMaxLength(cryptoCurrencyDescriptionField, 101)"
+                            required 
+                      />
+                      <div *ngIf="cryptoCurrencyDescriptionField.errors && cryptoCurrencyDescriptionField.dirty">
+                          <div [hidden]="cryptoCurrencyDescriptionField.errors.required || cryptoCurrencyDescriptionField.errors.pattern || (cryptoCurrencyDescriptionField.errors.minlength && cryptoCurrencyDescriptionField.errors.minlength['requiredLength']<cryptoCurrencyDescriptionField.errors.minlength['actualLength'])" class="error">
+                              Currency Description should be at least 5 characters long.
+                          </div>
+                          <div [hidden]="!cryptoCurrencyDescriptionField.errors.required" class="error">
+                              Currency Description is required.
+                          </div>
+                      </div>
+                        <div [hidden]="cryptoCurrencyDescriptionField.errors || !maxLengthExceeded['cryptoCurrencyDescription']" class="error">
+                            Currency Description should not exceed 100 characters.
+                        </div>
+                        <div [hidden]="(!cryptoCurrencyDescriptionField.touched || cryptoCurrencyDescriptionField.dirty) || (cryptoCurrencyDescriptionField.value && cryptoCurrencyDescriptionField.value.length)" class="error">
+                            Currency Description is required.
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 user_doc_form">
+                      <div class="form-group form-group-default">
+                        <label>Cryptocurrency Symbol</label>
+                        <input 
+                              type="text" 
+                              [(ngModel)]="whiteLabelMeta['walletSymbol']"
+                              name="cryptoCurrencySymbol"
+                              #cryptoCurrencySymbolField="ngModel"
+                              class="form-control" 
+                              placeholder="Enter Crypto Currency Symbol" 
+                              minlength="2"
+                              maxlength="51"   
+                              pattern="[A-Za-z0-9 _.,!'/$@-]*"
+                              (keyup)="checkMaxLength(cryptoCurrencySymbolField, 51)"
+                              required 
+                        />
+                        <div *ngIf="cryptoCurrencySymbolField.errors && cryptoCurrencySymbolField.dirty">
+                                <div [hidden]="cryptoCurrencySymbolField.errors.required || cryptoCurrencySymbolField.errors.pattern || (cryptoCurrencySymbolField.errors.minlength && cryptoCurrencySymbolField.errors.minlength['requiredLength']<cryptoCurrencySymbolField.errors.minlength['actualLength'])" class="error">
+                                    Currency Symbol should be at least 2 characters long.
+                                </div>
+                            <div [hidden]="!cryptoCurrencySymbolField.errors.required" class="error">
+                                Currency Symbol is required.
+                            </div>
+                        </div>
+                            <div [hidden]="cryptoCurrencySymbolField.errors || !maxLengthExceeded['cryptoCurrencySymbolField']" class="error">
+                                Currency Symbol should not exceed 50 characters.
+                            </div>
+                          <div [hidden]="(!cryptoCurrencySymbolField.touched || cryptoCurrencySymbolField.dirty) || (cryptoCurrencySymbolField.value && cryptoCurrencySymbolField.value.length)" class="error">
+                              Currency Symbol is required.
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="checkbox check-success">
+                      <input 
+                            type="checkbox" 
+                            name="active"
+                            [(ngModel)]="whiteLabelMeta['isActive']"   
+                      />
+                      <label for="checkbox2">Active</label>
+                    </div>
+                  </div>
+              <div class="col-md-12 user_doc_form">
+                <button type="button" [disabled]="whiteLabelWalletForm.invalid" class="btn btn-primary changepassword-btn" (click)="saveAndUpdateWallet()">Submit</button>
+              </div>
+            </div> 
+        </div>
+      </form>
+  </div>
+</app-dialog>

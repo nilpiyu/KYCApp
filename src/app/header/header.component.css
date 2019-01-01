@@ -1,0 +1,26 @@
+.navbar-form{    box-shadow: none;}
+.disable_cursor{
+    cursor: not-allowed;
+    pointer-events: none;
+}
+/* ul.dropdown-menu.pagination{
+    max-height: 300px;
+    overflow-y: scroll;
+} */
+ul.dropdown-menu.notification{
+    max-height: 150px;
+    overflow-y: scroll;
+}
+a.community{
+    float: right;
+    margin: 10px 5px;
+}
+
+profile_image img{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: auto;
+    border: 2px solid #d8d8d8;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,414 @@
+<div class=" container ">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-default">
+        <div class="card-header ">
+          <div class="card-title">
+            Search Form Field Name
+          </div>
+        </div>
+        <div class="card-block">
+          <form class="" role="form">
+            <div class="row">
+              <div class="col-md-5  col-sm-6 col-xs-12">
+                <div class="form-group form-group-default required">
+                   <input type="email" class="form-control" placeholder="" required>
+                </div>
+              </div>
+              <div class="col-md-7  col-sm-6 col-xs-12 text-right">
+                <div class="form-group ">
+                  <a class="btn btn-default changepassword-btn" (click)="openModal()">Add</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card card-transparent">
+        <div class="card-header ">
+          <div class="card-title">
+          </div>
+          <div class="tools">
+            <a class="collapse" href="javascript:;"></a>
+            <a class="config" data-toggle="modal" href="#grid-config"></a>
+            <a class="reload" href="javascript:;"></a>
+            <a class="remove" href="javascript:;"></a>
+          </div>
+        </div>
+        <div class="card-block">
+          <div style="margin: auto; max-width: 1000px">
+            <data-table
+                headerTitle="FORM FIELD NAME(s)"
+                [items]="formFieldsMeta"
+                [itemCount]="totalFormFieldsMeta"
+                (reload)="reloadFormFieldsMeta($event)"
+                [limit]="noOfFormFieldsMetaPerPage"
+                [indexColumnHeader]="'#'"
+                >
+                <ng-template #dataTableExpand let-user="item">
+                  <div [textContent]="user.email" style="padding: 5px; color: gray"></div>
+                </ng-template>
+                <data-table-column
+                    [property]="'formmetaid'"
+                    [header]="'FORM META ID'"
+                    [sortable]="true">
+                </data-table-column>
+                <data-table-column
+                    [property]="'jspattern'"
+                    [header]="'JAVASCRIPT PATTERN'"
+                    [sortable]="true">
+                </data-table-column>
+                <data-table-column
+                    [property]="'javapattern'"
+                    [header]="'JAVA PATTERN'"
+                    [sortable]="true">
+                </data-table-column> 
+                <data-table-column
+                    [property]="'label'"
+                    [header]="'LABEL'"
+                    [sortable]="true">
+                </data-table-column>
+                <data-table-column
+                    [property]="'messagetodisplay'"
+                    [header]="'DISPLAY MESSAGE'"
+                    [sortable]="true">
+                 </data-table-column>
+                <data-table-column
+                    [property]="'name'"
+                    [header]="'NAME'"
+                    [sortable]="true">
+                 </data-table-column>
+                <data-table-column
+                    [property]="'placeholder'"
+                    [header]="'PLACEHOLDER'"
+                    [sortable]="true">
+               </data-table-column>
+               <data-table-column
+                    [property]="'required'"
+                    [header]="'REQUIRED'"
+                    [sortable]="true">
+              </data-table-column>
+              <data-table-column
+                    [property]="'type'"
+                    [header]="'TYPE'"
+                    [sortable]="true">
+              </data-table-column>
+              <data-table-column
+                    [property]="'validationErrorMessage'"
+                    [header]="'VALIDATION MESSAGE'"
+                    [sortable]="true">
+              </data-table-column>
+                <data-table-column
+                    [header]="'ACTION'"
+                    [sortable]="true"
+                    [cellColors]="cellColor">
+                  <ng-template #dataTableCell let-formFieldMeta="item">
+                      <i class="fa fa-edit" (click)="editFormFieldMetaById(formFieldMeta)"></i>
+                      <i class="fa fa-trash-o" (click)="deleteFormFieldMetaDataById(formFieldMeta.formmetaid)"></i>
+                  </ng-template>
+                </data-table-column>
+            </data-table>  
+        </div>
+      </div>
+      <!-- END card -->
+    </div>
+  </div>
+  <div *ngIf="formFieldMetaModal" class="overlay" (click)="closeModal()"></div>
+</div>
+<app-dialog [(visible)]="formFieldMetaModal">
+  <div class="popup_dialouge poup_edit">
+    <h5 *ngIf="!formFieldMeta['formmetaid']">ADD <span class="semi-bold">FORM FIELD NAME</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <h5 *ngIf="formFieldMeta['formmetaid']">EDIT <span class="semi-bold">FORM FIELD NAME</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <form role="form" #formFieldMetaForm="ngForm">
+      <fieldset class="form-group-attached">
+        <div class="row">
+            <div class="col-md-12">
+                <label>Select Document</label>
+                <select  
+                        name="kycdocId" 
+                        class="form-control"  
+                        [(ngModel)]="formFieldMeta.kycdocId" 
+                        #kycDocumentField="ngModel"
+                        [disabled]="formFieldMeta['formmetaid']"
+                        required>
+                        <option disabled [ngValue]="undefined">Select Document</option>
+                        <option *ngFor="let userDocument of userDocuments" [ngValue]="userDocument['kycDocId']">{{userDocument['kycDocumentMeta']['documentName'] }} [{{userDocument['kycDocumentType'].documentType}}] [{{userDocument['country']['countryName']}}]</option>
+                </select>
+                <div *ngIf="kycDocumentField.errors && (kycDocumentField.dirty || kycDocumentField.touched)" class="error">
+                  <div [hidden]="!kycDocumentField.errors.required">Document is required.</div>
+                  </div>
+                  <input type="hidden" [(ngModel)]="formFieldMeta['formmetaid']" name="formmetaid"/>
+                </div>
+        </div>
+      </fieldset>
+      <fieldset class="form-group-attached">
+          <div class="row">
+            <div class="col-md-6">
+              <label>Select Form Field</label>
+              <select  
+                      name="fieldId" 
+                      class="form-control"  
+                      [(ngModel)]="formFieldMeta['fieldId']"
+                      #formField="ngModel"
+                      [disabled]="formFieldMeta['formmetaid']"
+                      required>
+                      <option disabled [ngValue]="undefined">Select Form Field</option>
+                      <option *ngFor="let formField of formFields" [ngValue]="formField['fid']">{{formField['name']}}</option>
+              </select>
+              <div *ngIf="formField.errors && (formField.dirty || formField.touched)" class="error">
+                  <div [hidden]="!formField.errors.required">Form Field is required.</div>
+              </div>                                        
+            </div>
+            <div class="col-md-6">
+              <label>Select Field Type</label>
+              <select  
+                      name="type" 
+                      class="form-control"  
+                      [(ngModel)]="formFieldMeta.type"
+                      #fieldTypeField="ngModel"
+                      required>
+                      <option disabled [ngValue]="undefined">Select Form Field Type</option>
+                      <option *ngFor="let formFieldType of formFieldTypes" [ngValue]="formFieldType">{{formFieldType}}</option>
+              </select>
+              <div *ngIf="fieldTypeField.errors && (fieldTypeField.dirty || fieldTypeField.touched)" class="error">
+                  <div [hidden]="!fieldTypeField.errors.required">Field Type is required.</div>
+              </div> 
+            </div>
+          </div>
+      </fieldset>
+      <fieldset class="form-group-attached">
+        <div class="row">
+          <div class="col-md-6">
+            <label class="ui-cell-data">Custom Pattern</label>
+            <input 
+                  type="checkbox" 
+                  class="form-control" 
+                  name="formFieldCustomPattern"
+                  [(ngModel)]="formFieldCustomPattern"
+                  (change)="selectFormFieldCustomPattern()"
+            />
+          </div>
+          <div class="col-md-6">
+                <label>Select Form Field Pattern</label>
+                <select  
+                        name="fieldPattern" 
+                        class="form-control"  
+                        [(ngModel)]="formFieldMeta['patternid']"
+                        (change)="readSelectedFormFieldPattern()"
+                        [disabled]="formFieldCustomPattern"
+                        #fieldPatternField="ngModel"
+                        required>
+                    <option disabled [ngValue]="undefined">Select Form Field Pattern</option>
+                    <option *ngFor="let formFieldPattern of formFieldPatterns" [ngValue]="formFieldPattern['patternid']">{{formFieldPattern['patternname']}} [{{formFieldPattern['jspattern']}}]</option>
+                </select>
+                <div *ngIf="fieldPatternField.errors && (fieldPatternField.dirty || fieldPatternField.touched)" class="error">
+                    <div [hidden]="!fieldPatternField.errors.required">Field Type is required.</div>
+                </div> 
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="form-group-attached">
+        <div class="row">
+            <div class="col-md-6">
+              <label>JavaScript Pattern</label>
+              <input 
+                      type="text" 
+                      class="form-control" 
+                      name="jspattern" 
+                      [(ngModel)]="formFieldMeta['otherpattern']['jspattern']"
+                      [disabled]="!formFieldCustomPattern"
+                      #fieldJavaScriptCustomPatternField="ngModel"
+                      minlength="2"
+                      maxlength="51"
+                      (keyup)="checkMaxLength(fieldJavaScriptCustomPatternField, 51)"
+                      [required]="formFieldCustomPattern"
+              />
+              <div *ngIf="fieldJavaScriptCustomPatternField.errors && fieldJavaScriptCustomPatternField.dirty">
+                  <div [hidden]="fieldJavaScriptCustomPatternField.errors.required || !fieldJavaScriptCustomPatternField.errors.pattern" class="error">
+                      Entered characters are not allowed.
+                  </div>
+                  <div [hidden]="fieldJavaScriptCustomPatternField.errors.required || fieldJavaScriptCustomPatternField.errors.pattern || (fieldJavaScriptCustomPatternField.errors.minlength && fieldJavaScriptCustomPatternField.errors.minlength['requiredLength']<fieldJavaScriptCustomPatternField.errors.minlength['actualLength'])" class="error">
+                          JavaScript Pattern should be at least 2 characters long.
+                  </div>
+                  <div [hidden]="!fieldJavaScriptCustomPatternField.errors.required" class="error">
+                      JavaScript Pattern is required.
+                  </div>
+              </div>
+              <div [hidden]="fieldJavaScriptCustomPatternField.errors || !maxLengthExceeded['jspattern']" class="error">
+                  JavaScript Pattern Name should not exceed 50 characters.
+              </div>
+              <div [hidden]="(!fieldJavaScriptCustomPatternField.touched || fieldJavaScriptCustomPatternField.dirty) || (fieldJavaScriptCustomPatternField.value && fieldJavaScriptCustomPatternField.value.length)" class="error">
+                      JavaScript Pattern is required.
+              </div>
+          </div>
+          <div class="col-md-6">
+            <label>Java Pattern</label>
+            <input 
+                    type="text" 
+                    class="form-control" 
+                    name="javapattern" 
+                    [(ngModel)]="formFieldMeta['otherpattern']['javapattern']"
+                    [disabled]="!formFieldCustomPattern"
+                    #fieldJavaCustomPatternField="ngModel"
+                    minlength="2"
+                    maxlength="51"
+                    [required]="formFieldCustomPattern"
+                    (keyup)="checkMaxLength(fieldJavaCustomPatternField, 51)"
+            />
+            <div *ngIf="fieldJavaCustomPatternField.errors && fieldJavaCustomPatternField.dirty">
+                <div [hidden]="fieldJavaCustomPatternField.errors.required || !fieldJavaCustomPatternField.errors.pattern" class="error">
+                    Entered characters are not allowed.
+                </div>
+                <div [hidden]="fieldJavaCustomPatternField.errors.required || fieldJavaCustomPatternField.errors.pattern || (fieldJavaCustomPatternField.errors.minlength && fieldJavaCustomPatternField.errors.minlength['requiredLength']<fieldJavaCustomPatternField.errors.minlength['actualLength'])" class="error">
+                        Java Pattern should be at least 2 characters long.
+                </div>
+                <div [hidden]="!fieldJavaCustomPatternField.errors.required" class="error">
+                    Java Pattern is required.
+                </div>
+            </div>
+            <div [hidden]="fieldJavaCustomPatternField.errors || !maxLengthExceeded['javapattern']" class="error">
+                Java Pattern Name should not exceed 50 characters.
+            </div>
+            <div [hidden]="(!fieldJavaCustomPatternField.touched || fieldJavaCustomPatternField.dirty) || (fieldJavaCustomPatternField.value && fieldJavaCustomPatternField.value.length)" class="error">
+                    Java Pattern is required.
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="form-group-attached">
+        <div class="row">
+          <div class="col-md-6">
+              <fieldset>
+                  <label>Message</label>
+                  <input 
+                        type="text" 
+                        class="form-control" 
+                        name="messagetodisplay" 
+                        [(ngModel)]="formFieldMeta['messagetodisplay']"
+                        #messageToDisplayField="ngModel"
+                        placeholder="Enter Message"
+                        minlength="2"
+                        maxlength="51"
+                        pattern="[A-Za-z '/-]*"
+                        required
+                        (keyup)="checkMaxLength(messageToDisplayField, 51)"
+                  />
+                  <div *ngIf="messageToDisplayField.errors && messageToDisplayField.dirty">
+                      <div [hidden]="messageToDisplayField.errors.required || !messageToDisplayField.errors.pattern" class="error">
+                        Numbers are not allowed.
+                      </div>
+                      <div [hidden]="messageToDisplayField.errors.required || messageToDisplayField.errors.pattern || (messageToDisplayField.errors.minlength && messageToDisplayField.errors.minlength['requiredLength']<messageToDisplayField.errors.minlength['actualLength'])" class="error">
+                        Displayed Message should be at least 2 characters long.
+                      </div>
+                      <div [hidden]="!messageToDisplayField.errors.required" class="error">
+                        Displayed Message is required.
+                      </div>
+                  </div>
+                  <div [hidden]="messageToDisplayField.errors || !maxLengthExceeded['messagetodisplay']" class="error">
+                    Displayed Message should not exceed 50 characters.
+                  </div>
+                  <div [hidden]="(!messageToDisplayField.touched || messageToDisplayField.dirty) || (messageToDisplayField.value && messageToDisplayField.value.length)" class="error">
+                    Displyed Message is required.
+                  </div>
+              </fieldset>
+          </div>
+          <div class="col-md-6">
+            <label>Select Required</label>
+            <select  
+                    name="required" 
+                    class="form-control"  
+                    [(ngModel)]="formFieldMeta['required']" 
+                    #fieldRequiredField="ngModel"
+                    required>
+                <option disabled [ngValue]="undefined">Select Required</option>
+                <option *ngFor="let formFieldRequired of formFieldRequireds" [ngValue]="formFieldRequired['required']">{{formFieldRequired['required']}}</option>
+            </select>
+            <div *ngIf="fieldRequiredField.errors && (fieldRequiredField.dirty || fieldRequiredField.touched)" class="error">
+                <div [hidden]="!fieldRequiredField.errors.required">Required Attribute is required.</div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="form-group-attached">
+        <div class="row">
+          <div class="col-md-6">
+              <label class="ui-cell-data">Placeholder</label>
+              <input 
+                      type="text" 
+                      class="form-control" 
+                      #fieldPlaceholderField="ngModel" 
+                      name="placeholder" 
+                      [(ngModel)]="formFieldMeta['placeholder']"
+                      placeholder="Enter Placeholder" 
+                      minlength="2"
+                      maxlength="51"   
+                      pattern="[a-zA-Z]+([\s][a-zA-Z]+)*" 
+                      required 
+                      (keyup)="checkMaxLength(fieldPlaceholderField, 51)"
+              />
+              <div *ngIf="fieldPlaceholderField.errors && fieldPlaceholderField.dirty">
+                  <div [hidden]="fieldPlaceholderField.errors.required || !fieldPlaceholderField.errors.pattern" class="error">
+                      Numbers are not allowed.
+                  </div>
+                  <div [hidden]="fieldPlaceholderField.errors.required || fieldPlaceholderField.errors.pattern || (fieldPlaceholderField.errors.minlength && fieldPlaceholderField.errors.minlength['requiredLength']<fieldPlaceholderField.errors.minlength['actualLength'])" class="error">
+                      Placeholder should be at least 2 characters long.
+                  </div>
+                  <div [hidden]="!fieldPlaceholderField.errors.required" class="error">
+                      Placeholder is required.
+                  </div>
+              </div>
+              <div [hidden]="fieldPlaceholderField.errors || !maxLengthExceeded['placeholder']" class="error">
+                  Placeholder should not exceed 50 characters.
+              </div>
+              <div [hidden]="(!fieldPlaceholderField.touched || fieldPlaceholderField.dirty) || (fieldPlaceholderField.value && fieldPlaceholderField.value.length)" class="error">
+                  Placeholder is required.
+              </div>                                            
+          </div>
+          <div class="col-md-6">
+              <label class="ui-cell-data">Validation Message</label>
+              <input 
+                      type="text" 
+                      class="form-control" 
+                      #fieldValidationErrorMessageField="ngModel" 
+                      name="validationErrorMessage" 
+                      [(ngModel)]="formFieldMeta['validationErrorMessage']"
+                      placeholder="Enter Validation Message" 
+                      minlength="2"
+                      maxlength="51"   
+                      pattern="[a-zA-Z]+([\s][a-zA-Z]+)*" 
+                      required 
+                      (keyup)="checkMaxLength(fieldValidationErrorMessageField, 51)"
+              />
+              <div *ngIf="fieldValidationErrorMessageField.errors && fieldValidationErrorMessageField.dirty">
+                  <div [hidden]="fieldValidationErrorMessageField.errors.required || !fieldValidationErrorMessageField.errors.pattern" class="error">
+                      Only Alphabet(s) are allowed.
+                  </div>
+                  <div [hidden]="fieldValidationErrorMessageField.errors.required || fieldValidationErrorMessageField.errors.pattern || (fieldValidationErrorMessageField.errors.minlength && fieldValidationErrorMessageField.errors.minlength['requiredLength']<fieldValidationErrorMessageField.errors.minlength['actualLength'])" class="error">
+                      Error Message should be at least 2 characters long.
+                  </div>
+                  <div [hidden]="!fieldValidationErrorMessageField.errors.required" class="error">
+                      Error Message is required.
+                  </div>
+              </div>
+              <div [hidden]="fieldValidationErrorMessageField.errors || !maxLengthExceeded['validationErrorMessage']" class="error">
+                  Error Message should not exceed 50 characters.
+              </div>
+              <div [hidden]="(!fieldValidationErrorMessageField.touched || fieldValidationErrorMessageField.dirty) || (fieldValidationErrorMessageField.value && fieldValidationErrorMessageField.value.length)" class="error">
+                  Error Message is required.
+              </div>
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <fieldset class="form-group-attached">
+        <div class="row">
+          <div class="col-md-3">
+              <button type="button" [disabled]="formFieldMetaForm.invalid || maxLengthExceeded['jspattern'] || maxLengthExceeded['javapattern'] || maxLengthExceeded['messagetodisplay'] || maxLengthExceeded['placeholder'] || maxLengthExceeded['validationErrorMessage']" class="btn btn-primary changepassword-btn" (click)="saveAndUpdateFormFieldMeta()">Submit</button>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+</div>
+</app-dialog>

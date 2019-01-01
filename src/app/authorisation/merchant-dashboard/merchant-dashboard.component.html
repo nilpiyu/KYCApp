@@ -1,0 +1,1401 @@
+<div class="container dashboard_main">
+    <ul class="nav nav-tabs main_section">
+       <li class="active"><a data-toggle="tab" href="#profile">Profile</a></li>
+       <li><a data-toggle="tab" href="#kyc">KYC</a></li>
+       <li><a data-toggle="tab" href="#wallet">Wallet</a></li>
+    </ul>
+    <div class="tab-content main_section_tab">
+       <div id="profile" class="tab-pane fade in active">
+          <div class="col-md-12 no-padding ">
+             <div class="col-md-4 col-sm-6 no-padding">
+                <div class="card social-card" data-social="item">
+                   <div class="card-header  user_profile">
+                      <div class="col-md-12 no-padding">
+                         <div class="user_profile_wallet text-center col-md-4">
+                            <img src="assets/img/neeraj.jpg" class="img-responsive"/>
+                            <i class="fa fa-check-circle text_succes"></i>
+                         </div>
+                         <div class="user_profile_wallet col-md-8">
+                            <h3 class="text_complete">{{userProfileData.name}}</h3>
+                         </div>
+                      </div>
+                      <h3 class="text_complete">Profile <i class="fa fa-circle text_complete"></i></h3>
+                      <div class="profile-edit-btn">
+                         <i *ngIf="!isEdited" class="fa fa-pencil" (click)="editUserProfile()" ngbTooltip="Edit"></i>
+                         <i *ngIf="isEdited" class="fa fa-pencil"  ngbTooltip="Editable"></i>
+                      </div>
+                      <div class="table-responsive table_profile">
+                         <form #updateUserProfileForm="ngForm">
+                            <table class="table " id="stripedTable">
+                                <tbody>
+                                    <tr>
+                                     <td class="v-align-middle semi-bold">
+                                        <p>Name:</p>
+                                     </td>
+                                     <td class="v-align-middle semi-bold">
+                                        <!-- <p>{{userProfileData.name}}</p> -->
+                                        <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="userName" 
+                                        #nameField="ngModel"  
+                                        [(ngModel)]="userProfileData.name" 
+                                        minlength="5"
+                                        maxlength="101" 
+                                        pattern="(^(?=.{5,100}$)(?!.* {2,})[a-zA-Z][a-zA-Z ]*[a-zA-Z]$)"
+                                        required
+                                        disabled
+                                        />
+                                     </td>
+                                    </tr>
+                                  <tr>
+                                     <td class="v-align-middle semi-bold">
+                                        <p>Email:</p>
+                                     </td>
+                                     <td class="v-align-middle semi-bold">
+                                        <!-- <p>{{userProfileData.email}}</p> -->
+                                        <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="emailField" 
+                                        #emailField="ngModel"  
+                                        [(ngModel)]="userProfileData.email" 
+                                        minlength="5" 
+                                        maxlength="101" 
+                                        disabled
+                                        (keyup)="checkMaxLength(emailField, 101)"
+                                        />
+                                     </td>
+                                  </tr>
+                                  <tr>
+                                     <td class="v-align-middle semi-bold">
+                                        <p>Phone no:</p>
+                                     </td>
+                                     <td class="v-align-middle semi-bold">
+                                        <!-- <p>{{userProfileData.address.phone}}</p> -->
+                                        <input 
+                                        type="tel" 
+                                        class="form-control" 
+                                        name="phoneField" 
+                                        #phoneField="ngModel" 
+                                        [(ngModel)]="userProfileData.address.phone" 
+                                        minlength="4" 
+                                        maxlength="11" 
+                                        (keyup)="checkMaxLength(phoneField, 11)" 
+                                        pattern="([1-9]){1}([0-9]*)"  
+                                        required
+                                        [disabled]="!isEdited"
+                                        [ngClass]="{'editable-input-field':isEdited}"
+                                        />
+                                     </td>
+                                  </tr>
+                                  <tr>
+                                     <td class="v-align-middle semi-bold">
+                                        <p>Pincode:</p>
+                                     </td>
+                                     <td class="v-align-middle semi-bold">
+                                        <!-- <p>{{userProfileData.address.pincode}}</p> -->
+                                        <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="pincodeField" 
+                                        #pincodeField="ngModel"  
+                                        [(ngModel)]="userProfileData.address.pincode" 
+                                        minlength="5" 
+                                        maxlength="16" 
+                                        (keyup)="checkMaxLength(pincodeField, 16)"
+                                        pattern="([1-9]){1}([0-9]*)"  
+                                        required
+                                        [disabled]="!isEdited"
+                                        [ngClass]="{'editable-input-field':isEdited}"
+                                        />
+                                     </td>
+                                  </tr>
+                                  <tr>
+                                     <td class="v-align-middle semi-bold">
+                                        <p>Country:</p>
+                                     </td>
+                                     <td class="v-align-middle semi-bold">
+                                        <!-- <p>{{userProfileData.address.country}}</p> -->
+                                        <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="countryField" 
+                                        #countryField="ngModel"  
+                                        [(ngModel)]="userProfileData.address.country" 
+                                        minlength="3" 
+                                        maxlength="21" 
+                                        (keyup)="checkMaxLength(countryField, 21)" 
+                                        pattern="[a-zA-Z]+([\s][a-zA-Z]+)*"
+                                        required
+                                        disabled
+                                        />
+                                     </td>
+                                  </tr>
+                                  <tr>
+                                     <td class="v-align-middle semi-bold">
+                                        <p>Address:</p>
+                                     </td>
+                                     <td class="v-align-middle semi-bold">
+                                        <!-- <p>{{userProfileData.address.addressLine1}}</p> -->
+                                        <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="addressLine1Field" 
+                                        #addressLine1Field="ngModel"  
+                                        [(ngModel)]="userProfileData.address.addressLine1" 
+                                        minlength="2" 
+                                        maxlength="101" 
+                                        pattern="[a-zA-Z0-9.,-_/ ]*"
+                                        (keyup)="checkMaxLength(addressLine1Field, 101)" 
+                                        required
+                                        [ngClass]="{'editable-input-field':isEdited}"
+                                        [disabled]="!isEdited"
+                                        />
+                                     </td>
+                                  </tr>
+                                  <tr>
+                                     <td class="v-align-middle semi-bold">
+                                        <p>State:</p>
+                                     </td>
+                                     <td class="v-align-middle semi-bold">
+                                        <!-- <p>{{userProfileData.address.state}}</p> -->
+                                        <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="stateField" 
+                                        #stateField="ngModel"  
+                                        [(ngModel)]="userProfileData.address.state" 
+                                        minlength="2" 
+                                        maxlength="21" 
+                                        (keyup)="checkMaxLength(stateField, 21)" 
+                                        pattern="[a-zA-Z. ]*"
+                                        [disabled]="!isEdited"
+                                        [ngClass]="{'editable-input-field':isEdited}"
+                                        />
+                                     </td>
+                                  </tr>
+                                  <tr>
+                                     <td class="v-align-middle semi-bold">
+                                        <p>City:</p>
+                                     </td>
+                                     <td class="v-align-middle semi-bold">
+                                        <!-- <p>{{userProfileData.address.city}}</p> -->
+                                        <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="cityField" 
+                                        #cityField="ngModel"  
+                                        [(ngModel)]="userProfileData.address.city" 
+                                        minlength="3" 
+                                        maxlength="21" 
+                                        (keyup)="checkMaxLength(cityField, 21)" 
+                                        pattern="[a-zA-Z ]*" 
+                                        required
+                                        [ngClass]="{'editable-input-field':isEdited}"
+                                        [disabled]="!isEdited"
+                                        />
+                                     </td>
+                                  </tr>
+                                </tbody>
+                            </table>
+                            <div *ngIf="isEdited" >
+                               <button class="profile-btn" (click)="updateUserProfile(updateUserProfileForm)">Submit</button>     
+                            </div>
+                         </form>
+                      </div>
+                   </div>
+                </div>
+             </div>
+             <div class="col-md-4 col-sm-6 no-padding">
+                <div class="card social-card share " data-social="item">
+                   <div class="card-header clearfix user_profile">
+                      <div class="user_profile_wallet_right">
+                         <h3 class="text_complete">Social Media <i class="fa fa-circle text_complete"></i></h3>
+                         <ul>
+                            <li><a ><i class="fa fa-facebook"></i></a></li>
+                            <li><a ><i class="fa fa-twitter"></i></a></li>
+                            <li><a ><i class="fa fa-linkedin"></i></a></li>
+                            <li><a ><i class="fa fa-instagram"></i></a></li>
+                         </ul>
+                      </div>
+                   </div>
+                </div>
+                <div class="card social-card share  full-width m-b-10 no-border" data-social="item">
+                   <div class="card-header clearfix user_profile">
+                      <div class="kyc_status">
+                         <h3 class="text_complete">KYC Status <i class="fa fa-circle text_complete"></i></h3>
+                         <ul>
+                            <li *ngFor="let userCountry of userCountries">{{userCountry['country']['countryName']}} 
+                               <span class="verfied" [ngClass]="{'verfied': userCountry['kycstatus'], 'unverfied': !userCountry['kycstatus']}"><i *ngIf="userCountry['kycstatus']" class="fa fa-check" class="fa fa-check"></i><i *ngIf="!userCountry['kycstatus']" class="fa fa-exclamation-triangle"></i>{{userCountry.kycstatus? 'Verified' : 'Unverified'}}</span>
+                            </li>
+                         </ul>
+                      </div>
+                   </div>
+                </div>
+             </div>
+             <div class="col-md-4 col-sm-6 no-padding">
+                <div class="card social-card share" data-social="item">
+                   <div class="card-header clearfix user_profile">
+                      <div class="user_profile_wallet_right">
+                         <h3 class="text_complete">Last Login Date/Time <i class="fa fa-circle text_complete"></i></h3>
+                         <p>{{loginDateAndTime}}</p>
+                      </div>
+                   </div>
+                </div>
+                <div class="card social-card share  full-width m-b-10 no-border" data-social="item">
+                   <div class="card-header clearfix user_profile">
+                      <div class="kyc_status">
+                         <h3 class="text_complete">Paying Requests <i class="fa fa-circle text_complete"></i></h3>
+                         <ul>
+                            <li>Belfrics KYC <span class="verfied"><i class="fa fa-check"></i>Verified</span></li>
+                            <li>AXIS Bank <span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></li>
+                            <li>ICICI <span class="verfied"><i class="fa fa-check"></i>Verified</span></li>
+                            <li>INDIAN Bank <span class="verfied"><i class="fa fa-check"></i>Verified</span></li>
+                            <li>CANARA Bank <span class="verfied"><i class="fa fa-check"></i>Verified</span></li>
+                            <li>SBI <span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></li>
+                         </ul>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+       <div id="kyc" class="tab-pane fade kyc_section">
+          <div class="col-md-3 no-padding">
+             <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#england">England</a></li>
+                <li><a data-toggle="tab" href="#india">India</a></li>
+                <li><a data-toggle="tab" href="#italy">Italy</a></li>
+                <li><a data-toggle="tab" href="#usa">USA</a></li>
+             </ul>
+          </div>
+          <div class="col-md-9 kyc_content_section">
+             <div class="tab-content">
+                <div id="england" class="tab-pane fade in active">
+                   <div class="col-md-12 no-padding kyc_doc_table ">
+                      <table class="table table-bordered" id="stripedTable">
+                         <thead>
+                            <tr>
+                               <th style="width:30%">Document Type</th>
+                               <th style="width:40%">Date of uploads</th>
+                               <th style="width:30%">Verification Status</th>
+                            </tr>
+                         </thead>
+                         <tbody>
+                            <tr>
+                               <td colspan="3" class="v-align-middle td_inner">
+                                  <div class="panel-group" id="accordion">
+                                     <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                           <h4 class="panel-title">
+                                              <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i> Identity Document</a>
+                                           </h4>
+                                        </div>
+                                        <div id="collapse1" class="panel-collapse collapse in">
+                                           <div class="panel-body">
+                                              <table style="width:100%" class="table borderless">
+                                                 <tbody>
+                                                    <tr>
+                                                       <td style="width:30%" class="v-align-middle semi-bold">
+                                                          Document 1
+                                                       </td>
+                                                       <td style="width:40%" class="v-align-middle">
+                                                          <p>19/02/2018</p>
+                                                       </td>
+                                                       <td style="width:30%" class="v-align-middle">
+                                                          <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                       </td>
+                                                    </tr>
+                                                    <tr>
+                                                       <td style="width:30%" class="v-align-middle semi-bold">
+                                                          <p>Document 1</p>
+                                                       </td>
+                                                       <td style="width:40%" class="v-align-middle">
+                                                          <p>19/02/2018</p>
+                                                       </td>
+                                                       <td style="width:30%" class="v-align-middle">
+                                                          <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                       </td>
+                                                    </tr>
+                                                    <tr>
+                                                       <td style="width:30%" class="v-align-middle semi-bold">
+                                                          <p>Document 1</p>
+                                                       </td>
+                                                       <td style="width:40%" class="v-align-middle">
+                                                          <p>19/02/2018</p>
+                                                       </td>
+                                                       <td style="width:30%" class="v-align-middle">
+                                                          <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                       </td>
+                                                    </tr>
+                                                 </tbody>
+                                              </table>
+                                           </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                           <div class="panel-heading">
+                                              <h4 class="panel-title">
+                                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i> Financial Document</a>
+                                              </h4>
+                                           </div>
+                                           <div id="collapse2" class="panel-collapse collapse">
+                                              <div class="panel-body">
+                                                 <table style="width:100%" class="table borderless">
+                                                    <tbody>
+                                                       <tr>
+                                                          <td style="width:30%" class="v-align-middle semi-bold">
+                                                             Document 1
+                                                          </td>
+                                                          <td style="width:40%" class="v-align-middle">
+                                                             <p>19/02/2018</p>
+                                                          </td>
+                                                          <td style="width:30%" class="v-align-middle">
+                                                             <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                          </td>
+                                                       </tr>
+                                                       <tr>
+                                                          <td style="width:30%" class="v-align-middle semi-bold">
+                                                             <p>Document 1</p>
+                                                          </td>
+                                                          <td style="width:40%" class="v-align-middle">
+                                                             <p>19/02/2018</p>
+                                                          </td>
+                                                          <td style="width:30%" class="v-align-middle">
+                                                             <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                          </td>
+                                                       </tr>
+                                                       <tr>
+                                                          <td style="width:30%" class="v-align-middle semi-bold">
+                                                             <p>Document 1</p>
+                                                          </td>
+                                                          <td style="width:40%" class="v-align-middle">
+                                                             <p>19/02/2018</p>
+                                                          </td>
+                                                          <td style="width:30%" class="v-align-middle">
+                                                             <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                          </td>
+                                                       </tr>
+                                                    </tbody>
+                                                 </table>
+                                              </div>
+                                           </div>
+                                           <div class="panel panel-default">
+                                              <div class="panel-heading">
+                                                 <h4 class="panel-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse3" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i> Educational Document</a>
+                                                 </h4>
+                                              </div>
+                                              <div id="collapse3" class="panel-collapse collapse">
+                                                 <div class="panel-body">
+                                                    <table style="width:100%" class="table borderless">
+                                                       <tbody>
+                                                          <tr>
+                                                             <td style="width:30%" class="v-align-middle semi-bold">
+                                                                Document 1
+                                                             </td>
+                                                             <td style="width:40%" class="v-align-middle">
+                                                                <p>19/02/2018</p>
+                                                             </td>
+                                                             <td style="width:30%" class="v-align-middle">
+                                                                <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                             </td>
+                                                          </tr>
+                                                          <tr>
+                                                             <td style="width:30%" class="v-align-middle semi-bold">
+                                                                <p>Document 1</p>
+                                                             </td>
+                                                             <td style="width:40%" class="v-align-middle">
+                                                                <p>19/02/2018</p>
+                                                             </td>
+                                                             <td style="width:30%" class="v-align-middle">
+                                                                <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                             </td>
+                                                          </tr>
+                                                          <tr>
+                                                             <td style="width:30%" class="v-align-middle semi-bold">
+                                                                <p>Document 1</p>
+                                                             </td>
+                                                             <td style="width:40%" class="v-align-middle">
+                                                                <p>19/02/2018</p>
+                                                             </td>
+                                                             <td style="width:30%" class="v-align-middle">
+                                                                <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                             </td>
+                                                          </tr>
+                                                       </tbody>
+                                                    </table>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </td>
+                            </tr>
+                         </tbody>
+                      </table>
+                   </div>
+                </div>
+                <div id="india" class="tab-pane fade">
+                   <div class="col-md-12 no-padding kyc_doc_table ">
+                      <table class="table table-bordered" id="stripedTable">
+                         <thead>
+                            <tr>
+                               <th style="width:30%">Document Type</th>
+                               <th style="width:40%">Date of uploads</th>
+                               <th style="width:30%">Verification Status</th>
+                            </tr>
+                         </thead>
+                         <tbody>
+                            <tr>
+                               <td colspan="3" class="v-align-middle td_inner">
+                                  <div class="panel-group" id="ind">
+                                     <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                           <h4 class="panel-title">
+                                              <a data-toggle="collapse" data-parent="#ind" href="#indid" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i> Identity Document</a>
+                                           </h4>
+                                        </div>
+                                        <div id="indid" class="panel-collapse collapse in">
+                                           <div class="panel-body">
+                                              <table style="width:100%" class="table borderless">
+                                                 <tbody>
+                                                    <tr>
+                                                       <td style="width:30%" class="v-align-middle semi-bold">
+                                                          Document 1
+                                                       </td>
+                                                       <td style="width:40%" class="v-align-middle">
+                                                          <p>19/02/2018</p>
+                                                       </td>
+                                                       <td style="width:30%" class="v-align-middle">
+                                                          <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                       </td>
+                                                    </tr>
+                                                    <tr>
+                                                       <td style="width:30%" class="v-align-middle semi-bold">
+                                                          <p>Document 1</p>
+                                                       </td>
+                                                       <td style="width:40%" class="v-align-middle">
+                                                          <p>19/02/2018</p>
+                                                       </td>
+                                                       <td style="width:30%" class="v-align-middle">
+                                                          <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                       </td>
+                                                    </tr>
+                                                    <tr>
+                                                       <td style="width:30%" class="v-align-middle semi-bold">
+                                                          <p>Document 1</p>
+                                                       </td>
+                                                       <td style="width:40%" class="v-align-middle">
+                                                          <p>19/02/2018</p>
+                                                       </td>
+                                                       <td style="width:30%" class="v-align-middle">
+                                                          <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                       </td>
+                                                    </tr>
+                                                 </tbody>
+                                              </table>
+                                           </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                           <div class="panel-heading">
+                                              <h4 class="panel-title">
+                                                 <a data-toggle="collapse" data-parent="#ind" href="#indfin" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i> Financial Document</a>
+                                              </h4>
+                                           </div>
+                                           <div id="indfin" class="panel-collapse collapse">
+                                              <div class="panel-body">
+                                                 <table style="width:100%" class="table borderless">
+                                                    <tbody>
+                                                       <tr>
+                                                          <td style="width:30%" class="v-align-middle semi-bold">
+                                                             Document 1
+                                                          </td>
+                                                          <td style="width:40%" class="v-align-middle">
+                                                             <p>19/02/2018</p>
+                                                          </td>
+                                                          <td style="width:30%" class="v-align-middle">
+                                                             <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                          </td>
+                                                       </tr>
+                                                       <tr>
+                                                          <td style="width:30%" class="v-align-middle semi-bold">
+                                                             <p>Document 1</p>
+                                                          </td>
+                                                          <td style="width:40%" class="v-align-middle">
+                                                             <p>19/02/2018</p>
+                                                          </td>
+                                                          <td style="width:30%" class="v-align-middle">
+                                                             <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                          </td>
+                                                       </tr>
+                                                       <tr>
+                                                          <td style="width:30%" class="v-align-middle semi-bold">
+                                                             <p>Document 1</p>
+                                                          </td>
+                                                          <td style="width:40%" class="v-align-middle">
+                                                             <p>19/02/2018</p>
+                                                          </td>
+                                                          <td style="width:30%" class="v-align-middle">
+                                                             <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                          </td>
+                                                       </tr>
+                                                    </tbody>
+                                                 </table>
+                                              </div>
+                                           </div>
+                                           <div class="panel panel-default">
+                                              <div class="panel-heading">
+                                                 <h4 class="panel-title">
+                                                    <a data-toggle="collapse" data-parent="#ind" href="#indedu" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i> Educational Document</a>
+                                                 </h4>
+                                              </div>
+                                              <div id="indedu" class="panel-collapse collapse">
+                                                 <div class="panel-body">
+                                                    <table style="width:100%" class="table borderless">
+                                                       <tbody>
+                                                          <tr>
+                                                             <td style="width:30%" class="v-align-middle semi-bold">
+                                                                Document 1
+                                                             </td>
+                                                             <td style="width:40%" class="v-align-middle">
+                                                                <p>19/02/2018</p>
+                                                             </td>
+                                                             <td style="width:30%" class="v-align-middle">
+                                                                <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                             </td>
+                                                          </tr>
+                                                          <tr>
+                                                             <td style="width:30%" class="v-align-middle semi-bold">
+                                                                <p>Document 1</p>
+                                                             </td>
+                                                             <td style="width:40%" class="v-align-middle">
+                                                                <p>19/02/2018</p>
+                                                             </td>
+                                                             <td style="width:30%" class="v-align-middle">
+                                                                <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                             </td>
+                                                          </tr>
+                                                          <tr>
+                                                             <td style="width:30%" class="v-align-middle semi-bold">
+                                                                <p>Document 1</p>
+                                                             </td>
+                                                             <td style="width:40%" class="v-align-middle">
+                                                                <p>19/02/2018</p>
+                                                             </td>
+                                                             <td style="width:30%" class="v-align-middle">
+                                                                <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                             </td>
+                                                          </tr>
+                                                       </tbody>
+                                                    </table>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </td>
+                            </tr>
+                         </tbody>
+                      </table>
+                   </div>
+                </div>
+                <div id="italy" class="tab-pane fade">
+                   <div class="col-md-12 no-padding kyc_doc_table ">
+                      <table class="table table-bordered" id="stripedTable">
+                         <thead>
+                            <tr>
+                               <th style="width:30%">Document Type</th>
+                               <th style="width:40%">Date of uploads</th>
+                               <th style="width:30%">Verification Status</th>
+                            </tr>
+                         </thead>
+                         <tbody>
+                            <tr>
+                               <td colspan="3" class="v-align-middle td_inner">
+                                  <div class="panel-group" id="italy">
+                                     <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                           <h4 class="panel-title">
+                                              <a data-toggle="collapse" data-parent="#italy" href="#italyid" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i> Identity Document</a>
+                                           </h4>
+                                        </div>
+                                        <div id="italyid" class="panel-collapse collapse in">
+                                           <div class="panel-body">
+                                              <table style="width:100%" class="table borderless">
+                                                 <tbody>
+                                                    <tr>
+                                                       <td style="width:30%" class="v-align-middle semi-bold">
+                                                          Document 1
+                                                       </td>
+                                                       <td style="width:40%" class="v-align-middle">
+                                                          <p>19/02/2018</p>
+                                                       </td>
+                                                       <td style="width:30%" class="v-align-middle">
+                                                          <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                       </td>
+                                                    </tr>
+                                                    <tr>
+                                                       <td style="width:30%" class="v-align-middle semi-bold">
+                                                          <p>Document 1</p>
+                                                       </td>
+                                                       <td style="width:40%" class="v-align-middle">
+                                                          <p>19/02/2018</p>
+                                                       </td>
+                                                       <td style="width:30%" class="v-align-middle">
+                                                          <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                       </td>
+                                                    </tr>
+                                                    <tr>
+                                                       <td style="width:30%" class="v-align-middle semi-bold">
+                                                          <p>Document 1</p>
+                                                       </td>
+                                                       <td style="width:40%" class="v-align-middle">
+                                                          <p>19/02/2018</p>
+                                                       </td>
+                                                       <td style="width:30%" class="v-align-middle">
+                                                          <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                       </td>
+                                                    </tr>
+                                                 </tbody>
+                                              </table>
+                                           </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                           <div class="panel-heading">
+                                              <h4 class="panel-title">
+                                                 <a data-toggle="collapse" data-parent="#italy" href="#italyfin" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i> Financial Document</a>
+                                              </h4>
+                                           </div>
+                                           <div id="italyfin" class="panel-collapse collapse">
+                                              <div class="panel-body">
+                                                 <table style="width:100%" class="table borderless">
+                                                    <tbody>
+                                                       <tr>
+                                                          <td style="width:30%" class="v-align-middle semi-bold">
+                                                             Document 1
+                                                          </td>
+                                                          <td style="width:40%" class="v-align-middle">
+                                                             <p>19/02/2018</p>
+                                                          </td>
+                                                          <td style="width:30%" class="v-align-middle">
+                                                             <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                          </td>
+                                                       </tr>
+                                                       <tr>
+                                                          <td style="width:30%" class="v-align-middle semi-bold">
+                                                             <p>Document 1</p>
+                                                          </td>
+                                                          <td style="width:40%" class="v-align-middle">
+                                                             <p>19/02/2018</p>
+                                                          </td>
+                                                          <td style="width:30%" class="v-align-middle">
+                                                             <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                          </td>
+                                                       </tr>
+                                                       <tr>
+                                                          <td style="width:30%" class="v-align-middle semi-bold">
+                                                             <p>Document 1</p>
+                                                          </td>
+                                                          <td style="width:40%" class="v-align-middle">
+                                                             <p>19/02/2018</p>
+                                                          </td>
+                                                          <td style="width:30%" class="v-align-middle">
+                                                             <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                          </td>
+                                                       </tr>
+                                                    </tbody>
+                                                 </table>
+                                              </div>
+                                           </div>
+                                           <div class="panel panel-default">
+                                              <div class="panel-heading">
+                                                 <h4 class="panel-title">
+                                                    <a data-toggle="collapse" data-parent="#italy" href="#italyedu" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i> Educational Document</a>
+                                                 </h4>
+                                              </div>
+                                              <div id="italyedu" class="panel-collapse collapse">
+                                                 <div class="panel-body">
+                                                    <table style="width:100%" class="table borderless">
+                                                       <tbody>
+                                                          <tr>
+                                                             <td style="width:30%" class="v-align-middle semi-bold">
+                                                                Document 1
+                                                             </td>
+                                                             <td style="width:40%" class="v-align-middle">
+                                                                <p>19/02/2018</p>
+                                                             </td>
+                                                             <td style="width:30%" class="v-align-middle">
+                                                                <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                             </td>
+                                                          </tr>
+                                                          <tr>
+                                                             <td style="width:30%" class="v-align-middle semi-bold">
+                                                                <p>Document 1</p>
+                                                             </td>
+                                                             <td style="width:40%" class="v-align-middle">
+                                                                <p>19/02/2018</p>
+                                                             </td>
+                                                             <td style="width:30%" class="v-align-middle">
+                                                                <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                             </td>
+                                                          </tr>
+                                                          <tr>
+                                                             <td style="width:30%" class="v-align-middle semi-bold">
+                                                                <p>Document 1</p>
+                                                             </td>
+                                                             <td style="width:40%" class="v-align-middle">
+                                                                <p>19/02/2018</p>
+                                                             </td>
+                                                             <td style="width:30%" class="v-align-middle">
+                                                                <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                             </td>
+                                                          </tr>
+                                                       </tbody>
+                                                    </table>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </td>
+                            </tr>
+                         </tbody>
+                      </table>
+                   </div>
+                </div>
+                <div id="usa" class="tab-pane fade">
+                   <div class="col-md-12 no-padding kyc_doc_table ">
+                      <table class="table table-bordered" id="stripedTable">
+                         <thead>
+                            <tr>
+                               <th style="width:30%">Document Type</th>
+                               <th style="width:40%">Date of uploads</th>
+                               <th style="width:30%">Verification Status</th>
+                            </tr>
+                         </thead>
+                         <tbody>
+                            <tr>
+                               <td colspan="3" class="v-align-middle td_inner">
+                                  <div class="panel-group" id="usa">
+                                     <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                           <h4 class="panel-title">
+                                              <a data-toggle="collapse" data-parent="#usa" href="#usaid" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i> Identity Document</a>
+                                           </h4>
+                                        </div>
+                                        <div id="usaid" class="panel-collapse collapse in">
+                                           <div class="panel-body">
+                                              <table style="width:100%" class="table borderless">
+                                                 <tbody>
+                                                    <tr>
+                                                       <td style="width:30%" class="v-align-middle semi-bold">
+                                                          Document 1
+                                                       </td>
+                                                       <td style="width:40%" class="v-align-middle">
+                                                          <p>19/02/2018</p>
+                                                       </td>
+                                                       <td style="width:30%" class="v-align-middle">
+                                                          <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                       </td>
+                                                    </tr>
+                                                    <tr>
+                                                       <td style="width:30%" class="v-align-middle semi-bold">
+                                                          <p>Document 1</p>
+                                                       </td>
+                                                       <td style="width:40%" class="v-align-middle">
+                                                          <p>19/02/2018</p>
+                                                       </td>
+                                                       <td style="width:30%" class="v-align-middle">
+                                                          <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                       </td>
+                                                    </tr>
+                                                    <tr>
+                                                       <td style="width:30%" class="v-align-middle semi-bold">
+                                                          <p>Document 1</p>
+                                                       </td>
+                                                       <td style="width:40%" class="v-align-middle">
+                                                          <p>19/02/2018</p>
+                                                       </td>
+                                                       <td style="width:30%" class="v-align-middle">
+                                                          <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                       </td>
+                                                    </tr>
+                                                 </tbody>
+                                              </table>
+                                           </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                           <div class="panel-heading">
+                                              <h4 class="panel-title">
+                                                 <a data-toggle="collapse" data-parent="#usa" href="#usafin" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i> Financial Document</a>
+                                              </h4>
+                                           </div>
+                                           <div id="usafin" class="panel-collapse collapse">
+                                              <div class="panel-body">
+                                                 <table style="width:100%" class="table borderless">
+                                                    <tbody>
+                                                       <tr>
+                                                          <td style="width:30%" class="v-align-middle semi-bold">
+                                                             Document 1
+                                                          </td>
+                                                          <td style="width:40%" class="v-align-middle">
+                                                             <p>19/02/2018</p>
+                                                          </td>
+                                                          <td style="width:30%" class="v-align-middle">
+                                                             <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                          </td>
+                                                       </tr>
+                                                       <tr>
+                                                          <td style="width:30%" class="v-align-middle semi-bold">
+                                                             <p>Document 1</p>
+                                                          </td>
+                                                          <td style="width:40%" class="v-align-middle">
+                                                             <p>19/02/2018</p>
+                                                          </td>
+                                                          <td style="width:30%" class="v-align-middle">
+                                                             <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                          </td>
+                                                       </tr>
+                                                       <tr>
+                                                          <td style="width:30%" class="v-align-middle semi-bold">
+                                                             <p>Document 1</p>
+                                                          </td>
+                                                          <td style="width:40%" class="v-align-middle">
+                                                             <p>19/02/2018</p>
+                                                          </td>
+                                                          <td style="width:30%" class="v-align-middle">
+                                                             <p><span class="verfied"><i class="fa fa-check"></i>Verified</span></p>
+                                                          </td>
+                                                       </tr>
+                                                    </tbody>
+                                                 </table>
+                                              </div>
+                                           </div>
+                                           <div class="panel panel-default">
+                                              <div class="panel-heading">
+                                                 <h4 class="panel-title">
+                                                    <a data-toggle="collapse" data-parent="#usa" href="#usaedu" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i> Educational Document</a>
+                                                 </h4>
+                                              </div>
+                                              <div id="usaedu" class="panel-collapse collapse">
+                                                 <div class="panel-body">
+                                                    <table style="width:100%" class="table borderless">
+                                                       <tbody>
+                                                          <tr>
+                                                             <td style="width:30%" class="v-align-middle semi-bold">
+                                                                Document 1
+                                                             </td>
+                                                             <td style="width:40%" class="v-align-middle">
+                                                                <p>19/02/2018</p>
+                                                             </td>
+                                                             <td style="width:30%" class="v-align-middle">
+                                                                <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                             </td>
+                                                          </tr>
+                                                          <tr>
+                                                             <td style="width:30%" class="v-align-middle semi-bold">
+                                                                <p>Document 1</p>
+                                                             </td>
+                                                             <td style="width:40%" class="v-align-middle">
+                                                                <p>19/02/2018</p>
+                                                             </td>
+                                                             <td style="width:30%" class="v-align-middle">
+                                                                <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                             </td>
+                                                          </tr>
+                                                          <tr>
+                                                             <td style="width:30%" class="v-align-middle semi-bold">
+                                                                <p>Document 1</p>
+                                                             </td>
+                                                             <td style="width:40%" class="v-align-middle">
+                                                                <p>19/02/2018</p>
+                                                             </td>
+                                                             <td style="width:30%" class="v-align-middle">
+                                                                <p><span class="unverfied"><i class="fa fa-exclamation-triangle"></i> UnVerified</span></p>
+                                                             </td>
+                                                          </tr>
+                                                       </tbody>
+                                                    </table>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </td>
+                            </tr>
+                         </tbody>
+                      </table>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+       <div id="wallet" class="tab-pane fade kyc_section">
+          <div class="col-md-3 no-padding">
+             <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#walletengland">England</a></li>
+                <li><a data-toggle="tab" href="#walletindia">India</a></li>
+                <li><a data-toggle="tab" href="#walletitaly">Italy</a></li>
+                <li><a data-toggle="tab" href="#walletusa">USA</a></li>
+             </ul>
+          </div>
+          <div class="col-md-9 kyc_content_section">
+             <div class="tab-content">
+                <div id="walletengland" class="tab-pane fade in active">
+                   <div class="col-md-12 no-padding kyc_doc_table ">
+                      <div class="col-md-8 no-padding">
+                         <h4>Wallet Address:</h4>
+                         <h2 class="text_complete">1235688465688GRJEUH</h2>
+                      </div>
+                      <div class="col-md-4 no-padding">
+                         <h4>BET:</h4>
+                         <h2 class="text_complete">25,0000</h2>
+                      </div>
+                   </div>
+                   <div class="col-md-12 no-padding kyc_doc_table wallet_btn">
+                      <ul>
+                         <li><a><span>Send <i class="fa fa-paper-plane"></i></span></a></li>
+                         <li><a (click)="become = !become"><span>Become Delegate <i class="fa fa-users"></i></span></a></li>
+                         <li><a (click)="vote = !vote"><span>Vote <i class="fa fa-plus"></i></span></a></li>
+                         <li><a ><span class="remove_vote9+">Remove Vote <i class="fa fa-times"></i></span></a></li>
+                      </ul>
+                   </div>
+                   <div class="col-md-12 no-padding">
+                      <div class="col-lg-12 col-sm-12 no-padding">
+                         <div class="card-transparent">
+                            <div class="vote-header ">
+                               <h3>My Votes</h3>
+                               <div class="tools">
+                                  <a class="collapse" href="javascript:;"></a>
+                                  <a class="config" data-toggle="modal" href="#grid-config"></a>
+                                  <a class="reload" href="javascript:;"></a>
+                                  <a class="remove" href="javascript:;"></a>
+                               </div>
+                            </div>
+                            <div class="card-block">
+                               <div class="table-responsive">
+                                  <table class="table table-bordered" id="stripedTable">
+                                     <thead>
+                                        <tr>
+                                           <th style="">Rank</th>
+                                           <th style="">Name</th>
+                                           <th style="">Belrium Address</th>
+                                           <th style="">Uptime</th>
+                                           <th style="">Vote Status</th>
+                                        </tr>
+                                     </thead>
+                                     <tbody>
+                                        <tr>
+                                           <td class="v-align-middle semi-bold">
+                                              <p>9</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>myKad</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>Address</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>2018-01-09 14:06:15.0</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p><span class="unverfied"><i class="fa fa-times"></i>Remove Vote</span></p>
+                                           </td>
+                                        </tr>
+                                        <tr>
+                                           <td class="v-align-middle semi-bold">
+                                              <p>9</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>myKad</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>Address</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>2018-01-09 14:06:15.0</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p><span class="unverfied"><i class="fa fa-times"></i>Remove Vote</span></p>
+                                           </td>
+                                        </tr>
+                                        <tr>
+                                           <td class="v-align-middle semi-bold">
+                                              <p>9</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>myKad</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>Address</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>2018-01-09 14:06:15.0</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p><span class="unverfied"><i class="fa fa-times"></i>Remove Vote</span></p>
+                                           </td>
+                                        </tr>
+                                     </tbody>
+                                  </table>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                   <div class="col-md-12 no-padding">
+                      <div class="col-lg-12 col-sm-12 no-padding">
+                         <div class="card-transparent">
+                            <div class="vote-header ">
+                               <h3>Top Delegates</h3>
+                               <div class="tools">
+                                  <a class="collapse" href="javascript:;"></a>
+                                  <a class="config" data-toggle="modal" href="#grid-config"></a>
+                                  <a class="reload" href="javascript:;"></a>
+                                  <a class="remove" href="javascript:;"></a>
+                               </div>
+                            </div>
+                            <div class="card-block">
+                               <div class="table-responsive">
+                                  <table class="table table-bordered" id="stripedTable">
+                                     <thead>
+                                        <tr>
+                                           <th style="">Rank</th>
+                                           <th style="">Name</th>
+                                           <th style="">Belrium Address</th>
+                                           <th style="">Uptime</th>
+                                           <th style="">Vote Status</th>
+                                        </tr>
+                                     </thead>
+                                     <tbody>
+                                        <tr>
+                                           <td class="v-align-middle semi-bold">
+                                              <p>9</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>myKad</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>Address</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>2018-01-09 14:06:15.0</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p><span class="verfied"><i class="fa fa-plus"></i>Vote</span></p>
+                                           </td>
+                                        </tr>
+                                        <tr>
+                                           <td class="v-align-middle semi-bold">
+                                              <p>9</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>myKad</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>Address</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>2018-01-09 14:06:15.0</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p><span class="verfied"><i class="fa fa-plus"></i>Vote</span></p>
+                                           </td>
+                                        </tr>
+                                        <tr>
+                                           <td class="v-align-middle semi-bold">
+                                              <p>9</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>myKad</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>Address</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>2018-01-09 14:06:15.0</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p><span class="verfied"><i class="fa fa-plus"></i>Vote</span></p>
+                                           </td>
+                                        </tr>
+                                     </tbody>
+                                  </table>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                   <div class="col-md-12 no-padding">
+                      <div class="col-lg-12 col-sm-12 no-padding">
+                         <div class="card-transparent">
+                            <div class="vote-header ">
+                               <h3>Latest Transactions</h3>
+                               <div class="tools">
+                                  <a class="collapse" href="javascript:;"></a>
+                                  <a class="config" data-toggle="modal" href="#grid-config"></a>
+                                  <a class="reload" href="javascript:;"></a>
+                                  <a class="remove" href="javascript:;"></a>
+                               </div>
+                            </div>
+                            <div class="card-block">
+                               <div class="table-responsive">
+                                  <table class="table table-bordered" id="stripedTable">
+                                     <thead>
+                                        <tr>
+                                           <th style="">ID</th>
+                                           <th style="">Date</th>
+                                           <th style="">Type</th>
+                                           <th style="">Amount</th>
+                                           <th style="">Status</th>
+                                        </tr>
+                                     </thead>
+                                     <tbody>
+                                        <tr>
+                                           <td class="v-align-middle semi-bold">
+                                              <p>9</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>2018-01-09</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>Deposit</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>25,000</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p><span class="verfied"><i class="fa fa-check"></i>Success</span></p>
+                                           </td>
+                                        </tr>
+                                        <tr>
+                                           <td class="v-align-middle semi-bold">
+                                              <p>9</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>myKad</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>Address</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>2018-01-09 14:06:15.0</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p><span class="unverfied failed"><i class="fa fa-exclamation-triangle"></i> Failed</span></p>
+                                           </td>
+                                        </tr>
+                                        <tr>
+                                           <td class="v-align-middle semi-bold">
+                                              <p>9</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>myKad</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>Address</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p>2018-01-09 14:06:15.0</p>
+                                           </td>
+                                           <td class="v-align-middle">
+                                              <p><span class="verfied"><i class="fa fa-check"></i>Success</span></p>
+                                           </td>
+                                        </tr>
+                                     </tbody>
+                                  </table>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+    <app-dialog [(visible)]="become">
+    <div class="popup_dialouge">
+       <div class="security_warning_logo">
+          <img src="assets/img/logo-belrium.png" class="img-responsive"/>
+       </div>
+       <div class="">
+          <div class="security_warning text-center popup_padding">
+             <h5>Register as a Delegate</h5>
+             <p>Please choose a delegate name.</p>
+          </div>
+          <div class="">
+             <form class="" role="form">
+                <div class="form-group form-group-default popup_padding delegate_pad">
+                   <input type="text" class="form-control" placeholder="Delegate Name" required>
+                   <p class="fee_shift"><span>Fee: 60 SHIFT</span></p>
+                </div>
+                <div class="form-group security_warning_last popup_padding">
+                   <p>Becoming a delegate requires registration. You may choose your own delegate name, which can be used to promote your delegate. Only the top 101 delegates are eligible to forge. All fees are shared equally between the top 101 delegates.</p>
+                </div>
+                <div class="form-group text-right popup_padding">
+                   <a class="btn btn-default changepassword-btn">CANCEL</a>
+                   <button type="submit" class="btn btn-default changepassword-btn">Register</button>
+                </div>
+             </form>
+          </div>
+       </div>
+    </div>
+    </app-dialog>
+    <app-dialog [(visible)]="vote">
+    <div class="popup_dialouge">
+       <div class="security_warning_logo">
+          <img src="assets/img/logo-belrium.png" class="img-responsive"/>
+       </div>
+       <div class="">
+          <div class="security_warning text-center popup_padding">
+             <h5>Voting for delegates</h5>
+             <p>Please confirm your selection and confirm your vote.</p>
+          </div>
+          <div class="">
+             <form class="" role="form">
+                <div class="form-group form-group-default popup_padding delegate_pad">
+                   <input type="text" class="form-control" placeholder="Delegate Name" value="seatrips" required>
+                   <p class="fee_shift"><span>Fee: 1 SHIFT</span></p>
+                </div>
+                <div class="form-group security_warning_last popup_padding">
+                   <p>You can select up to 33 delegates in one voting turn. Up to 101 delegates in total.</p>
+                </div>
+                <div class="form-group text-right popup_padding">
+                   <a class="btn btn-default changepassword-btn">CANCEL</a>
+                   <button type="submit" class="btn btn-default changepassword-btn">confirm Vote</button>
+                </div>
+             </form>
+          </div>
+       </div>
+    </div>
+    </app-dialog>
+    <!--<div class="col-md-12 no-padding ">
+       <div class="col-lg-6 col-sm-6 ">
+         <div class="card social-card share  full-width m-b-10 no-border" data-social="item">
+           <div class="card-header clearfix user_profile">
+             <img src="assets/img/neeraj.jpg" class="img-responsive"/>
+             <div class="user_profile_wallet">
+               <h5 class="">NEERAJ KUMAR</h5>
+               <p class="">Wallet Id : 12089918398794946182BL</p>
+             </div>
+             <div class="clearfix"></div>
+           </div>
+         </div>
+       </div>
+       <div class="col-lg-6 col-sm-6 d">
+         <div class="card social-card share  full-width m-b-10 no-border" data-social="item">
+           <div class="card-header clearfix user_profile">
+             <img src="assets/img/wallet.png" class="img-responsive"/>
+             <div class="user_profile_wallet_right">
+               <p class="">Your account status is</p>
+               <h5 class="">UNVERIFIED</h5>
+               <a href="#">(Get verified now)</a>
+             </div>
+             <div class="clearfix"></div>
+           </div>
+         </div>
+       </div>
+       </div>
+       <div class="col-md-12 no-padding">
+       <div class="col-lg-12 col-sm-12">
+         <div class="card social-card share  full-width m-b-10 no-border" data-social="item">
+           <div class="card-header clearfix">
+             <div class="">
+               <h5 class="">Profile Completion 60%</h5>
+               <div class="progress">
+                 <div class="progress-bar" style="width:60%"></div>
+               </div>
+             </div>
+             <div class="clearfix"></div>
+           </div>
+         </div>
+       </div>
+       </div>
+       <div class="col-md-12 no-padding">
+       <div class="col-lg-12 col-sm-12 ">
+         <div class="card card-transparent">
+           <div class="card-header ">
+             <div class="card-title">DOCUMENTS
+             </div>
+             <div class="tools">
+               <a class="collapse" href="javascript:;"></a>
+               <a class="config" data-toggle="modal" href="#grid-config"></a>
+               <a class="reload" href="javascript:;"></a>
+               <a class="remove" href="javascript:;"></a>
+             </div>
+           </div>
+           <div class="card-block">
+             <div class="table-responsive">
+               <table class="table table-bordered" id="stripedTable">
+                 <thead>
+                   <tr>
+                     <th style="">Id</th>
+                     <th style="">Document Name</th>
+                     <th style="">Upload Time</th>
+                     <th style="">Status</th>
+                     <th style="">Thumbnail</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr>
+                     <td class="v-align-middle semi-bold">
+                       <p>9</p>
+                     </td>
+                     <td class="v-align-middle">
+                       <p>myKad</p>
+                     </td>
+                     <td class="v-align-middle">
+                       <p>2018-01-09 14:06:15.0</p>
+                     </td>
+                     <td class="v-align-middle">
+                       <p>Approved</p>
+                     </td>
+                     <td class="v-align-middle">
+                       <img src="assets/img/adhar.jpg" class="img-responsive thumbnail_doc"/>
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+           </div>
+         </div>
+       </div>
+       </div>
+       <div class="col-md-12 no-padding ">
+         <div class="col-lg-6 col-sm-6 ">
+           <div class="card social-card share  full-width m-b-10 no-border" data-social="item">
+             <div class="card-header clearfix user_profile">
+               <div class="balance_belrium col-md-8">
+                 <h3 class="">Balance</h3>
+                 <p class="">0 Belrium</p>
+               </div>
+               <div class="balance_belrium_send col-md-4">
+                   <a href="#" class="btn changepassword-btn">Send <i class="fa fa-angle-right"></i></a>
+                 </div>
+             </div>
+           </div>
+         </div>
+       </div>
+       <div class="col-md-12 no-padding">
+           <div class="col-lg-12 col-sm-12 ">
+             <div class="card card-transparent">
+               <div class="card-header ">
+                 <div class="card-title"><h3>Latest Transactions</h3>
+                 </div>
+               </div>
+               <div class="card-block">
+                 <div class="col-md-12 text-center transactions">
+                     <img src="assets/img/logo-belrium.png" class="img-responsive"/>
+                     <p>You have not made any transactions yet.</p>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>-->
+ </div>

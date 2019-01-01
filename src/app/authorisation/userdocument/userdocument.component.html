@@ -1,0 +1,109 @@
+<div class=" container ">
+    <div class="row">
+       <div class="col-md-12">
+          <!-- START card -->
+          <div class="card card-default">
+             <div class="card-header ">
+                <div class="card-title">
+                   Search User By Email
+                </div>
+             </div>
+             <div class="card-block">
+                <form #userDocumentsForm="ngForm">
+                   <div class="row">
+                      <div class="col-md-5 col-sm-5 col-xs-6">
+                         <div class="form-group form-group-default required">
+                            <input 
+                            type="email" 
+                            [(ngModel)]="userRequestedDocumentSearchCriteria['recieverEmail']"
+                            #email="ngModel"
+                            name="email"
+                            class="form-control" 
+                            placeholder="abc123@xyz.com" 
+                            maxlength="100"   
+                            pattern="\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+"
+                            required 
+                            />
+                            <div *ngIf="(email.errors && ((email.dirty || email.touched)))" class="error"> 
+                                <div *ngIf="email.errors.required && !email.errors.minlength && !email.errors.pattern && !email.errors.maxlength">Email is required.</div>
+                                <div [hidden]="!email.errors.pattern" class="error">
+                                       Email is not valid.
+                                </div>
+                        </div>
+                         </div>
+                      </div>
+                      <div class="col-md-5 col-sm-5 col-xs-6">
+                         <select  
+                                name="country" 
+                                #country="ngModel" 
+                                class="form-control"  
+                                [(ngModel)]="userRequestedDocumentSearchCriteria['kycDocGroupId']"
+                                required>
+                                <option disabled [ngValue]="undefined">Select Group</option>
+                                <option *ngFor="let documentGroupMapping of documentGroupMappings" [ngValue]="documentGroupMapping['kycDocGroupId']">{{documentGroupMapping['groupName']}} [{{documentGroupMapping['kycDocGroupId']}}]</option>
+                         </select>
+                         <div *ngIf="country.invalid && (country.dirty || country.touched)" class="error">
+                            <div *ngIf="country.errors.required">
+                                    Group Name is required.
+                            </div>
+                    </div> 
+                         <div class="form-group ">
+                         </div>
+                      </div>
+                      <div class="col-md-2 col-sm-2 col-xs-12">
+                         <div class="form-group ">
+                            <button type="button" [disabled]="userDocumentsForm.invalid" class="btn btn-primary changepassword-btn" (click)="getUserDocumentByUserEmailAndGroup();">Search</button>
+                          </div>
+                      </div>
+                   </div>
+                </form>
+             </div>
+       <div>
+            <data-table
+                headerTitle="Document(s) Group"
+                [items]="userRequestedDocuments"
+                [itemCount]="totalUserRequestedDocument"
+                (reload)="reloadUserRequestedDocument($event)"
+                [limit]="userRequestedDocumentPerPage"
+                [sortBy]="'rating'"
+                [sortAsc]="false"
+                [multiSelect]="false"
+                [substituteRows]="false"
+                [translations]="translations"
+            >
+            <ng-template #dataTableExpand let-user="item">
+              <div [textContent]="user.roleDescription" style="padding: 5px; color: gray"></div>
+            </ng-template>
+            <data-table-column
+                [property]="'countryName'"
+                [header]="'Country Name'"
+                [sortable]="true">
+            </data-table-column>
+            <data-table-column
+                [property]="'documentName'"
+                [header]="'Document Name'"
+                [sortable]="true">
+            </data-table-column>
+            <data-table-column
+                [property]="'documentType'"
+                [header]="'Document Type'"
+                [sortable]="true">
+            </data-table-column>
+            <data-table-column
+                [header]="'Request Document(s)'"
+                [sortable]="true">
+                <ng-template #dataTableCell let-userDocument="item">
+                <input 
+                    type="checkbox"
+                    [(ngModel)]="userDocument.documentStatus"
+                    (change)="requestedDocument(userDocument)"
+                />
+                </ng-template>
+            </data-table-column>
+        </data-table>
+        <button type="button" [disabled]="!kycDocIds.length" class="btn btn-primary changepassword-btn" (click)="saveDocumentByEmailAndGroup();">Submit</button>                           
+      </div>
+    </div>
+    </div>
+    </div>
+ </div>

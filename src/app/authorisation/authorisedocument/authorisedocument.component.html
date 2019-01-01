@@ -1,0 +1,191 @@
+
+  <div class=" container ">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card card-default">
+              <div class="card-header ">
+                <div class="card-title">
+                  Search Document
+                </div>
+              </div>
+              <div class="card-block">
+                <form class="" role="form">
+                  <div class="row">
+                    <div class="col-md-5  col-sm-6 col-xs-12">
+                      <div class="form-group form-group-default required">
+                         <input type="email" class="form-control" placeholder="" required>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div>
+                <data-table
+                    headerTitle="AUTHORISED DOCUMENT(s)"
+                    [items]="requestData"
+                    [itemCount]="totalUserDocuments"
+                    (reload)="reloadUserDocuments($event)"
+                    [limit]="noOfUserDocumentsPerPage"
+                    [sortBy]="'rating'"
+                    [sortAsc]="false"
+                    [multiSelect]="false"
+                    [substituteRows]="false"
+                    [translations]="translations"
+                    [indexColumnHeader]="'#'"
+                    >
+                    <data-table-column
+                        [property]="'countryName'"
+                        [header]="'COUNTRY NAME'"
+                        [sortable]="true">
+                    </data-table-column>
+                    <data-table-column
+                        [property]="'email'"
+                        [header]="'EMAIL'"
+                        [sortable]="true">
+                    </data-table-column>
+                    <data-table-column
+                        [property]="'documentName'"
+                        [header]="'DOCUMENT NAME'"
+                        [sortable]="true">
+                    </data-table-column>
+                    <data-table-column
+                        [property]="'documentType'"
+                        [header]="'DOCUMENT TYPE'"
+                        [sortable]="true">
+                     </data-table-column>
+                      <data-table-column
+                        [property]="'updatedAt'"
+                        [header]="' REQUESTED AT'"
+                        [sortable]="true">
+                    </data-table-column>
+                    <data-table-column
+                        [property]="'userStatus'"
+                        [header]="'Status'"
+                        [sortable]="true"
+                        [cellColors]="cellColor">
+                        <ng-template #dataTableCell let-authoriseDocument="item">
+                            <p>
+                                <button *ngIf="authoriseDocument['status']=='Requested'" type="button" class="btn btn-warning user-requested-document-status"><span>{{authoriseDocument['status']}}</span></button>
+                                <button *ngIf="authoriseDocument['status']=='Accepted'" type="button" class="btn btn-success user-requested-document-status"><span>{{authoriseDocument['status']}}</span></button>
+                                <button *ngIf="authoriseDocument['status']=='Rejected'" type="button" class="btn btn-danger user-requested-document-status"><span>{{authoriseDocument['status']}}</span></button>
+                              </p>
+                        </ng-template>
+                    </data-table-column>
+                    <data-table-column
+                        [header]="'Action'"
+                        [sortable]="true"
+                        [cellColors]="cellColor">
+                        <ng-template #dataTableCell let-authoriseDocument="item">
+                            <p>
+                              <i *ngIf="authoriseDocument['status']=='Accepted'" (click)="viewAuthorisedDocumentByUser(authoriseDocument)" class="fa fa-eye" aria-hidden="true"></i>
+                              <i *ngIf="authoriseDocument['status']=='Requested'" class="fa fa-eye-slash" aria-hidden="true"></i><i *ngIf="authoriseDocument['status']=='Rejected'" class="fa fa-eye-slash" aria-hidden="true"></i>
+                            </p>
+                        </ng-template>
+                  </data-table-column>
+                </data-table>
+             </div>
+            </div> 
+            <div *ngIf="viewRequestedDocumentImageModal" class="overlay" (click)="closeViewRequestedDocumentImageModal()"></div>       
+            <div *ngIf="documentViewPaymentModal" class="overlay" (click)="closeDocumentViewPaymentModal()"></div>                                    
+          </div>
+            <app-dialog [(visible)]="viewRequestedDocumentImageModal">
+                <div class="popup_dialouge poup_edit">
+                  <h5>View <span class="semi-bold">Requested Document</span><button (click)="closeViewRequestedDocumentImageModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+                  <form role="form" #roleForm="ngForm">
+                    <div class="form-group-attached">
+                        <div class="row">
+                          <div class="col-md-offset-2 col-md-8">
+                              <div class="form-group form-group-default">
+                                  <img *ngIf="requestedDocumentImage" width="310px" height="350px" [src]="requestedDocumentImage"/>
+                              </div>
+                            </div>
+                        </div> 
+                        <div class="row">
+                          <div class="col-md-12">
+                              <button style="float: right" type="button" class="btn btn-primary changepassword-btn" (click)="dismissViewRequestedDocumentImageModal()">OK</button>
+                          </div>
+                        </div> 
+                    </div>
+                  </form>
+              </div>
+            </app-dialog>  
+            <app-dialog [(visible)]="documentViewPaymentModal">
+                <div class="popup_dialouge">
+                    <div class="security_warning_logo">
+                        <img src="assets/img/logo-belrium.png" class="img-responsive"/>
+                        <button (click)="closeDocumentViewPaymentModal()" aria-label="Close" class="dialog__close-btn">X</button>
+                    </div>
+                    <div class="security_warning text-center popup_padding"> 
+                        <p class="fee_shift"><span><b>Fee: {{viewDocumentFee}} BEL</b></span></p>               
+                    </div> 
+                    <div class="">
+                    <form #documentViewPaymentForm="ngForm" class="" role="form">
+                        <div class="col-md-12 user_doc_form">
+                            <div class="form-group form-group-default form-group-default-select2 required">
+                                <label class="">Select Country</label>
+                                <select 
+                                        class="form-control" 
+                                        name="countryID" 
+                                        data-placeholder="Select Country" 
+                                        data-init-plugin="select2"
+                                        [(ngModel)]="paymentCredentials['senderCountryCode']"
+                                        #country
+                                        required>
+                                        <option disabled [ngValue]="undefined">Select Country</option>
+                                        <option [ngValue]="userCountry['country']['countryCode']" *ngFor="let userCountry of userCountries">{{userCountry['country']['countryName']}}[{{userCountry['country']['countryCode']}}]</option>
+                                </select>
+                                <div *ngIf="country.errors && (country.touched)" class="error">
+                                    <div [hidden]="!country.errors.required">
+                                        Country is required
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-default popup_padding delegate_pad">
+                            <label>Passphrase:</label>
+                            <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    name="secret"
+                                    #secret="ngModel"
+                                    [(ngModel)]="paymentCredentials['secret']"
+                                    placeholder="Your Passphrase" 
+                                    required
+                            />
+                            <div *ngIf="(secret.errors && (secret.dirty || secret.touched))">
+                                <div [hidden]="!secret.errors.required" class="error">
+                                    Passphrase is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group text-right popup_padding"> 
+                            <button type="submit" [disabled]="documentViewPaymentForm.invalid" class="btn btn-default changepassword-btn vote" (click)="saveAndUpdateDocumentViewPayment()">Submit</button> 
+                        </div> 
+                    </form>
+                    </div>
+                </div>
+            </app-dialog>
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

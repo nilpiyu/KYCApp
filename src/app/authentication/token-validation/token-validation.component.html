@@ -1,0 +1,15 @@
+<div  class=" container-fluid no-padding ">
+  <div class="col-md-12 no-padding">
+      <div class="col-md-12 thankyou_left no-padding">
+          <div class="login_head">
+            <div class="thankyou_middle">
+              <img src="../../assets/img/thankyou-register.png" class="img-responsive" alt="logo">
+              <h2>{{tokenMessage}}</h2>
+              <div class="token-invalid-button">
+                <a *ngIf="this.linkState=='register-token-verification'"routerLink="/register" routerLinkActive="active">Register</a>
+                <a *ngIf="this.linkState=='reset-token-verification'"routerLink="/forget-password" routerLinkActive="active">Reset Password</a>
+              </div>
+            </div>
+      </div>
+  </div>
+</div>

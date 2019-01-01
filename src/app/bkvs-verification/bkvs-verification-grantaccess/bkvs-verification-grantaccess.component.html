@@ -1,0 +1,166 @@
+
+<div *ngIf="isloaded">
+<app-bkvs-verification-header></app-bkvs-verification-header>
+<div *ngIf="isloaded && type == 2">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-lg-offset-3">
+        <div class="well">
+          <div class="alert alert-info" *ngIf="actualKycStatus">
+            <strong>Please click on kyc access button</strong> to let merchant access your kyc status on BKVS System.
+          </div>
+          <div class="alert alert-info" *ngIf="!actualKycStatus">
+            <strong>Your KYC status is not approved, so you are not eligible to share your status.</strong>Please login into BKVS system and upload and verify your kyc documents.
+          </div>
+          <div class="col-12">
+            <button type="button"  [disabled]='!actualKycStatus' class="btn btn-primary" (click)="getBKVSKYCStatus()">Share KYC Status</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div *ngIf="isloaded && type == 1">
+<div class="container" *ngIf="isloaded && isOnlyKYCRequest">
+  <div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+      <div class="well">
+        <div class="alert alert-info">
+          <strong>Please click on grant kyc access button</strong> to let merchant access your kyc status.
+        </div>
+        <div class="col-12">
+          <button type="button"  class="btn btn-primary" (click)="shareKYCStatus()">Grant Access</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container" *ngIf="isloaded && !isOnlyKYCRequest">
+<div  class="row">
+        <div class="col-md-12" *ngIf='showMessage()'>
+               <div class="alert alert-info">
+                 <strong>Please click on grant access button</strong> to let merchant access your approved documents.
+               </div>
+        </div>
+
+        <div class="col-md-12" *ngIf='disable && !showMessage()'>
+                <div class="alert alert-danger">
+                  <strong>BKVS social kyc verification can not be processed.</strong> Kindly login to bkvs system to get your document approved and then reinitiate the request.
+                </div>
+         </div>
+</div>
+ <div class="row">
+
+ <div class="col-md-12">
+ <div class="card card-default">
+ <div class="card-header ">
+ <div class="card-title">
+ User's Document for Social KYC Verification
+ </div>
+ </div>
+ <div class="card-block"> 
+ <div>
+ <data-table
+ headerTitle="USER DOCUMENT"
+ [items]="pageAbleDocument"
+ [itemCount]="noOfUserDocuments"
+ (reload)="reloadUsers($event)"
+ [limit]="noOfDocumentPerPage"
+ >
+ <data-table-column
+ [property]="'countryName'"
+ [header]="'COUNTRY'"
+ [sortable]="true">
+ </data-table-column>
+ <data-table-column
+ [property]="'documentType'"
+ [header]="'DOCUMENT TYPE'"
+ [sortable]="true">
+ </data-table-column>
+ <data-table-column
+ [property]="'documentName'"
+ [header]="'DOCUMENT NAME'"
+ [sortable]="true">
+ </data-table-column> 
+ <data-table-column
+ [property]="'documentStatus'"
+ [header]="'DOCUMENT STATUS'"
+ [sortable]="true">
+ </data-table-column> 
+ </data-table>
+ </div>
+ <div class="col-12">
+ <button type="button" [disabled]='buttonDisable' class="btn btn-primary" (click)="shareDocumentAccess()">Grant Access</button>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ <div class="container" *ngIf="isloaded && type==3">
+  <div  class="row">
+    <div class="col-md-12" *ngIf='!isPaymentRequestDisable'>
+           <div class="alert alert-info">
+             <strong>Please click on grant access button</strong> to let merchant perform the task of KYC verification on your behalf.
+           </div>
+    </div>
+  
+    <div class="col-md-12" *ngIf='isPaymentRequestDisable'>
+            <div class="alert alert-danger">
+              <strong>BKVS social kyc verification can not be processed.</strong> Kindly upload all the requested document so that merhant can pay for verification.
+            </div>
+    </div>
+  </div>
+   <div class="row">
+  
+   <div class="col-md-12">
+   <div class="card card-default">
+   <div class="card-header ">
+   <div class="card-title">
+   User's Document for Social KYC Verification
+   </div>
+   </div>
+   <div class="card-block"> 
+   <div>
+   <data-table
+   headerTitle="USER DOCUMENT"
+   [items]="pageAbleDocument"
+   [itemCount]="noOfUserDocuments"
+   (reload)="reloadUsers($event)"
+   [limit]="noOfDocumentPerPage"
+   >
+   <data-table-column
+   [property]="'countryName'"
+   [header]="'COUNTRY'"
+   [sortable]="true">
+   </data-table-column>
+   <data-table-column
+   [property]="'documentType'"
+   [header]="'DOCUMENT TYPE'"
+   [sortable]="true">
+   </data-table-column>
+   <data-table-column
+   [property]="'documentName'"
+   [header]="'DOCUMENT NAME'"
+   [sortable]="true">
+   </data-table-column> 
+   <data-table-column
+   [property]="'documentStatus'"
+   [header]="'DOCUMENT STATUS'"
+   [sortable]="true">
+   </data-table-column> 
+   </data-table>
+   </div>
+   <div class="col-12">
+   <button type="button" [disabled]='isPaymentRequestDisable' class="btn btn-primary" (click)="shareDocumentAccessAndPaymentInformation()">Grant Access</button>
+   </div>
+   </div>
+   </div>
+   </div>
+   </div>
+   </div>
+ <app-footer></app-footer>
+</div>

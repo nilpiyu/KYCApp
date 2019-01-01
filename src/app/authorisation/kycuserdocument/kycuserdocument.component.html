@@ -1,0 +1,225 @@
+<div class=" container ">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-default">
+        <div class="card-header ">
+          <div class="card-title">
+            Search User Document
+          </div>
+        </div>
+        <div class="card-block">
+          <form class="" role="form">
+            <div class="row">
+              <div class="col-md-5 col-sm-6 col-xs-12">
+                <div class="form-group form-group-default required">
+                  <input type="email" class="form-control"  required>
+                </div>
+              </div>
+              <div class="col-md-7 col-sm-6 col-xs-12 text-right">
+                <div class="form-group ">
+                  <a class="btn btn-default changepassword-btn" (click)="openModal()">Add</a>
+                </div>
+              </div>
+          </div>
+          </form>
+          <div>
+            <data-table
+                headerTitle="USER DOCUMENT(s)"
+                [items]="userDocuments"
+                [itemCount]="totalUserDocuments"
+                (reload)="reloadUserDocuments($event)"
+                [limit]="noOfUserDocumentsPerPage"
+                [indexColumnHeader]="'#'"
+                >
+                <data-table-column
+                    [property]="'countryName'"
+                    [header]="'COUNTRY'"
+                    [sortable]="true">
+                </data-table-column>
+                <data-table-column
+                    [property]="'documentType'"
+                    [header]="'DOCUMENT TYPE'"
+                    [sortable]="true">
+                </data-table-column>
+                <data-table-column
+                    [property]="'documentName'"
+                    [header]="'DOCUMENT NAME'"
+                    [sortable]="true">
+                </data-table-column>  
+                <data-table-column
+                    [property]="'channelName'"
+                    [header]="'CHANNEL NAME'"
+                    [sortable]="true">
+                </data-table-column>  
+                <data-table-column
+                    [header]="'ACTION'"
+                    [sortable]="true"
+                    [cellColors]="cellColor">
+                    <ng-template #dataTableCell let-userDocument="item">
+                      <i class="fa fa-edit" (click)="editUserDocument(userDocument)"></i>
+                  </ng-template>
+                </data-table-column>
+                <data-table-column
+                    [header]="'REFRESH CHANNEL'"
+                    [sortable]="true"
+                    [cellColors]="cellColor">
+                    <ng-template #dataTableCell let-userDocument="item">
+                      <i class="fa fa-refresh" (click)="editDocumentChannel(userDocument)"></i>
+                  </ng-template>
+                </data-table-column>
+            </data-table>
+          </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div *ngIf="kycUserDocument" class="overlay" (click)="closeModal()"></div>
+  <div *ngIf="refreshChannelDataModal" class="overlay" (click)="closeRefreshChannelDataModal()"></div>
+</div>
+<app-dialog [(visible)]="kycUserDocument">
+  <div class="popup_dialouge poup_edit">
+    <h5 *ngIf="!userDocument['kycDocId']" >ADD <span class="semi-bold">USER DOCUMENT MAPPING</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <h5 *ngIf="userDocument['kycDocId']" >EDIT <span class="semi-bold">USER DOCUMENT MAPPING</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <form role="form" #userDocumentForm="ngForm">
+      <div class="form-group-attached">
+      <div class="row">
+      <div class="col-md-12 user_doc_form">
+        <div class="form-group form-group-default form-group-default-select2 required">
+          <label class="">Country</label>
+          <select 
+                  class="form-control" 
+                  name="countryID" 
+                  [(ngModel)]="userDocument['countryCode']" 
+                  data-placeholder="Select Country" 
+                  data-init-plugin="select2"
+                  #country="ngModel" 
+                  [disabled]="userDocument['kycDocId']"
+                  required>
+                  <option disabled [ngValue]="undefined">Select Country</option>
+                  <option [ngValue]="country['countryCode']" *ngFor="let country of countries">{{country['countryName']}}[{{country['countryCode']}}]</option>
+          </select>
+          <div *ngIf="country.errors && (country.touched)" class="error">
+            <div [hidden]="!country.errors.required">
+                Country is required
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 user_doc_form">
+          <div class="form-group form-group-default form-group-default-select2 required">
+            <label class="">Document Type</label>
+            <select 
+                    class="form-control" 
+                    name="documentTypeId" 
+                    [(ngModel)]="userDocument['kycDocumentTypeId']" 
+                    data-placeholder="Select Document Type" 
+                    data-init-plugin="select2"
+                    #kycDocumentMeta="ngModel" 
+                    required>
+                    <option disabled [ngValue]="undefined">Select Document Type</option>
+                    <option [ngValue]="documentType['kycDocumentTypeId']" *ngFor="let documentType of documentTypes">{{documentType['documentType']}}</option>
+            </select>
+            <div *ngIf="kycDocumentMeta.errors && (kycDocumentMeta.dirty || kycDocumentMeta.touched)" class="error">
+              <div [hidden]="!kycDocumentMeta.errors.required">Document Meta is required.</div>
+            </div>
+          </div>
+        </div>
+      <div class="col-md-12 user_doc_form">
+        <div class="form-group form-group-default form-group-default-select2 required">
+          <label class="">Document Name</label>
+          <select 
+                  class="form-control" 
+                  name="documentMetaId" 
+                  [(ngModel)]="userDocument['kycDocumentMetaId']" 
+                  data-placeholder="Select Document" 
+                  data-init-plugin="select2"
+                  #kycDocumentType="ngModel" 
+                  required>
+                  <option disabled [ngValue]="undefined">Select Document</option>
+                  <option [ngValue]="documentMeta['kycDocumentMetaId']" *ngFor="let documentMeta of documentMetas">{{documentMeta['documentName']}}</option>
+          </select>
+          <div *ngIf="kycDocumentType.errors && (kycDocumentType.dirty || kycDocumentType.touched)" class="error">
+            <div [hidden]="!kycDocumentType.errors.required">Document Type is required.</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 user_doc_form">
+          <div class="form-group form-group-default form-group-default-select2 required">
+            <label class="">Document Channel Name</label>
+            <select 
+                    class="form-control" 
+                    name="documentChannel" 
+                    [(ngModel)]="userDocument['channelName']" 
+                    data-init-plugin="select2"
+                    #documentChannel="ngModel" 
+                    required>
+                    <option disabled [ngValue]="undefined">Select Document Channel</option>
+                    <option [ngValue]="documentChannel" *ngFor="let documentChannel of documentChannels">{{documentChannel}}</option>
+            </select>
+            <div *ngIf="documentChannel.errors && (documentChannel.dirty || documentChannel.touched)" class="error">
+              <div [hidden]="!documentChannel.errors.required">Document Channel is required.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="checkbox check-success">
+            <input 
+                  type="checkbox" 
+                  name="isMandatory" 
+                  [(ngModel)]="userDocument['isMandatory']"
+            />
+            <label for="checkbox3">Mandatory</label>
+          </div>
+          <div *ngIf="!userDocument['kycDocId']" class="checkbox check-success">
+            <input 
+                  type="checkbox" 
+                  name="canExpired" 
+                  [(ngModel)]="userDocument['canExpired']"
+            />
+            <label for="checkbox4">Expired:</label>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <button type="button" [disabled]="userDocumentForm.invalid" class="btn btn-primary changepassword-btn" (click)="saveAndUpdateUserDocument()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>
+</app-dialog>
+
+<app-dialog [(visible)]="refreshChannelDataModal">
+    <div class="popup_dialouge poup_edit">
+      <h5>REFRESH <span class="semi-bold">CHANNEL NAME</span><button (click)="closeRefreshChannelDataModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+      <form role="form" #userDocumentChannelForm="ngForm">
+        <div class="form-group-attached">
+        <div class="row">
+          <div class="col-md-12 user_doc_form">
+            <div class="form-group form-group-default form-group-default-select2 required">
+              <label class="">Document Channel Name</label>
+              <select 
+                      class="form-control" 
+                      name="documentChannel" 
+                      [(ngModel)]="documentChannelName['channelName']" 
+                      data-init-plugin="select2"
+                      #documentChannel="ngModel" 
+                      required>
+                      <option disabled [ngValue]="undefined">Select Document Channel</option>
+                      <option [ngValue]="documentChannel" *ngFor="let documentChannel of documentChannels">{{documentChannel}}</option>
+              </select>
+              <div *ngIf="documentChannel.errors && (documentChannel.dirty || documentChannel.touched)" class="error">
+                <div [hidden]="!documentChannel.errors.required">Document Channel is required.</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <button type="button" [disabled]="userDocumentChannelForm.invalid" class="btn btn-primary changepassword-btn" (click)="saveAndUpdateDocumentChannel()">Submit</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    </div>
+  </app-dialog>
+  
+
+

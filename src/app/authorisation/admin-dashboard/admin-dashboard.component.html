@@ -1,0 +1,103 @@
+<div class="container">
+  <!-- START ROW -->
+  <div class="col-md-12 no-padding dashboard_main">
+    <div class="col-md-4 col-sm-4 text-center no-padding">
+      <div class="card-header total_users_card">
+        <h5 class=""><b>TOTAL USER(s)</b></h5>
+        <h3><span>{{userChart['total']}}</span></h3>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-4 text-center no-padding">
+      <div class="card-header total_users_card">
+        <h5 class=""><b>TOTAL WALLET(s)</b></h5>
+        <h3><span>{{walletGraph['total']}}</span></h3>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-4 text-center no-padding">
+      <div class="card-header total_users_card">
+        <h5 class=""><b>WATCH LIST</b></h5>
+        <h3><span>{{userChart['inactiveUsers']}}</span></h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 no-padding dashboard_main">
+    <div class="col-md-4 col-sm-4 text-center no-padding">
+      <div class="card-header">
+        <h5 class=""><b>KYC Status By Base Country and Year</b></h5>
+        <app-bar-chart></app-bar-chart>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-4 text-center no-padding">
+      <div class="card-header">
+          <h5 class=""><b>KYC Status By Base Country (Percentage)</b></h5>
+          <ngx-charts-pie-chart
+            [view]="view"
+            [scheme]="colorScheme"
+            [results]="single"
+            [legend]="false"
+            [explodeSlices]="explodeSlices"
+            [labels]="true"
+            [doughnut]="doughnut"
+            [gradient]="true"
+            (select)="onSelect($event)">
+          </ngx-charts-pie-chart>
+      </div>
+    </div>
+      <div class="col-md-4 col-sm-4 text-center no-padding">
+        <div class="card-header">
+          <h5 class=""><b>KYC Status By Base Country</b></h5>
+          <app-base-chart></app-base-chart>        
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 no-padding dashboard_main">
+      <div class="col-md-4 col-sm-4 text-center no-padding">
+        <div class="card-header">
+            <h5 class=""><b>User Wallet(s) By Status</b></h5>
+            <canvas baseChart
+              [data]="doughnutChartWalletData"
+              [labels]="doughnutChartWalletLabels"
+              [chartType]="doughnutChartType"
+              (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)">
+            </canvas>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-4 text-center no-padding">
+        <div class="card-header">
+          <h5 class=""><b>User(s) By Country</b></h5>
+          <ngx-charts-bar-horizontal-2d
+            [view]="[280, 230]"
+            [scheme]="colorScheme"
+            [results]="multi"
+            [gradient]="gradient"
+            [xAxis]="showXAxis"
+            [yAxis]="showYAxis"
+            [legend]="false"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel"
+            (select)="onSelect($event)">
+          </ngx-charts-bar-horizontal-2d>
+        </div>
+      </div>
+        <div class="col-md-4 col-sm-4 text-center no-padding">
+          <div class="card-header">
+              <h5 class=""><b>User(s) By Country (Percentage)</b></h5>
+            <ngx-charts-pie-chart
+              [view]="view"
+              [scheme]="colorScheme"
+              [results]="userPercentageCountryWise"
+              [legend]="false"
+              [explodeSlices]="explodeSlices"
+              [labels]="true"
+              [doughnut]="doughnut"
+              [gradient]="true"
+              (select)="onSelect($event)">
+            </ngx-charts-pie-chart>
+          </div>
+        </div>
+      </div>
+  <!-- END ROW -->
+</div>

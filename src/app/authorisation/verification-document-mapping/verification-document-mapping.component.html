@@ -1,0 +1,163 @@
+<div class=" container ">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-default">
+          <div class="card-header ">
+            <div class="card-title">
+              Search Document Group Mapping
+            </div>
+          </div>
+          <div class="card-block">
+            <form class="" role="form">
+              <div class="row">
+                <div class="col-md-5  col-sm-6 col-xs-12">
+                  <div class="form-group form-group-default required">
+                     <input type="email" class="form-control" placeholder="" required>
+                  </div>
+                </div>
+                <div class="col-md-7  col-sm-6 col-xs-12 text-right">
+                  <div class="form-group ">
+                    <a class="btn btn-default changepassword-btn" (click)="openModal()">Add</a>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div>
+              <data-table
+                  headerTitle="Document Group Mapping(s)"
+                  [items]="documentGroupMappings"
+                  [itemCount]="totalDocumentGroupMappings"
+                  (reload)="reloadDocumentGroupMapping($event)"
+                  [limit]="noOfDocumentGroupMappingsPerPage"
+                  [indexColumnHeader]="'#'"
+                  >
+                  <data-table-column
+                      [property]="'roleName'"
+                      [header]="'Role Name'"
+                  >
+                  </data-table-column>
+                  <data-table-column
+                      [property]="'roleDescription'"
+                      [header]="'Role Description'"
+                  >
+              </data-table-column>
+              <data-table-column
+                  [header]="'Action'"
+                  [cellColors]="cellColor">
+                  <ng-template #dataTableCell let-documentGroupMapping="item">
+                      <i class="fa fa-edit" (click)="editDocumentGroupMappingById(documentGroupMapping)"></i>
+                  </ng-template>
+              </data-table-column>
+              </data-table>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="documentGroupMappingModal" class="overlay" (click)="closeModal()"></div>
+  </div>
+  
+  <app-dialog [(visible)]="documentGroupMappingModal">
+    <div class="popup_dialouge poup_edit">
+      <h5 *ngIf="!documentGroupMapping['roleId']">ADD <span class="semi-bold">Document Group Mapping</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button> </h5>
+      <h5 *ngIf="documentGroupMapping['roleId']">EDIT <span class="semi-bold">Document Group Mapping</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button> </h5>
+      <form role="form" #documentGroupMappingForm="ngForm">
+        <div class="form-group-attached">
+            <div class="row">
+              <div class="col-md-12 user_doc_form">
+                  <div class="form-group form-group-default">
+                    <label>Document Group Name</label>
+                    <input 
+                          type="text" 
+                          [(ngModel)]="documentGroupMapping['roleName']"
+                          name="documentGroupName"
+                          class="form-control" 
+                          #documentGroupName="ngModel"
+                          placeholder="Enter Document Group Name" 
+                          minlength="2"
+                          maxlength="101"   
+                          pattern="[a-zA-Z]+([\s][a-zA-Z]+)*" 
+                          [disabled]="documentGroupMapping['roleId']"
+                          (keyup)="checkMaxLength(documentGroupName, 101)"
+                          required 
+                    />
+                    <div *ngIf="documentGroupName.errors && documentGroupName.dirty">
+                      <div [hidden]="documentGroupName.errors.required || !documentGroupName.errors.pattern" class="error">
+                            Only alphabets are allowed.
+                      </div>
+                      <div [hidden]="documentGroupName.errors.required || documentGroupName.errors.pattern || (documentGroupName.errors.minlength && documentGroupName.errors.minlength['requiredLength']<roleNameField.errors.minlength['actualLength'])" class="error">
+                          Document Group Name should be at least 2 characters long.
+                      </div>
+                      <div [hidden]="!documentGroupName.errors.required" class="error">
+                          Document Group Name is required.
+                      </div>
+                    </div>
+                    <div [hidden]="documentGroupName.errors || !maxLengthExceeded['roleName']" class="error">
+                        Document Group Name should not exceed 100 characters.
+                    </div>
+                    <div [hidden]="(!documentGroupName.touched || documentGroupName.dirty) || (documentGroupName.value && documentGroupName.value.length)" class="error">
+                        Document Group Name is required.
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 user_doc_form">
+                  <div class="form-group form-group-default">
+                    <label>Select User Type</label>
+                    <select 
+                            name="userType" 
+                            #userType="ngModel" 
+                            class="form-control" 
+                            [(ngModel)]="documentGroupMapping['userType']"
+                            required>
+                      <option disabled [ngValue]="undefined">Select User Type</option>
+                      <option *ngFor="let userType of userTypes" [ngValue]="userType['countryCode']">{{userType['countryName']}}</option>
+                    </select>
+                    <div *ngIf="userType.invalid && (userType.dirty || userType.touched)" class="error">
+                        <div *ngIf="userType.errors.required">
+                            User Type is required.
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 user_doc_form">
+                  <div class="form-group form-group-default">
+                    <label>Country</label>
+                    <select 
+                            name="country" 
+                            #country="ngModel" 
+                            class="form-control" 
+                            [(ngModel)]="documentGroupMapping['countryCode']"
+                            required>
+                      <option disabled [ngValue]="undefined">Select Country</option>
+                      <option *ngFor="let country of countries" [ngValue]="country['countryCode']">{{country['countryName']}}</option>
+                    </select>
+                    <div *ngIf="country.invalid && (country.dirty || country.touched)" class="error">
+                        <div *ngIf="country.errors.required">
+                          Country is required.
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 user_doc_form">
+                  <div class="form-group form-group-default form-group-default-select2">
+                  <label>Select Document(s)</label>
+                  <select 
+                          class="form-control" 
+                          data-init-plugin="select2" 
+                          [(ngModel)]="documentGroupMapping['documentIds']" 
+                          name="documentIds"
+                          #documentIds="ngModel"
+                          multiple
+                          required>
+                    <option *ngFor="let document of documents" [ngValue]="document['documentId']">{{document['documentName']}}</option>
+                  </select>
+                  </div>
+                </div>
+                <div class="col-md-12 user_doc_form">
+                  <button type="button" [disabled]="documentGroupMappingForm.invalid" class="btn btn-primary changepassword-btn" (click)="saveAndUpdateDcoumentGroupMapping()">Submit</button>
+                </div>
+          </div>  
+        </div>
+      </form>
+    </div>
+  </app-dialog>

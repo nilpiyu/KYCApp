@@ -1,0 +1,109 @@
+<div class=" container ">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-default">
+          <div class="card-header ">
+            <div class="card-title">
+              Search Group
+            </div>
+          </div>
+          <div class="card-block">
+            <form class="" role="form">
+              <div class="row">
+                <div class="col-md-5  col-sm-6 col-xs-12">
+                  <div class="form-group form-group-default required">
+                     <input type="email" class="form-control" placeholder="" required>
+                  </div>
+                </div>
+                <div class="col-md-7  col-sm-6 col-xs-12 text-right">
+                  <div class="form-group ">
+                    <a class="btn btn-default changepassword-btn" (click)="openModal()">Add</a>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div>
+                <data-table
+                    headerTitle="Document(s) Group"
+                    [items]="docGroups"
+                    [itemCount]="totalDocGroups"
+                    (reload)="reloadDocGroups($event)"
+                    [limit]="noOfDocGroupsPerPage"
+                    [sortBy]="'rating'"
+                    [sortAsc]="false"
+                    [multiSelect]="false"
+                    [substituteRows]="false"
+                    [translations]="translations"
+                    [indexColumnHeader]="'#'"
+                    >
+                    <ng-template #dataTableExpand let-user="item">
+                      <div [textContent]="user.roleDescription" style="padding: 5px; color: gray"></div>
+                    </ng-template>
+                    <data-table-column
+                        [property]="'groupName'"
+                        [header]="'DOCUMENT GROUP NAME'"
+                        [sortable]="true">
+                    </data-table-column>
+                    <data-table-column
+                        [header]="'ACTION'"
+                        [sortable]="true">
+                          <ng-template #dataTableCell let-documentGroup="item">
+                              <i class="fa fa-edit" (click)="editDocById(documentGroup)"></i>
+                          </ng-template>
+                    </data-table-column>
+                </data-table>
+              </div>
+        </div>   
+        <div *ngIf="docGroupModal" class="overlay" (click)="closeModal()"></div>
+      </div>
+
+<app-dialog [(visible)]="docGroupModal">
+  <div class="popup_dialouge poup_edit">
+    <h5 *ngIf="!kycDocData['kycDocGroupId']">Add <span >Document</span> Group <button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <h5 *ngIf="kycDocData['kycDocGroupId']">EDIT <span class="semi-bold">Document</span> Group <button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>                      
+    <form role="form" #groupNameForm="ngForm">
+      <div class="form-group-attached">
+          <div class="row">
+              <div class="col-md-12 user_doc_form">
+                  <div class="form-group form-group-default">
+                    <label>Group Name</label>
+                    <input 
+                    type="text" 
+                    name="groupName"
+                    #groupNameField="ngModel"
+                    [(ngModel)]="kycDocData['groupName']"
+                    class="form-control" 
+                    placeholder="Enter Group Name" 
+                    minlength="2"
+                    maxlength="101"   
+                    pattern="[a-zA-Z]+([\s][a-zA-Z]+)*" 
+                    required 
+              />
+              <div *ngIf="groupNameField.errors && groupNameField.dirty">
+                  <div [hidden]="groupNameField.errors.required || !groupNameField.errors.pattern" class="error">
+                      Only alphabets are allowed.
+                  </div>
+                  <div [hidden]="groupNameField.errors.required || groupNameField.errors.pattern || (groupNameField.errors.minlength && groupNameField.errors.minlength['requiredLength']<groupNameField.errors.minlength['actualLength'])" class="error">
+                      Group Name should be at least 2 characters long.
+                  </div>
+                  <div [hidden]="!groupNameField.errors.required" class="error">
+                      Group Name is required.
+                  </div>
+                </div>
+                <div [hidden]="groupNameField.errors || !maxLengthExceeded['groupName']" class="error">
+                    Group Name Name should not exceed 100 characters.
+                </div>
+                <div [hidden]="(!groupNameField.touched || groupNameField.dirty) || (groupNameField.value && groupNameField.value.length)" class="error">
+                    Group Name is required.
+                </div>
+                  </div>
+                </div>
+            <div class="col-md-12 user_doc_form">
+                <button [disabled]="groupNameForm.invalid || maxLengthExceeded['groupName']" type="button" class="btn btn-primary changepassword-btn" (click)="saveAndUpdateGroup()">Submit</button>
+              </div>
+          </div>  
+      </div>
+    </form>
+  </div>
+</app-dialog>

@@ -1,0 +1,53 @@
+/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files */
+@font-face{font-family:'SegoeUi-Light';src:url('assets/fonts/SegoeUi-Light.ttf');font-weight:normal;}
+.content-center{padding:20px 0 50px 0 ;}
+.form-control{border: 1px solid rgba(0, 0, 0, 0.23) !important;
+  border-radius: 2px !important;
+  box-shadow: none !important;}
+body{font-family:'SegoeUi-Light' !important;}  
+.footer{    position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+  padding: 10px 0;
+  text-align: center;}
+  .footer p{margin: 0;}
+  .popup_dialouge h5{ 
+    font-weight: 100;
+    font-size: 20px;
+    color: #000;
+  }
+  .popup_dialouge h5>span{font-weight: bold;}
+  .checkbox input[type=checkbox], .checkbox-inline input[type=checkbox], .radio input[type=radio], .radio-inline input[type=radio]{margin-left:0px !important; }
+  .changepassword-btn{color:#fff !important;}
+  .poup_edit h5{    background: #cd2122;
+    margin: 0;
+    padding: 20px;
+    color: #fff;}
+.poup_edit form{padding: 20px;}
+.card{}
+
+form .error {
+  color:#cd2122;
+}
+
+.dialog__close-btn {
+  border: 0;
+  background: none;
+  color: #2d2d2d;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 1.2em;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}

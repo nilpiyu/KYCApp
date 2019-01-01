@@ -1,0 +1,7 @@
+
+
+http://localhost:4200/bkvs-verification?countryCode=IN&groupName=Belfrics KYC&message=1525246608954&digest=AFc1wVp0W3rPD9LJUd2VKsRYLVQtD6rKO952XWwZUXiT/2ODnlC8MBUhHTZiwdx803iZWYUfURBC3EzomrYuWA==&email=anchal.gaur@oodlestechnologies.com&redirectUrl=https:%2F%2Fwww.belfrics.com&walletAddress=A2C79B8ZbSa3UgvCwTGuARqVcpcPVnY3no&isPartial=true
+
+
+
+

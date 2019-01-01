@@ -1,0 +1,98 @@
+<app-dialog [(visible)]="userCountryModal">
+    <div class="popup_dialouge poup_edit">
+      <h5>ADD <span class="semi-bold">USER COUNTRY</span></h5>
+      <form role="form" #userDocumentForm="ngForm">
+        <div class="form-group-attached">
+        <div class="row">
+        <div class="col-md-12 user_doc_form">
+          <div class="form-group form-group-default form-group-default-select2 required">
+            <label class="">Country Name</label>
+            <select 
+                    class="form-control" 
+                    name="countryID" 
+                    [(ngModel)]="userCountry['countryId']" 
+                    data-placeholder="Select Country" 
+                    data-init-plugin="select2"
+                    #country="ngModel" 
+                    required>
+                    <option disabled [ngValue]="undefined">Select Country</option>
+                    <option [ngValue]="country['countryID']" *ngFor="let country of countries">{{country['countryName']}}[{{country['countryCode']}}]</option>
+            </select>
+            <div *ngIf="country.errors && (country.touched)" class="error">
+              <div [hidden]="!country.errors.required">
+                  Country is required
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+        <button type="button" [disabled]="userDocumentForm.invalid" class="btn btn-primary changepassword-btn" (click)="saveAndUpdateUserCountry()">Submit</button>
+        </div>
+        </div>
+        </div>
+    </form>
+</div>
+</app-dialog>
+
+<div id="kyc" class="tab-pane fade kyc_section">
+  <div class="col-md-3 no-padding">
+     <ul *ngFor="let userCountryDocument of userCountryDocuments;let userCountryDocumentLoopIndex=index;" class="nav nav-tabs" data-toggle="tab">
+        <li><a data-toggle="tab" href="#userCountryDocument" (click)="getDcoumentTypesByCountryIndex(userCountryDocumentLoopIndex)">{{userCountryDocument['countryName']}}</a></li>
+     </ul>
+     <button class="btn btn-default changepassword-btn " (click)="getCountries()">Add Country</button>
+  </div>
+  <div class="col-md-9 kyc_content_section">
+     <div class="tab-content">
+        <!-- ----------------------kyc country--------- -->
+        <div id="country" class="tab-pane fade in active">
+           <div class="col-md-12 no-padding kyc_doc_table ">
+              <table class="table table-bordered" id="stripedTable">
+                 <thead>
+                    <tr>
+                       <th style="width:30%">Document Type</th>
+                       <th style="width:40%">Date of uploads</th>
+                       <th style="width:30%">Verification Status</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    <tr>
+                       <td colspan="3" class="v-align-middle td_inner">
+                          <div *ngIf="userCountryDocuments[countryIndex] && userCountryDocuments[countryIndex]['kycDocumentTypes']" class="panel-group" id="accordion">
+                              <div *ngFor="let documentType of userCountryDocuments[countryIndex]['kycDocumentTypes'];let documentTypeLoopIndex=index" class="panel panel-default">
+                                <div class="panel-heading">
+                                  <h4 class="panel-title">
+                                    <p data-toggle="collapse" data-parent="#accordion" href="#collapse2" class="col_active"><i class="fa fa-caret-right" ></i> <i class="fa fa-caret-down"></i>{{documentType['documentType']}}</p><br>          
+                                  </h4>
+                                </div>
+                                <div>
+                                   <div class="panel-body">
+                                      <table style="width:100%" class="table borderless">
+                                          <tbody>
+                                              <div *ngIf="userCountryDocuments[countryIndex]['kycDocumentTypes'][documentTypeLoopIndex] && userCountryDocuments[countryIndex]['kycDocumentTypes'][documentTypeLoopIndex]['kycDocumentMetas']">
+                                                <tr *ngFor="let documentMeta of userCountryDocuments[countryIndex]['kycDocumentTypes'][documentTypeLoopIndex]['kycDocumentMetas'];let documentMetaLoopIndex=index">
+                                                    <td style="width:30%" class="v-align-middle semi-bold">
+                                                      <p>{{documentMeta['documentName']}}</p>
+                                                    </td>
+                                                    <td style="width:40%" class="v-align-middle">
+                                                      <p><i (click)="getDocumentByDocumentMetaIndex(documentTypeLoopIndex, documentMetaLoopIndex)" class="fa fa-upload"></i></p>
+                                                    </td>
+                                                    <td style="width:30%" class="v-align-middle">
+                                                        <p><i (click)="getDocumentByDocumentMetaIndex(documentTypeLoopIndex, documentMetaLoopIndex)" class="fa fa-upload"></i></p>
+                                                      </td>
+                                                </tr>
+                                              </div>
+                                          </tbody>
+                                        </table>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </td>
+                    </tr>
+                 </tbody>
+              </table>
+           </div>
+        </div>
+     </div>
+  </div>
+</div> 

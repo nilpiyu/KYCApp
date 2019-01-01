@@ -1,0 +1,7 @@
+.changepassword-btn{background: #cd2122 !important; color: #fff;border: none;border-radius: 6px; float: right}
+.card{padding: 20px;background: #fff;border: 1px solid rgba(230, 230, 230, 0.7);margin-bottom: 20px;}
+.card-title{padding-bottom: 10px;}
+.table-bordered th{background: #e1e1e1;}
+.table-bordered .btn{    border: 1px solid #e8e9ea;
+    box-shadow: none;
+    color: #333;margin-right: 5px;}

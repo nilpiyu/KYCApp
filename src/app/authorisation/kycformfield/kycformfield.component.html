@@ -1,0 +1,147 @@
+<div class=" container ">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- START card -->
+      <div class="card card-default">
+        <div class="card-header ">
+          <div class="card-title">
+            Search Form Field
+          </div>
+        </div>
+        <div class="card-block">
+          <form class="" role="form">
+            <div class="row">
+              <div class="col-md-5  col-sm-6 col-xs-12">
+                <div class="form-group form-group-default required">
+                   <input type="email" class="form-control" placeholder="" required>
+                </div>
+              </div>
+              <div class="col-md-7  col-sm-6 col-xs-12 text-right">
+                <div class="form-group">
+                  <a class="btn btn-default changepassword-btn" (click)="openModal()">Add</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div>
+            <data-table
+                    headerTitle="FORM FIELD(s)"
+                    [items]="formFields"
+                    [itemCount]="totalFormFields"
+                    (reload)="reloadFormFields($event)"
+                    [limit]="noOfFormFieldsPerPage"
+                    [indexColumnHeader]="'#'"
+                >
+                <data-table-column
+                    [property]="'name'"
+                    [header]="'ATTRIBUTE NAME'"
+                    [sortable]="true">
+                </data-table-column>
+                <data-table-column
+                    [property]="'label'"
+                    [header]="'LABEL'"
+                    [sortable]="true">
+            </data-table-column>
+                <data-table-column
+                    [header]="'ACTION'"
+                    [sortable]="true"
+                    [cellColors]="cellColor">
+                  <ng-template #dataTableCell let-formField="item">
+                      <i class="fa fa-edit" (click)="editFormField(formField)"></i>
+                  </ng-template>
+                </data-table-column>
+            </data-table>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="formFieldModal" class="overlay" (click)="closeModal()"></div>
+</div>
+
+<app-dialog [(visible)]="formFieldModal">
+  <div class="popup_dialouge poup_edit">
+    <h5 *ngIf="!formField['fid']" >ADD <span class="semi-bold">FORM FIELD</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <h5 *ngIf="formField['fid']" >EDIT <span class="semi-bold">FORM FIELD</span><button (click)="closeModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+    <form role="form" #formFieldForm="ngForm">
+      <div class="form-group-attached">
+          <div class="row">
+              <div class="col-md-12 user_doc_form">
+                  <div class="form-group form-group-default">
+                    <label>Label</label>
+                    <input 
+                          type="text" 
+                          class="form-control"
+                          name="label"
+                          #formFieldLabelField="ngModel"
+                          [(ngModel)]="formField['label']"
+                          minlength="2"
+                          maxlength="101"   
+                          pattern="[a-zA-Z]+([\s][a-zA-Z]+)*" 
+                          (keyup)="checkMaxLength(formFieldLabelField, 101)"
+                          placeholder="Enter Label"
+                          required
+                    />
+                    <div *ngIf="formFieldLabelField.errors && formFieldLabelField.dirty">
+                      <div [hidden]="formFieldLabelField.errors.required || !formFieldLabelField.errors.pattern" class="error">
+                          Only alphabets are allowed
+                      </div>
+                      <div [hidden]="formFieldLabelField.errors.required || formFieldLabelField.errors.pattern || (formFieldLabelField.errors.minlength && formFieldLabelField.errors.minlength['requiredLength']<formFieldLabelField.errors.minlength['actualLength'])" class="error">
+                          Label should be at least 2 characters long.
+                      </div>
+                      <div [hidden]="!formFieldLabelField.errors.required" class="error">
+                          Label is required.
+                      </div>
+                    </div>
+                    <div [hidden]="formFieldLabelField.errors || !maxLengthExceeded['label']" class="error">
+                        Label should not exceed 100 characters.
+                    </div>
+                    <div [hidden]="(!formFieldLabelField.touched || formFieldLabelField.dirty) || (formFieldLabelField.value && formFieldLabelField.value.length)" class="error">
+                        Label is required.
+                    </div>
+                  </div>
+                </div>
+               <div class="col-md-12 user_doc_form">
+                  <div class="form-group form-group-default">
+                    <label>Attribute Name</label>
+                    <input 
+                          type="text" 
+                          class="form-control"
+                          name="name"
+                          #formFieldNameField="ngModel"
+                          [(ngModel)]="formField['name']"
+                          minlength="2"
+                          maxlength="101"   
+                          pattern="[a-zA-Z]+"
+                          placeholder="Enter Attribute Name" 
+                          (keyup)="checkMaxLength(formFieldNameField, 101)"
+                          [disabled]="formField['fid']"
+                          required
+                    />
+                    <div *ngIf="formFieldNameField.errors && formFieldNameField.dirty">
+                      <div [hidden]="formFieldNameField.errors.required || !formFieldNameField.errors.pattern" class="error">
+                          Only alphabets are allowed.
+                      </div>
+                      <div [hidden]="formFieldNameField.errors.required || formFieldNameField.errors.pattern || (formFieldNameField.errors.minlength && formFieldNameField.errors.minlength['requiredLength']<formFieldNameField.errors.minlength['actualLength'])" class="error">
+                          Name should be at least 2 characters long.
+                      </div>
+                      <div [hidden]="!formFieldNameField.errors.required" class="error">
+                          Name is required.
+                      </div>
+                    </div>
+                    <div [hidden]="formFieldNameField.errors || !maxLengthExceeded['name']" class="error">
+                        Name should not exceed 100 characters.
+                    </div>
+                    <div [hidden]="(!formFieldNameField.touched || formFieldNameField.dirty) || (formFieldNameField.value && formFieldNameField.value.length)" class="error">
+                        Name is required.
+                    </div> 
+                  </div>
+                </div>
+            <div class="col-md-12 user_doc_form">
+              <button type="button" [disabled]="formFieldForm.invalid || maxLengthExceeded['name'] || maxLengthExceeded['label']" class="btn btn-primary changepassword-btn" (click)="saveAndUpdateFormField()">Submit</button>
+            </div>
+          </div>  
+      </div>
+    </form>
+</div>
+</app-dialog>

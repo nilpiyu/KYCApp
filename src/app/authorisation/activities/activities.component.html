@@ -1,0 +1,49 @@
+<div class=" container ">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-default">
+        <div class="card-header ">
+          <div class="card-title">
+            Search Activities:
+          </div>
+        </div>
+        <div class="card-block">
+          <form class="" role="form">
+            <div class="row">
+              <div class="col-md-5 col-sm-6 col-xs-12">
+                <div class="form-group form-group-default required">
+                   <input type="email" class="form-control" placeholder="" required>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div>
+            <data-table
+                    headerTitle="Activities(s)"
+                    [items]="activities"
+                    [itemCount]="noOfUsers"
+                    (reload)="reloadUsers($event)"
+                    [limit]="noOfUsersPerPage"
+                    [indexColumnHeader]="'#'"
+                    >
+                <data-table-column
+                    [property]="'activityName'"
+                    [header]="'ACTIVITY NAME'"
+                    [sortable]="true">
+                </data-table-column>
+                <data-table-column
+                    [property]="'active'"
+                    [header]="'STATUS'"
+                    [sortable]="true"
+                    >
+                    <ng-template #dataTableCell let-activity="item">
+                        <span [ngClass]="{'role_activated':activity['active'], 'role_deactivated':!activity['active']}">{{activity['active']? 'Active' : 'Deactive'}}</span>
+                    </ng-template>
+                </data-table-column>
+            </data-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

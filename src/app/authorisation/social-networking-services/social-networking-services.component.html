@@ -1,0 +1,180 @@
+<div class=" container ">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-default">
+          <div class="card-header ">
+            <div class="card-title">
+              Search Social Service
+            </div>
+          </div>
+          <div class="card-block">
+            <form class="" role="form">
+              <div class="row">
+                <div class="col-md-5  col-sm-6 col-xs-12">
+                  <div class="form-group form-group-default required">
+                      <input 
+                            type="email" 
+                            class="form-control" 
+                            placeholder="" 
+                            required
+                      />
+                  </div>
+                </div>
+            
+                <div class="col-md-7  col-sm-6 col-xs-12 text-right">
+                  <div class="form-group ">
+                    <a class="btn btn-default changepassword-btn" (click)="openSocialServiceModal()">Add</a>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div>
+              <data-table
+                  headerTitle="Availed Social Service(s)"
+                  [items]="registeredSocialServices"
+                  [itemCount]="totalSocialServices"
+                  (reload)="reloadSocialServices($event)"
+                  [limit]="noOfSocialServicesPerPage"
+                  [indexColumnHeader]="'#'"
+                  >
+                  <data-table-column
+                      [property]="'profileName'"
+                      [header]="'SOCIAL NETWORK'"
+                      [sortable]="true">
+                  </data-table-column>
+                  <data-table-column
+                      [header]="'LOGO'"
+                      [sortable]="true">
+                  <ng-template  #dataTableCell let-socialService="item">
+                      <img src="{{socialService['url']}}" height="30px" width="30px"/>
+                  </ng-template>  
+              </data-table-column>
+                  <data-table-column
+                      [property]="'description'"
+                      [header]="'DESCRIPTION'"
+                      [sortable]="true">
+                  </data-table-column>
+                  <data-table-column
+                      [property]="'active'"
+                      [header]="'STATUS'"
+                      [sortable]="true">
+                      <ng-template #dataTableCell let-socialService="item">
+                          <span [ngClass]="{'role_activated':socialService['active'], 'role_deactivated':!socialService['active']}">{{socialService['active']? 'Active' : 'Deactive'}}</span>
+                      </ng-template>  
+                 </data-table-column>
+                  <data-table-column
+                      [header]="'ACTION'"
+                      [sortable]="true"
+                      [cellColors]="cellColor">
+                    <ng-template #dataTableCell let-socialService="item">
+                        <i class="fa fa-edit" (click)="editSocialService(socialService)"></i>
+                    </ng-template>
+                  </data-table-column>
+              </data-table>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="socialServiceModal" class="overlay" (click)="closeSocialServiceModal()"></div>
+  </div>
+  <app-dialog [(visible)]="socialServiceModal">
+    <div class="popup_dialouge poup_edit">
+      <h5 *ngIf="!socialService['socialMetaId']">ADD <span class="semi-bold">Social Service</span><button (click)="closeSocialServiceModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+      <h5 *ngIf="socialService['socialMetaId']">EDIT <span class="semi-bold">Social Service</span><button (click)="closeSocialServiceModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+      <form role="form" #socialServiceForm="ngForm">
+        <div class="form-group-attached">
+            <div class="row">
+                <div class="col-md-12 user_doc_form">
+                    <div class="form-group form-group-default">
+                      <label>Social Service Name</label>
+                      <input 
+                            type="text" 
+                            [(ngModel)]="socialService['profileName']"
+                            name="socialServiceName"
+                            class="form-control" 
+                            #socialServiceNameField="ngModel"
+                            placeholder="Enter Social Service Name" 
+                            minlength="2"
+                            maxlength="101"   
+                            pattern="[a-zA-Z]+([\s][a-zA-Z]+)*" 
+                            required 
+                            (keyup)="checkMaxLength(socialServiceNameField, 101)"
+                      />
+                      <div *ngIf="socialServiceNameField.errors && socialServiceNameField.dirty">
+                        <div [hidden]="socialServiceNameField.errors.required || !socialServiceNameField.errors.pattern" class="error">
+                              Only alphabets are allowed.
+                        </div>
+                        <div [hidden]="socialServiceNameField.errors.required || socialServiceNameField.errors.pattern || (socialServiceNameField.errors.minlength && socialServiceNameField.errors.minlength['requiredLength']<socialServiceNameField.errors.minlength['actualLength'])" class="error">
+                              Social Service Name should be at least 2 characters long.
+                        </div>
+                        <div [hidden]="!socialServiceNameField.errors.required" class="error">
+                              Social Service Name is required.
+                        </div>
+                      </div>
+                      <div [hidden]="socialServiceNameField.errors || !maxLengthExceeded['socialServiceName']" class="error">
+                            Social Service Name should not exceed 100 characters.
+                      </div>
+                      <div [hidden]="(!socialServiceNameField.touched || socialServiceNameField.dirty) || (socialServiceNameField.value && socialServiceNameField.value.length)" class="error">
+                            Social Service Name is required.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 user_doc_form">
+                    <div class="form-group form-group-default">
+                      <label>Social Service Description</label>
+                      <input 
+                            type="text" 
+                            [(ngModel)]="socialService['description']"
+                            name="socialServiceDescription"
+                            #socialServiceDescriptionField="ngModel"
+                            class="form-control" 
+                            placeholder="Enter Social Service Description" 
+                            minlength="5"
+                            maxlength="101"   
+                            pattern="[A-Za-z0-9 _.,!'/$@-]*" 
+                            required 
+                            (keyup)="checkMaxLength(socialServiceDescriptionField, 101)"
+                      />
+                      <div *ngIf="socialServiceDescriptionField.errors && socialServiceDescriptionField.dirty">
+                        <!-- <div [hidden]="socialServiceDescriptionField.errors.required || !socialServiceDescriptionField.errors.pattern" class="error">
+                              Numbers are not allowed.
+                        </div> -->
+                        <div [hidden]="socialServiceDescriptionField.errors.required || socialServiceDescriptionField.errors.pattern || (socialServiceDescriptionField.errors.minlength && socialServiceDescriptionField.errors.minlength['requiredLength']<socialServiceDescriptionField.errors.minlength['actualLength'])" class="error">
+                              Social Service Description should be at least 5 characters long.
+                        </div>
+                        <div [hidden]="!socialServiceDescriptionField.errors.required" class="error">
+                            Social Service Description is required.
+                        </div>
+                      </div>
+                      <div [hidden]="socialServiceDescriptionField.errors || !maxLengthExceeded['socialServiceDescription']" class="error">
+                          Social Service Description should not exceed 100 characters.
+                      </div>
+                      <div [hidden]="(!socialServiceDescriptionField.touched || socialServiceDescriptionField.dirty) || (socialServiceDescriptionField.value && socialServiceDescriptionField.value.length)" class="error">
+                          Social Service Description is required.
+                      </div>
+                    </div>
+                  </div>
+                <div class="col-md-12 user_doc_form">
+                  <div class="form-group form-group-default">
+                    <label>Social Profile Logo</label>
+                    <img [src]="socialService['logoImageFilePath']" accept="image/*" height="30px" width="30px"/>                                    
+                    <input 
+                          type="file" 
+                          name="socialServiceLogo"
+                          [(ngModel)]="socialService['logoImage']"
+                          #socialServiceLogoField="ngModel"
+                          (change)="readSocialServiceLogo($event)"   
+                          #socialProfileImage
+                    />
+                  </div>
+                </div>
+              <span class="social_service">Only PNG or JPG/JPEG images of size less than 2mb can be uploaded</span>                                                                                
+              <div class="col-md-12 user_doc_form">
+                <button type="button" [disabled]="socialServiceForm.invalid" class="btn btn-primary changepassword-btn" (click)="saveAndUpdateSocialService()">Submit</button>
+              </div>
+            </div> 
+        </div>
+      </form>
+    </div>
+  </app-dialog>

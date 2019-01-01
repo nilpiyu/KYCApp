@@ -1,0 +1,95 @@
+<div class="container sm-padding-10 p-t-20 p-l-0 p-r-0">
+  <div class="row">
+    <div class="col-md-6 col-sm-6">
+      <div class="col-md-12 col-sm-12">
+        <form action="/file-upload" class="dropzone no-margin">
+          <div class="fallback text-center">
+            <label for="files">TWO-FACTOR AUTHENTICATION</label>
+            <input name="files" id="files" style="display:none;" type="file" />
+          </div>
+        </form>
+      </div>
+      <div class="col-md-12 col-sm-12 account_profile_verified text-center">
+        <div class="message">Two-Factor Authentication or 2FA is an additional security step for your Belrium account</div>
+        <h3>GOOGLE AUTHENTICATOR</h3>
+        <div class="message">By enabling Google Authenticator, you will be able to sign in and perform critical actions via Authentication codes on your Google Authenticator App.</div>
+      </div>
+      <div class="col-md-6 col-sm-6">
+        <button class="btn btn-default changepassword-btn" (click)="openAuthenticatorEnableModal()">Enable</button> 
+      </div>
+    </div>
+  </div>
+  <div *ngIf="authenticatorEnableModal" class="overlay" (click)="closeAuthenticatorEnableModal()"></div>
+</div>
+<app-dialog [(visible)]="authenticatorEnableModal">
+  <div class="popup_dialouge poup_edit">
+    <h5 class="semi-bold">ENABLE<span class="semi-bold">GOOGLE AUTHENTICATOR</span><button (click)="closeAuthenticatorEnableModal()" aria-label="Close" class="dialog__close-btn">X</button></h5>
+      <form role="form" #socialMediaForm="ngForm">
+        <div class="form-group-attached">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <div class="col-md-12 col-sm-12 account_profile_verified text-center">
+                        <h3>Authenticator Secret Code</h3>
+                          <div class="authenticator-code">
+                            <input 
+                              type="text" 
+                              class="form-control"
+                              name="gAuthSecret"
+                              #gAuthSecretField="ngModel"
+                              [(ngModel)]="Secret.gAuthSecret" 
+                              required
+                            />
+                            <span class="copy-gcode"><clipboard-component [content]="Secret['gAuthSecret']" [faIcon]="true" ></clipboard-component></span>
+                            <qr-code [value]="Secret['uri'] || 'N/A'" [size]="150"></qr-code>
+                          </div>
+                      </div>
+                      <span class="authenticator-click-message">(Take the snapshot of QR code to save it to your device storage. You may need this when you change devices.)</span>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <div class="col-md-12 col-sm-12 account_profile_verified text-center">
+                        <div class="authenticator-steps">
+                          <div class="step"><b>1.</b>
+                            Install a Google Authenticator app on your mobile device if you don't already have it.
+                          </div>
+                          <div class="step"><b>2.</b>
+                            Scan the QR code on left with the authenticator app
+                          </div>
+                          <div class="step"><b>3.</b>
+                            Please write down or print a copy of the 16-digit secret code and store it safely.
+                          </div>
+                          <div class="step"><b>4.</b>
+                            If your phone is lost, stolen or reset, you will need this code to access Belrium from your new device.
+                          </div>
+                          <div class="step"><b>5.</b>
+                            Do not share the secret code or QR code with anyone. Beaware of phishing attempts. Belrium will never ask you for this code.
+                          </div>
+                          <!-- <div class="authenticator-message">Once an authenticator is enabled, all other 2FA methods will not be applicable.</div> -->
+                          <div class="step">
+                            Enter the 2-step verification code provided by your authentication app
+                          </div>
+                            <form role="form" #otpForm="ngForm">
+                              <input 
+                                type="text" 
+                                class="form-control"
+                                name="otp"
+                                #otp="ngModel"
+                                (keydown.space)="$event.preventDefault()"
+                                pattern="^[0-9]{6}$"
+                                minlength="6"
+                                maxlength="6"
+                                placeholder="OTP"
+                                [(ngModel)]="authenticatorOTP['totp']"
+                                required
+                              />
+                            </form>
+                        </div>
+                      </div>
+                </div>
+              <div class="col-md-12 user_doc_form">
+                <button [disabled]="otpForm.invalid" type="button" class="btn btn-primary changepassword-btn authenticator" (click)="saveAuthenticatorSecret()">Confirm</button>
+              </div>
+          </div>
+        </div>
+      </form>
+  </div>
+</app-dialog>

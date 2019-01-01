@@ -1,0 +1,25 @@
+.changepassword-btn{background: #cd2122 !important; color: #fff;border: none;border-radius: 6px; float: right;}
+.card{padding: 20px;background: #fff;border: 1px solid rgba(230, 230, 230, 0.7);margin-bottom: 20px;}
+.card-title{padding-bottom: 10px;}
+.table-bordered th{background: #e1e1e1;}
+.table-bordered .btn{    border: 1px solid #e8e9ea;
+    box-shadow: none;
+    color: #333;margin-right: 5px;}
+    .table>thead>tr>th {
+        padding: 8px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+        text-align:center;
+    }
+    .table>thead>tbody>tr{
+        text-align: center;
+    }
+    span.social_service{
+        position: relative;
+        bottom: 10px;
+        color: #9b0707;
+        font-size: 12px;
+        left:15px;
+      }
+      

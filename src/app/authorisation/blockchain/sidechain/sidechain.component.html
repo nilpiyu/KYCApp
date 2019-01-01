@@ -1,0 +1,63 @@
+<div class=" container ">
+  <div class="row">
+    
+    <div class="col-md-12">
+      <!-- START card -->
+      <div class="card card-transparent">
+        <div class="card-header ">
+          <div class="card-title">SIDECHAIN
+          </div>
+        </div>
+        
+      </div>
+      <!-- END card -->
+    </div>
+    <div class="col-md-12">
+    <div class="col-md-12 sidechain_app_install">
+      <div class="col-md-3">
+          <div class="installed_applicaion">
+              <img src="assets/img/icon.png" class="img-responsive"/>
+              <h4>Sidechain</h4>
+            </div>
+      </div>
+      <div class="col-md-9 sidechain_inner">
+          <h3>Sidechain</h3>
+          <div class="col-md-12 no-padding"> <a class="btn btn_open" (click)="viewrole = !viewrole"><i class="fa fa-download"></i> OPEN</a></div>
+          <div class="col-md-12 no-padding"> <a class="btn btn_uninstall" (click)="viewrole = !viewrole"><i class="fa fa-trash"></i>UNINSTALL</a></div>
+          <p>Category: <a>Official</a></p>
+      </div>
+      
+    </div>
+   </div> 
+  <div class="col-md-12">
+        <div class="col-md-12 application_installed discription">
+          <h3>Description</h3>
+          <p>Sidechain decentralized application</p>
+          <span>sidechain</span>
+          <span>hosting</span>
+          <span>websites</span>
+          <span>decentral</span>
+        </div>
+  </div>
+  </div>
+
+  <app-dialog [(visible)]="viewrole">
+      <div class="popup_dialouge">
+        <div class="security_warning_logo">
+            <img src="assets/img/logo-belrium.png" class="img-responsive"/>
+        </div>
+        <div class="security_warning">
+            <h5>Security Warning</h5>
+            <p>Please read carefully.</p>
+        </div>
+        <div class="security_warning_last">
+            <p>The Belrium apps platform currently does not provide any protection against any unauthorized system calls made from the running application. Therefore opening any untrusted applications is not yet advisable, and could potentially lead to loss of funds.</p>
+            <p>If you are confident the application can be deemed trustworthy, click <span>Open Anyway</span>, otherwise click <span>Cancel</span> now.</p>
+          </div>
+        <ul class="security_warning_last_ul">
+          <li><a>CANCEL</a></li>
+          <li><a>OPEN ANYWAY</a></li>
+        </ul>
+    </div>
+    </app-dialog>
+</div>
