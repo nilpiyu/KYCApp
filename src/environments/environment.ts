@@ -22,12 +22,12 @@ export const environment = {
   apiWalletHost:"http://54.254.174.74",
   apiWalletPort:"8080",
   apiWalletRoutepath:"/api/",
-  apiPayrollDappHost:"http://54.251.138.1",
+  apiPayrollDappHost:"http://54.157.252.226",
   apipayrollDappPort:"9305",
   apiPayrollDappRoutepath:"/api/",
-  apiSuperDappHost:"http://18.188.23.5",
+  apiSuperDappHost:"http://54.157.252.226",
   apiSuperDappPort:"9305",
   apiSuperDappRoutepath:"/api/dapps",
-  sDAPPID:"2197e1a71e1105989b207d81d67f6a882dc14d02dc8ea4cd4ac060a7b2f0ecb9",
+  sDAPPID:"048c1869547f60db8a6cd93b06a786abe5f50c4567198f4df0376462f9a20c5e",
   captchaKey:"6LfciH0UAAAAAHGzbKf0cACnoQL_6YLf9vRWxQbs"
 };

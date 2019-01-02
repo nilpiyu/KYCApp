@@ -701,7 +701,7 @@
       </form>
       
     </div>
-    <div>
+    <div *ngIf="userPaySlipArrData.length > 0">
         <data-table
           headerTitle="List of Payslip(s)"
           [items]="userPaySlipArrData"

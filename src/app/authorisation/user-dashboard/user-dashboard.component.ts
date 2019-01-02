@@ -2252,10 +2252,10 @@ export class UserDashboardComponent implements OnInit {
 if(this.selectedCountryWallet['address']){
   this.dappData["Address"]=this.selectedCountryWallet['address'];
 }else{
-  this.dappData["Address"]="testingdappPEAddress1";
+  this.dappData["Address"]="";
 }
   
-this.dappData["Address"] ="AEuw8v4rQeH9kXsxFwYnPWAmfmM13q3KTsIN";
+//this.dappData["Address"] ="A92TGtCSZ6R7ogquZ996wTgXXVQXBxYY71IN";
 
    console.log("dappaddress", JSON.stringify( this.dappData["Address"]));
     this.authorizationApiService.getDappId(this.dappData).subscribe(
@@ -2268,6 +2268,7 @@ this.dappData["Address"] ="AEuw8v4rQeH9kXsxFwYnPWAmfmM13q3KTsIN";
          //alert("success");
          for(let userdappIndex in this.dapps){
           
+          if(this.dapps !== []){
            console.log("companyName" + JSON.stringify(this.dapps[userdappIndex]));
          //this.dappNames.push(this.dapps[userdappIndex]);
          let isActive: boolean= false;
@@ -2281,7 +2282,7 @@ this.dappData["Address"] ="AEuw8v4rQeH9kXsxFwYnPWAmfmM13q3KTsIN";
 
          console.log("dapps"+ JSON.stringify(this.dappNames));
           this.getPayslips(this.dapps[0]['dappid'], limit , offset, 0, false);
-        
+        }
         this.unblockUserInterface();
       },
       error=>{
@@ -2316,9 +2317,9 @@ this.dappData["Address"] ="AEuw8v4rQeH9kXsxFwYnPWAmfmM13q3KTsIN";
   if(this.selectedCountryWallet['address']){
     this.userPaySlipData["Address"]= this.selectedCountryWallet['address'];
   }else{
-   this.userPaySlipData["Address"]="testingdappPEAddress1";
+   this.userPaySlipData["Address"]="";
   }
-  this.userPaySlipData["Address"]="AEuw8v4rQeH9kXsxFwYnPWAmfmM13q3KTsIN";
+  // this.userPaySlipData["Address"]="A92TGtCSZ6R7ogquZ996wTgXXVQXBxYY71IN";
 
     this.userPaySlipData["dappId"]=dappID;
     this.userPaySlipData["limit"]=limit;
